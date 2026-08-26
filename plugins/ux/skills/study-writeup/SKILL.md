@@ -1,5 +1,5 @@
 ---
-name: ux-research-study-writeup
+name: study-writeup
 version: 1
 description: >
   Write up a finished piece of UX research as a full report and a one-page study card,
