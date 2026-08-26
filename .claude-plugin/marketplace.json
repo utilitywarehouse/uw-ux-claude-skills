@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "uw-ux-claude-skills",
+  "description": "Claude Code skills for UX design workflows",
+  "owner": { "name": "UW UX team" },
+  "plugins": [
+    {
+      "name": "ux",
+      "description": "Claude Code skills for UX design workflows",
+      "author": { "name": "UW UX team" },
+      "source": "./plugins/ux"
+    }
+  ]
+}
