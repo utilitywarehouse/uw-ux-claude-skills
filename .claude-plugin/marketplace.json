@@ -6,6 +6,7 @@
   "plugins": [
     {
       "name": "ux",
+      "displayName": "UX",
       "description": "Claude Code skills for UX design workflows",
       "author": { "name": "UW UX team" },
       "source": "./plugins/ux"
