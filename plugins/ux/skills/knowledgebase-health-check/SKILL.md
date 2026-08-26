@@ -116,4 +116,4 @@ Three rules that keep this from going wrong:
 
 If the same defect appears in many files, look for what produced them. For example, if two project CLAUDE.md files both mandate plain-text citations because `new-project-setup` carries that spec in its own template, every new project inherits it. Fixing the files without fixing the generator means the next project starts broken again.
 
-Sources worth checking when a defect looks systemic: the `new-project-setup` skill's embedded CLAUDE.md template, the `ux-transcript-cleaner` and `ux-transcript-coder` frontmatter templates, the Obsidian Web Clipper's property template, and Obsidian's own settings.
+Sources worth checking when a defect looks systemic: the `new-project-setup` skill's embedded CLAUDE.md template, the `transcript-cleaner` and `transcript-coder` frontmatter templates, the Obsidian Web Clipper's property template, and Obsidian's own settings.

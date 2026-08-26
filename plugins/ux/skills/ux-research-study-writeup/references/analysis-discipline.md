@@ -16,7 +16,7 @@ Structure and verification catch the mechanical failures — a missing field, a 
 
 ## Thematic synthesis (Braun & Clarke's six-phase method)
 
-When this skill is doing the synthesis itself — clustering coded quotes or raw responses into named themes, rather than working from an already-written report — it follows the standard method behind thematic analysis, picking up from wherever coding already happened (typically `ux-transcript-coder`'s codebook):
+When this skill is doing the synthesis itself — clustering coded quotes or raw responses into named themes, rather than working from an already-written report — it follows the standard method behind thematic analysis, picking up from wherever coding already happened (typically `transcript-coder`'s codebook):
 
 1. Familiarize with the full dataset before clustering anything.
 2. Codes already exist (from the coding step) — this skill doesn't regenerate them.

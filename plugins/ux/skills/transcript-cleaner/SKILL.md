@@ -1,5 +1,5 @@
 ---
-name: ux-transcript-cleaner
+name: transcript-cleaner
 version: 2
 description: Clean video transcripts from UX research sessions — moderated interviews, usability tests, and unmoderated test recordings — into a coding-ready markdown file for your knowledge base. Use this skill whenever the user provides a raw transcript (pasted text, uploaded file, or referenced from Drive/Dovetail) and wants it tidied up for analysis. Trigger on phrases like "clean this transcript", "tidy up this session", "prep this for coding", "remove the fillers", "intelligent verbatim", or when they upload a .vtt, .srt, .txt, .docx, or messy interview text and asks for it to be made readable. Also trigger when they share a Userlytics, Dovetail, Google Meet, Zoom, or Teams transcript export with any framing that suggests it's headed for thematic analysis — even if they don't say the word "clean". When in doubt, this skill is what they mean.
 ---
