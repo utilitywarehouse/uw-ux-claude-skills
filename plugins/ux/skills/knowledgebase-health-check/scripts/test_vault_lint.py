@@ -65,6 +65,18 @@ FILES = {
         "- Ingest notes.md is discussed here as prose, not cited\n"
     ),
     "notes/Ingest notes.md": "another source\n",
+    # a Routing Map whose folders exist, don't exist, or were archived
+    "CLAUDE.md": (
+        "## Routing Map\n\n"
+        "| Folder | Use when... |\n"
+        "|---|---|\n"
+        "| `1-Projects/Live Project/` | still active — must not be flagged |\n"
+        "| `1-Projects/Gone Project/` | archived but the row was never removed |\n"
+        "| `1-Projects/Never Existed/` | never had a folder at all |\n"
+        "| `2-Areas/Some Guide.md` | a machine-specific path **[replace on setup]** |\n"
+    ),
+    "1-Projects/Live Project/index.md": "still here\n",
+    "4-Archives/Old Area/Gone Project/index.md": "moved here\n",
 }
 
 failures = []
@@ -129,6 +141,20 @@ with tempfile.TemporaryDirectory() as root:
     check("counts exactly the real edges, no over-counting",
           r["counts"]["edges"] == 2, f"got {r['counts']['edges']}")
     check("reports orphans", isinstance(r["orphans"], list) and len(r["orphans"]) > 0)
+
+    stale = {row["row_path"]: row for row in r["stale_routing_map_rows"]}
+    check("does not flag a Routing Map row whose folder still exists",
+          "1-Projects/Live Project/" not in stale, f"got {list(stale)}")
+    check("flags a Routing Map row whose folder is gone",
+          "1-Projects/Gone Project/" in stale, f"got {list(stale)}")
+    check("identifies where an archived row's folder actually went",
+          stale.get("1-Projects/Gone Project/", {}).get("archived_at") == "4-Archives/Old Area/Gone Project",
+          f"got {stale.get('1-Projects/Gone Project/')}")
+    check("flags a Routing Map row with no matching folder anywhere",
+          "1-Projects/Never Existed/" in stale
+          and stale["1-Projects/Never Existed/"]["archived_at"] is None)
+    check("does not flag a row marked [replace on setup]",
+          "2-Areas/Some Guide.md" not in stale, f"got {list(stale)}")
 
 print()
 if failures:
