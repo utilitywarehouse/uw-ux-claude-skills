@@ -31,6 +31,12 @@ INLINE_SOURCE = re.compile(r'\((?:source|Source)s?:\s*([^)]*)\)')
 FM_BLOCK = re.compile(r'^---\n(.*?)\n---', re.S)
 ALREADY_LINKED = re.compile(r'\[\[[^\]]*\]\]|\[[^\]]*\]\([^)]*\)')
 
+# A routing-map row: a markdown table row whose first cell is a backtick-wrapped
+# path, e.g. "| `1-Projects/Cashback Card/` | ... |". Restricted to CLAUDE.md,
+# since that's the only file this vault's routing convention lives in — a
+# vault-wide scan would also match unrelated backticked table cells.
+ROUTING_ROW = re.compile(r'^\|\s*`([^`]+)`\s*\|', re.M)
+
 # A "## Sources ingested" list is the one place a wiki deliberately
 # inventories its own provenance — and neither pattern above can see it,
 # because it is not a **Sources**: line and not a (source: ...) span.
@@ -99,6 +105,48 @@ class Vault:
                 continue
             out.append(os.path.splitext(unquote(url))[0])
         return [t for t in out if len(t) <= 200 and '\n' not in t]
+
+
+def stale_routing_rows(root, claude_md_text):
+    # A row can point anywhere the folder map wants, including outside the
+    # vault (a shared checkout path on another machine) or at a row that's
+    # explicitly marked machine-specific pending setup — neither is stale,
+    # just not yet resolvable on this filesystem, so both are skipped.
+    stale = []
+    for line_match in ROUTING_ROW.finditer(claude_md_text):
+        line_start = claude_md_text.rfind('\n', 0, line_match.start()) + 1
+        line_end = claude_md_text.find('\n', line_match.end())
+        line = claude_md_text[line_start:line_end if line_end != -1 else None]
+        if '[replace on setup]' in line:
+            continue
+        raw_path = line_match.group(1).strip()
+        if '/' not in raw_path or raw_path.startswith(('http', 'mailto')):
+            continue
+        # A bracketed segment ("1-Projects/[Project]/01-Inputs/") is a
+        # placeholder pattern for a whole class of folders, not a real path —
+        # nothing on disk is ever meant to match it literally.
+        if '[' in raw_path and ']' in raw_path:
+            continue
+        rel = raw_path.rstrip('/')
+        full = os.path.join(root, rel)
+        # A row can name a file without its extension (e.g. "2-Areas/Tasks"
+        # for Tasks.md) — check that before concluding the row is stale.
+        if os.path.exists(full) or os.path.exists(full + '.md'):
+            continue
+        # Same trailing name sitting under 4-Archives/ instead means the
+        # project was archived but the row never got removed — the exact gap
+        # this check exists to catch. Anything else just points nowhere.
+        name = os.path.basename(rel)
+        archived_at = None
+        archives_dir = os.path.join(root, '4-Archives')
+        if os.path.isdir(archives_dir):
+            for base, dirs, _ in os.walk(archives_dir):
+                dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+                if name in dirs:
+                    archived_at = os.path.relpath(os.path.join(base, name), root)
+                    break
+        stale.append({'row_path': raw_path, 'archived_at': archived_at})
+    return stale
 
 
 def lint(vault):
@@ -183,6 +231,9 @@ def lint(vault):
 
     root_files = [p for p in vault.md if os.sep not in p and p != 'CLAUDE.md']
 
+    claude_md_text = vault.text.get('CLAUDE.md', '')
+    stale_routing = stale_routing_rows(vault.root, claude_md_text) if claude_md_text else []
+
     return {
         'counts': {
             'notes': len(vault.md),
@@ -198,6 +249,7 @@ def lint(vault):
         'backtick_only_references': sorted(backtick_only),
         'case_collisions': case_clashes,
         'vault_root_files': sorted(root_files),
+        'stale_routing_map_rows': stale_routing,
     }
 
 
@@ -235,6 +287,14 @@ def report(r, quiet=False):
         lines.append(f"## Files in the knowledge base root ({len(r['vault_root_files'])})")
         for p in r['vault_root_files']:
             lines.append(f"  {p}")
+        lines.append("")
+    if r['stale_routing_map_rows']:
+        lines.append(f"## Stale Routing Map rows ({len(r['stale_routing_map_rows'])})")
+        for row in r['stale_routing_map_rows']:
+            if row['archived_at']:
+                lines.append(f"  `{row['row_path']}` — not found; likely archived to {row['archived_at']}")
+            else:
+                lines.append(f"  `{row['row_path']}` — not found anywhere in the vault")
         lines.append("")
     if not quiet and r['orphans']:
         lines.append(f"## Orphans — no links in or out ({len(r['orphans'])})")
