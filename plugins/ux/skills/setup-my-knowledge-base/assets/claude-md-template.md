@@ -2,7 +2,7 @@ This is your briefing on how to work within this knowledge base.
 
 ## Routing Map
 
-Work down this table in order when deciding where something goes: which row's "Use when" best matches what's happening right now? Filing by actionability beats filing by topic — a note filed under a subject is a note that won't get seen again when it's needed. As new projects and areas get created (see `new-project-setup`), a new row gets added here automatically, so this table grows into the map of everything in this knowledge base.
+Work down this table in order when deciding where something goes: which row's "Use when" best matches what's happening right now? Filing by actionability beats filing by topic — a note filed under a subject is a note that won't get seen again when it's needed. As new projects and areas get created (see `new-project-setup`), a new row gets added here automatically. As a project gets archived, its row is meant to go too — `knowledgebase-health-check` catches any row still pointing at a folder that's gone (usually because it moved to `4-Archives/`) and flags it for removal, so this table stays an accurate map instead of only ever growing.
 
 | Folder | Use when... |
 |---|---|
