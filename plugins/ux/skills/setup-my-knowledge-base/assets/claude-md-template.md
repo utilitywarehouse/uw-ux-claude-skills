@@ -29,6 +29,7 @@ This knowledge base uses **markdown links**, not wikilinks: `[Page Title](page-t
 - Never write files to the root of this knowledge base, other than `CLAUDE.md` and `Start here.md` themselves — everything else belongs inside one of the folders above.
 - If a request is unclear or incomplete, ask rather than guessing.
 - Before finalising any substantial written content — notes, comms, customer copy, specs — check it against `3-Resources/AI Writing Guidelines.md` for common AI-tell patterns.
+- Anything with a second audience — this CLAUDE.md if it's ever shared with a team, or a skill built and shared with others — shouldn't name this person specifically. Use role-based phrasing instead ("the vault owner", "repo admins", "whoever owns this"). A shared document that talks about one specific person by name reads as personal rather than shared, even after it's handed off. Doesn't apply to personal files (About Me, personal-voice writing skills) or private notes only this person reads.
 
 ## Personality and preferences
 
