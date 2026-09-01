@@ -1,6 +1,6 @@
 ---
 name: propose-skill
-version: 1
+version: 2
 description: Ship a finished skill change — a brand-new skill, an edit to an existing one, or retiring one entirely — from this repo (uw-ux-claude-skills) into a pull request for repo admins to review and merge. Use this whenever a team member has just finished writing a new skill (typically with skill-creator), editing an existing one here, or decided a skill should be removed, and now wants to submit it, share it with the team, open a PR, or get it added to (or taken out of) the shared UX skills repo. Trigger on phrases like "propose this skill", "submit my skill", "ship this to the team repo", "send this for review", "open a PR for this skill", "retire this skill", "remove this skill", or "how do I get this merged". This skill NEVER merges anything itself — main is protected and only repo admins approve merges. It runs this repo's smoke test for the skill before every push, but does not package a .skill file or touch Cowork — this repo ships purely via GitHub pull request, nothing else.
 ---
 
@@ -20,7 +20,7 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
    - New skill: `add-<skill-name>`
    - Update: `update-<skill-name>`
    - Retiring a skill: `retire-<skill-name>`
-4. **Stage and commit** — only the relevant skill's files. Write a plain, factual commit message describing what changed, matching this repo's existing style (e.g. "Add setup-my-knowledge-base skill", "Rename transcript-cleaner to research-transcript-cleaner and tighten scope"). **For a retirement, the commit message is where the reason for removing it lives** — see the "Retiring a skill" flow below; there's no separate tracking file for this, so a commit message that just says "Remove X" loses the one piece of information anyone will actually want later.
+4. **Bump `plugins/ux/.claude-plugin/plugin.json`'s `version` field** by one patch number, then **stage and commit** — the relevant skill's files, plus that one line. Write a plain, factual commit message describing what changed, matching this repo's existing style (e.g. "Add setup-my-knowledge-base skill", "Rename transcript-cleaner to research-transcript-cleaner and tighten scope"). **For a retirement, the commit message is where the reason for removing it lives** — see the "Retiring a skill" flow below; there's no separate tracking file for this, so a commit message that just says "Remove X" loses the one piece of information anyone will actually want later.
 5. **Run the smoke test.** Look up the skill's entry in `smoke-tests.md` at the repo root and run its test prompt against the change before doing anything else. If the expected behaviour doesn't hold, stop and report what broke — don't open a PR for a skill that just regressed. Skip this step for a retirement (there's nothing left to test).
 6. **Push the branch**, then **open the PR** with `gh pr create`. Keep the body short and plain — a summary of what changed and a one- or two-sentence why, so it's quick to review:
    ```
@@ -35,8 +35,9 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
 ## Guardrails
 
 - **Never push to `main` directly, and never merge, approve, or self-merge the PR** — not even if asked to. If someone asks you to merge it, say that only repo admins can approve and merge changes to this repo, and that's the entire point of routing through a PR.
-- **No packaging, no version tags, no Cowork upload.** This repo has no `scripts/package-skill.sh` and no packaged `.skill` distribution — it ships purely through GitHub. If someone asks about any of that, say plainly that this repo doesn't use that convention; don't invent steps that don't exist here just because another skills repo has them.
+- **No packaging, no per-skill version tags, no Cowork upload.** This repo has no `scripts/package-skill.sh` and no packaged `.skill` distribution — it ships purely through GitHub. If someone asks about any of that, say plainly that this repo doesn't use that convention; don't invent steps that don't exist here just because another skills repo has them.
 - **Bump `version:` in the SKILL.md frontmatter by 1** when proposing an edit to an existing skill (leave it if whoever wrote the edit already bumped it). New skills start at `version: 1`.
+- **Bump the plugin version too, every single time** — `plugins/ux/.claude-plugin/plugin.json`'s `version` field, by one patch number (e.g. `0.1.2` → `0.1.3`), in the same commit. This is the number `claude plugin update` actually compares to decide whether there's anything new to fetch — a skill's own `version:` field means nothing to that check. Skip this bump and every installed Claude Code, on every machine, will report "already up to date" and keep serving stale content indefinitely, with no error to say so. This bit everyone the first time `propose-skill` was used: three merged PRs in a row changed real behaviour without anyone noticing the installed copies never updated.
 
 ## Three flows
 
