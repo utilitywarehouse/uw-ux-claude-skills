@@ -1,7 +1,7 @@
 ---
-name: transcript-coder
-version: 2
-description: Code a cleaned UX research transcript with qualitative labels ready for thematic analysis and cross-session synthesis. Use this skill whenever a transcript is ready for analysis and the request is "code this", "apply codes", "tag this session", "analyse this transcript", or when transcript cleaning has just finished and it's time to decide what's next. Also trigger when working through the analysis phase of a research project with one or more sessions to code. Pairs naturally after the research-transcript-cleaner skill. When multiple sessions are being coded, this skill manages a shared codebook to ensure consistency across the study.
+name: research-transcript-coder
+version: 3
+description: Code a cleaned UX research transcript — from a moderated interview, usability test, or unmoderated test recording with a research participant — with qualitative labels ready for thematic analysis and cross-session synthesis. Use this skill whenever a transcript is ready for analysis and the request is "code this", "apply codes", "tag this session", "analyse this transcript", or when transcript cleaning has just finished and it's time to decide what's next. Also trigger when working through the analysis phase of a research project with one or more sessions to code. Pairs naturally after the research-transcript-cleaner skill. When multiple sessions are being coded, this skill manages a shared codebook to ensure consistency across the study. Do NOT use this for internal team meetings, standups, planning calls, or any transcript without a research participant — those aren't coded for themes and don't fit this workflow's codebook model; summarise those by hand instead. When in doubt, ask whether the recording involved a research participant before triggering.
 ---
 
 # UX Transcript Coder

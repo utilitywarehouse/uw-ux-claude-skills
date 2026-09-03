@@ -47,6 +47,6 @@ will notice breaking.
 **Prompt:** "we just wrapped the onboarding usability study, can you write it up?"
 **Expect:** Produces both a full report and a one-page study card, verifying every figure against a source rather than just formatting an already-decided set of findings.
 
-## transcript-coder
+## research-transcript-coder
 **Prompt:** "this session's been cleaned, can you code it now?"
 **Expect:** Applies qualitative codes ready for thematic analysis, managing a shared codebook if this is one of several sessions in the same study.
