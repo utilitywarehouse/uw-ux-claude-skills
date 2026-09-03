@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 10
+version: 11
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -114,7 +114,7 @@ This is Anthropic's own official plugin (`figma@claude-plugins-official`), not a
 
 ### Optional — install the Hearth AI Toolkit plugin
 
-`utilitywarehouse/hearth` is a public repo, so there's no access barrier here regardless of how the check above went. Ask a yes/no question: "Want to install the Hearth AI Toolkit plugin too? It gives Claude the component docs and MCP tools for building real UW UI in code — `hearth-react` and `hearth-react-native` — on top of the design knowledge you just linked in." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. If no, or if they're not building in code, skip it without pushing.
+`utilitywarehouse/hearth` is a public repo, so installing the plugin itself has no access barrier regardless of how the check above went. But the two MCP connectors it bundles aren't the same: `hearth-react` needs no extra login, while `hearth-react-native` needs a separate Chromatic login for UW's Hearth org that not everyone will already have. Ask a yes/no question: "Want to install the Hearth AI Toolkit plugin too? It gives Claude the component docs and MCP tools for building real UW UI in code — `hearth-react` and `hearth-react-native` — on top of the design knowledge you just linked in." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. Mention plainly that `hearth-react-native` may then ask for a Chromatic login they might not have — that's expected, not a setup failure, and getting one is a request to whoever manages the Hearth design system or the mobile team, not something to troubleshoot here. If they don't build React Native screens, they can just ignore that prompt; `hearth-react` still works fine without it. If no, or if they're not building in code at all, skip the whole plugin without pushing.
 
 ### Optional — install the claude-md-management plugin
 
