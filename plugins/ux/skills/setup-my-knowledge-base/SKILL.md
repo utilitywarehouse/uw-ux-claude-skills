@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 6
+version: 7
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -87,6 +87,18 @@ Walk the clone's actual top-level contents rather than a fixed list, since new s
 - Any other top-level folder in the clone that contains a `Wiki/` subfolder — each one is a shared product area, e.g. `Cashback Card`, `Brand & Design System` — create `1-Projects/<same name>/` if it doesn't already exist, then symlink that folder's `Wiki/` to `1-Projects/<same name>/Wiki`.
 
 Confirm the links resolved by listing one of them before moving on.
+
+### Clone the shared skills repo too
+
+Everyone gets a local clone of `utilitywarehouse/uw-ux-claude-skills`, the repo these skills themselves ship from — not just the installed plugin. The clone is what lets someone propose a change to a skill later, via `propose-skill`, rather than only ever consuming skills read-only.
+
+Ask where the clone should live — suggest `~/Documents/Github/uw-ux-claude-skills`, the same pattern as the knowledge-content clone above.
+
+- If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
+- Otherwise, `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder they chose.
+- If the clone fails on access, tell them plainly and skip this step without blocking the rest of setup — same handling as the knowledge-content access check above.
+
+If they're using the VS Code extension, add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**, then **File → Save Workspace As…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
 
 ### Optional — install the Hearth AI Toolkit plugin
 
