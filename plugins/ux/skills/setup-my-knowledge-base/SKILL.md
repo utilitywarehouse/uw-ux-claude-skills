@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 8
+version: 9
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -107,6 +107,10 @@ Now that the knowledge base folder and both clones are all open together, save t
 **File → Save Workspace As…**, save it as `<knowledge base folder name>.code-workspace`, right next to the knowledge base folder itself (a sibling, not inside it — this file isn't part of the PARA structure). E.g. if the knowledge base folder is `~/Documents/Obsidian/Second Brain - Work`, save the workspace file as `~/Documents/Obsidian/Second Brain - Work.code-workspace`.
 
 Tell them to reopen that `.code-workspace` file (instead of just the knowledge base folder) from now on, so all three folders come back together automatically.
+
+### Optional — install the Figma plugin
+
+This is Anthropic's own official plugin (`figma@claude-plugins-official`), not a UW one — no access request needed, anyone can install it. Ask a yes/no question: "Want to install the Figma plugin too? It gives Claude a set of skills for working with Figma files directly — building designs, converting them to code, and going the other way — on top of the design knowledge you just linked in." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. If no, skip it without pushing.
 
 ### Optional — install the Hearth AI Toolkit plugin
 
