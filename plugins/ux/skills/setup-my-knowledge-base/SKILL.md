@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 5
+version: 6
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -68,6 +68,14 @@ Ask where the clone should live — suggest `~/Documents/Github/uw-knowledgebase
 
 - If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
 - Otherwise, `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder they chose.
+
+### Add the clone to their VS Code workspace, if they're using the VS Code extension
+
+Skip this if they're running Claude Code from a plain terminal instead — it doesn't apply there.
+
+If Claude Code is running as a VS Code extension, it can only read and write inside the folders VS Code has open. The knowledge base folder is already one of those; this clone isn't, since it lives in a separate folder outside the knowledge base. Without this step, `contribute-to-shared-knowledgebase` will fail later with a sandbox permissions error when it tries to write to the clone.
+
+In VS Code: **File → Add Folder to Workspace…**, pick the clone folder from the step above, then **File → Save Workspace As…** so it's remembered next time rather than only for this session.
 
 ### Link it into the new knowledge base
 
