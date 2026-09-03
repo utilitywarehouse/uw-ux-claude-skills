@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 2
+version: 4
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, turns off Obsidian wikilinks if Obsidian is present, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -94,13 +94,21 @@ Walk the clone's actual top-level contents rather than a fixed list, since new s
 
 Confirm the links resolved by listing one of them before moving on.
 
+### Optional — install the Hearth AI Toolkit plugin
+
+`utilitywarehouse/hearth` is a public repo, so there's no access barrier here regardless of how the check above went. Ask a yes/no question: "Want to install the Hearth AI Toolkit plugin too? It gives Claude the component docs and MCP tools for building real UW UI in code — `hearth-react` and `hearth-react-native` — on top of the design knowledge you just linked in." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. If no, or if they're not building in code, skip it without pushing.
+
 ## Step 6 — Interview for About Me
 
 Use `assets/about-me-template.md` as the question set — it's already written for a newcomer and needs no changes. Walk through it conversationally rather than dumping the whole template as a form; skip anything they say doesn't apply. Write their answers into `3-Resources/About Me/About Me.md`, keeping the template's structure and frontmatter.
 
 ## Step 7 — Write the root CLAUDE.md
 
-Copy `assets/claude-md-template.md` to `CLAUDE.md` at the root of the new knowledge base, unchanged. It already carries its own Routing Map and link-style rule — nothing in it needs to be filled in with this person's specifics. The Routing Map is what `new-project-setup` adds a row to every time a new project or area is created, so it stays accurate as the knowledge base grows. The "Personality and preferences" section at the bottom stays blank; that's deliberate, it fills in as you work together over time.
+Copy `assets/claude-md-template.md` to `CLAUDE.md` at the root of the new knowledge base. It already carries its own Routing Map and link-style rule — nothing in it needs to be filled in with this person's specifics, and it already has static rows for the content every teammate gets (Research Repository, DESIGN.md).
+
+Then add one Routing Map row for each *product* wiki Step 5 actually linked (e.g. `Cashback Card`) — these vary from one teammate's setup to another and can't be baked into the template as a fixed list. Skip any wiki that already has a static row in the template (Research Repository, Brand & Design System). For each row, use the pattern already in the table: `1-Projects/<Product>/Wiki/` in the folder column, and a one-line "Use when..." pulled from that wiki's own `index.md` summary. If Step 5 was skipped or blocked (no repo access), skip this too — there's nothing linked to add a row for.
+
+The Routing Map is also what `new-project-setup` adds a row to every time a new project or area is created, so it stays accurate as the knowledge base grows. The "Personality and preferences" section at the bottom stays blank; that's deliberate, it fills in as you work together over time.
 
 ## Step 8 — Write Start here.md
 

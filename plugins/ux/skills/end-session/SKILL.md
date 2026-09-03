@@ -1,6 +1,6 @@
 ---
 name: end-session
-version: 4
+version: 5
 description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, and cross-session facts to auto-memory. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
@@ -12,7 +12,9 @@ The reason this is a skill rather than a standing instruction is that you cannot
 
 Your job is a review pass, not a writing spree. Most sessions produce one or two things worth keeping, some produce none, and a few produce a lot. Report what you actually find.
 
-It does two things and only two things: find what the session taught that is not yet on disk, and put it in the right file. It is not a tidy-up. No reorganising folders, no linting the wiki, no rewriting pages that are merely imperfect, no progress report on the project. Those are all real jobs the user can ask for separately, and doing them uninvited here buries the one or two findings that actually mattered.
+Its core job is two things and only two things: find what the session taught that is not yet on disk, and put it in the right file. It is not a tidy-up. No reorganising folders, no linting the wiki, no rewriting pages that are merely imperfect, no progress report on the project. Those are all real jobs the user can ask for separately, and doing them uninvited here buries the one or two findings that actually mattered.
+
+It also does one small, unrelated check on the way out — see Step 6.
 
 ## Step 1: Work out what is in scope
 
@@ -133,3 +135,5 @@ Follow the knowledge base's own standing rules while you write — check its roo
 ## Step 6: Confirm and land it
 
 List what you wrote and where, in a few lines. If the user skipped anything, note it once so they know it was dropped rather than quietly lost, and leave it there. No summary of the whole session, no suggestions for next time unless they ask.
+
+Before you close out, also check whether anything is waiting to go up to the shared repo. This is unrelated to the capture pass above — it's a second natural moment to catch it, alongside the same check that runs at the start of a session. For each shared folder touched this session (a symlink into the team's shared-content clone — the Research Repository, or a product wiki), resolve it to the real clone and run `git status --short` there. If anything is uncommitted, mention it once and offer to submit it with `contribute-to-shared-knowledgebase`. Don't submit anything without being asked, and don't hold up the rest of this skill's report waiting for an answer.

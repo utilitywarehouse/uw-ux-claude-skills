@@ -7,9 +7,13 @@ just regressed.
 Adding a new skill? Add its entry here in the same PR. A skill with no smoke test is one nobody
 will notice breaking.
 
+## contribute-to-shared-knowledgebase
+**Prompt:** "I just fixed a typo in the Cashback Card wiki, can you submit that back to the team repo?"
+**Expect:** Resolves the symlinked folder back to the shared repo clone, branches and commits the person's edit before touching the remote, then fetches and merges the latest `main` — pushing and opening a PR only if that merge is clean. On a real conflict, stops and names the conflicting file rather than resolving it, and leaves the branch intact. Never pushes to `main` directly, never merges the PR itself.
+
 ## end-session
 **Prompt:** "we're done for today, anything worth capturing before we close out?"
-**Expect:** Reviews the session for corrections, wiki-worthy facts, project state changes, and behaviour rules, then shows proposed changes grouped by destination (Wiki, MEMORY.md, CLAUDE.md, auto-memory) and waits for approval before writing anything.
+**Expect:** Reviews the session for corrections, wiki-worthy facts, project state changes, and behaviour rules, then shows proposed changes grouped by destination (Wiki, MEMORY.md, CLAUDE.md, auto-memory) and waits for approval before writing anything. Separately, on the way out, checks any shared-repo clones touched this session for uncommitted changes and offers `contribute-to-shared-knowledgebase` if it finds any — without submitting anything unasked.
 
 ## knowledgebase-health-check
 **Prompt:** "can you run a health check on my vault, graph view looks really sparse lately"
@@ -29,7 +33,7 @@ will notice breaking.
 
 ## setup-my-knowledge-base
 **Prompt:** "I'm new to the team, can you help me set up my own knowledge base from scratch?"
-**Expect:** Creates the core folder structure, checks access to the shared `uw-knowledgebase-content` repo and links its Research Repository and every shared product wiki in via symlinks (or fails that one step cleanly with access instructions if the check doesn't pass), interviews for an About Me note, writes a starter CLAUDE.md and Start here note, then hands off to new-project-setup for one real first project.
+**Expect:** Creates the core folder structure, checks access to the shared `uw-knowledgebase-content` repo and links its Research Repository and every shared product wiki in via symlinks (or fails that one step cleanly with access instructions if the check doesn't pass), interviews for an About Me note, writes a starter CLAUDE.md and Start here note, then hands off to new-project-setup for one real first project. The CLAUDE.md it writes includes a session-start check that looks for uncommitted changes in any linked shared clone and offers `contribute-to-shared-knowledgebase` if it finds any.
 
 ## study-writeup
 **Prompt:** "we just wrapped the onboarding usability study, can you write it up?"
