@@ -1,6 +1,6 @@
 ---
 name: contribute-to-shared-knowledgebase
-version: 2
+version: 1
 description: Submit an edit made inside the shared knowledge-content repo (the Research Repository, or any shared product wiki, linked in via symlink) back to the team as a pull request — without the person ever typing a raw git command. Use this whenever someone says they've edited a shared file and want to "submit", "contribute", "send this back", "open a PR for this", "push my changes to the team repo", or asks how to share an edit they just made to a wiki or research page. Do not use this for edits inside a person's own private folders (0-Inbox, personal 1-Projects work) — those never go through a PR, only the shared content does.
 ---
 
@@ -11,10 +11,6 @@ Takes an edit someone has already made inside their symlinked shared-repo folder
 ## Why this exists
 
 Contributors' local copies of the shared repo are separate clones linked into their own knowledge base by symlink (not git-nested inside it), specifically so nobody needs real git commands day to day. Pulling and PRs are this skill's job, not muscle memory. `main` is a protected branch — even if something tried to push straight to it, GitHub would reject it — so branch-and-PR is the only path in regardless.
-
-## Before you start
-
-If Claude Code's Bash tool is sandboxed, git will fail here with something like `Unable to create '.git/index.lock': Operation not permitted` — the sandbox is blocking writes to this clone. Fix it once per machine: add the clone's full local path (found in Step 1, e.g. `/Users/you/Documents/Github/uw-knowledgebase-content`) to both `allowWrite` and `allowRead` under `sandbox.filesystem` in your `.claude/settings.json`, then retry. If you can't edit that file yourself, ask whoever administers your Claude Code setup to add it.
 
 ## Step 1 — Find the shared repo clone
 
