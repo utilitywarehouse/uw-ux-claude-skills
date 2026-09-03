@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 5
+version: 8
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -69,6 +69,14 @@ Ask where the clone should live — suggest `~/Documents/Github/uw-knowledgebase
 - If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
 - Otherwise, `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder they chose.
 
+### Add the clone to their VS Code workspace, if they're using the VS Code extension
+
+Skip this if they're running Claude Code from a plain terminal instead — it doesn't apply there.
+
+If Claude Code is running as a VS Code extension, it can only read and write inside the folders VS Code has open. The knowledge base folder is already one of those; this clone isn't, since it lives in a separate folder outside the knowledge base. Without this step, `contribute-to-shared-knowledgebase` will fail later with a sandbox permissions error when it tries to write to the clone.
+
+In VS Code: **File → Add Folder to Workspace…**, and pick the clone folder from the step above. Don't save the workspace file yet — the skills-repo clone below joins the same workspace, and it only needs saving once.
+
 ### Link it into the new knowledge base
 
 Use real symlinks (`ln -s`), never macOS Finder aliases. A Finder alias only resolves from Finder itself; a symlink is transparent to every tool that touches the file — Claude Code, `grep`, and other skills like `study-writeup` and `end-session` that read straight through `Research Repository/CLAUDE.md` without knowing (or needing to know) that it's shared.
@@ -79,6 +87,26 @@ Walk the clone's actual top-level contents rather than a fixed list, since new s
 - Any other top-level folder in the clone that contains a `Wiki/` subfolder — each one is a shared product area, e.g. `Cashback Card`, `Brand & Design System` — create `1-Projects/<same name>/` if it doesn't already exist, then symlink that folder's `Wiki/` to `1-Projects/<same name>/Wiki`.
 
 Confirm the links resolved by listing one of them before moving on.
+
+### Clone the shared skills repo too
+
+Everyone gets a local clone of `utilitywarehouse/uw-ux-claude-skills`, the repo these skills themselves ship from — not just the installed plugin. The clone is what lets someone propose a change to a skill later, via `propose-skill`, rather than only ever consuming skills read-only.
+
+Ask where the clone should live — suggest `~/Documents/Github/uw-ux-claude-skills`, the same pattern as the knowledge-content clone above.
+
+- If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
+- Otherwise, `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder they chose.
+- If the clone fails on access, tell them plainly and skip this step without blocking the rest of setup — same handling as the knowledge-content access check above.
+
+If they're using the VS Code extension, add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
+
+### Save the workspace, if they're using the VS Code extension
+
+Now that the knowledge base folder and both clones are all open together, save that as a workspace file so VS Code remembers the set — otherwise it only lasts for this session.
+
+**File → Save Workspace As…**, save it as `<knowledge base folder name>.code-workspace`, right next to the knowledge base folder itself (a sibling, not inside it — this file isn't part of the PARA structure). E.g. if the knowledge base folder is `~/Documents/Obsidian/Second Brain - Work`, save the workspace file as `~/Documents/Obsidian/Second Brain - Work.code-workspace`.
+
+Tell them to reopen that `.code-workspace` file (instead of just the knowledge base folder) from now on, so all three folders come back together automatically.
 
 ### Optional — install the Hearth AI Toolkit plugin
 
