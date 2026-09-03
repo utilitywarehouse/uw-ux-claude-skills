@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 9
+version: 10
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -115,6 +115,10 @@ This is Anthropic's own official plugin (`figma@claude-plugins-official`), not a
 ### Optional — install the Hearth AI Toolkit plugin
 
 `utilitywarehouse/hearth` is a public repo, so there's no access barrier here regardless of how the check above went. Ask a yes/no question: "Want to install the Hearth AI Toolkit plugin too? It gives Claude the component docs and MCP tools for building real UW UI in code — `hearth-react` and `hearth-react-native` — on top of the design knowledge you just linked in." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. If no, or if they're not building in code, skip it without pushing.
+
+### Optional — install the claude-md-management plugin
+
+Another of Anthropic's own official plugins (`claude-md-management@claude-plugins-official`), same as the Figma one above — no access request needed. Unlike Figma or Hearth, this one applies to everyone regardless of what they design or build: Step 6 below writes this person's own `CLAUDE.md`, and it only grows more complex over time as `new-project-setup` adds rows to it. Ask a yes/no question: "Want to install the claude-md-management plugin too? It gives Claude skills for auditing and improving a CLAUDE.md file once it's grown — useful for keeping yours healthy as your knowledge base grows." If yes, walk them through adding it the normal way a Claude Code plugin gets installed (marketplace add + plugin install, or `claude mcp`/`/mcp` if that's how this session installs plugins) and confirm it shows up before moving on. If no, skip it without pushing.
 
 ## Step 5 — Interview for About Me
 
