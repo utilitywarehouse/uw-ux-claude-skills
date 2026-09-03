@@ -13,7 +13,7 @@ This knowledge base was just set up. Here's what exists and what to do next.
 
 - `CLAUDE.md` — the working rules Claude follows in this knowledge base. Worth a skim.
 - `3-Resources/About Me/About Me.md` — the profile built from the setup interview.
-- `2-Areas/Research Repository/` — a ready-made home for UX research, if and when it's needed.
+- `2-Areas/Research Repository/` — the whole team's shared UX research, linked straight in. Any product wiki the team already shares is linked in too, under `1-Projects/`.
 - `3-Resources/Design Principles.md` — a blank starting point for design heuristics as you build them up.
 - `3-Resources/AI Writing Guidelines.md` — patterns to check written content against before finalising, so it doesn't read as AI-generated.
 - The four PARA folders (`1-Projects/`, `2-Areas/`, `3-Resources/`, `4-Archives/`) plus `0-Inbox/` for quick capture. New to PARA, or want the fuller explanation? See `3-Resources/Mastering PARA - The Architect's Guide to Digital Organisation.md`.
