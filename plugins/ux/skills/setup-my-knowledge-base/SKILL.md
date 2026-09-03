@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 5
+version: 6
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -68,6 +68,23 @@ Ask where the clone should live — suggest `~/Documents/Github/uw-knowledgebase
 
 - If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
 - Otherwise, `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder they chose.
+
+### Allow Claude Code to write to the clone
+
+Claude Code's Bash tool sandboxes writes by default, and this clone lives outside the knowledge base folder — so it isn't covered automatically. Without this step, the `contribute-to-shared-knowledgebase` skill will fail later with something like `Unable to create '.git/index.lock': Operation not permitted`, with no clue why.
+
+Add the clone's full local path to the new knowledge base's `.claude/settings.json`, under `sandbox.filesystem.allowWrite` and `allowRead`. Create the file (and the `sandbox` block) if it doesn't exist yet; merge into it if it does — don't overwrite other keys already there, e.g. `outputStyle`:
+
+```json
+{
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": ["<clone path from the step above>"],
+      "allowRead": ["<clone path from the step above>"]
+    }
+  }
+}
+```
 
 ### Link it into the new knowledge base
 
