@@ -29,7 +29,7 @@ will notice breaking.
 
 ## setup-my-knowledge-base
 **Prompt:** "I'm new to the team, can you help me set up my own knowledge base from scratch?"
-**Expect:** Creates the core folder structure, interviews for an About Me note, writes a starter CLAUDE.md and Start here note, then hands off to new-project-setup for one real first project.
+**Expect:** Creates the core folder structure, checks access to the shared `uw-knowledgebase-content` repo and links its Research Repository and every shared product wiki in via symlinks (or fails that one step cleanly with access instructions if the check doesn't pass), interviews for an About Me note, writes a starter CLAUDE.md and Start here note, then hands off to new-project-setup for one real first project.
 
 ## study-writeup
 **Prompt:** "we just wrapped the onboarding usability study, can you write it up?"
