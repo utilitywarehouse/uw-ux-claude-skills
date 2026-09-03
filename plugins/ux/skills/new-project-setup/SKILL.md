@@ -97,6 +97,20 @@ Write this file to `1-Projects/[Product Name]/CLAUDE.md`:
 
 **Fence the `## Page format` block in the file you write.** It contains placeholder links (`[wiki-links](wiki-links.md)`, `[related-concept-1](related-concept-1.md)`, `[page-name](page-name.md)`) that are illustrations, not real targets. Left unfenced they become live broken links once opened in a linked-notes tool, and clicking one can create an empty note. Wrap that block in a ```` ```markdown ```` fence in the generated file, the same way it's fenced here.
 
+**If the Wiki is shared** (per A2), insert this section into the Wiki half of the template below, directly after `## Purpose`:
+
+```markdown
+## This content is shared
+
+This Wiki is not local to one person's knowledge base. It lives in the `utilitywarehouse/uw-knowledgebase-content` repo, cloned locally by each contributor and linked into their own knowledge base via a symlink.
+
+**Pull before editing, every time, without being asked.** Before changing anything under `Wiki/`, resolve it to the real clone it's symlinked from and run `git pull` there first — someone else may have merged a change since this knowledge base last synced. Do this automatically; don't rely on the person remembering.
+
+After editing, the change goes up as a pull request from that clone — never a direct push, and never a self-merge.
+```
+
+Skip this section entirely if the Wiki ended up local-only.
+
 ```markdown
 # [Product Name]
 
