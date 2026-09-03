@@ -1,7 +1,7 @@
 ---
 name: new-project-setup
-version: 4
-description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with Wiki) or a sub-project within an existing area — so the workspace is ready to go immediately."
+version: 5
+description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
 # New Project Setup
@@ -18,6 +18,7 @@ This skill assumes the default knowledge base layout: `1-Projects/` for active w
 1. Asks whether this is a top-level product area or a sub-project
 2. Asks a few focused questions based on the answer
 2a. Checks for an existing or archived folder with that name before creating anything
+2b. For a new product area, checks whether its Wiki should be shared with the team (default: yes) and links it into the shared repo if so
 3. Creates the folder structure
 4. Writes the appropriate CLAUDE.md file(s)
 5. Writes a populated MEMORY.md (sub-projects only)
@@ -71,13 +72,23 @@ Before creating anything:
 
 ### A2 — Create the folder structure
 
-Create the following inside `1-Projects/[Product Name]/`:
+New wikis are shared with the team by default (decision #31 in the Build Plan) — that's the whole point of the shared repo growing on its own, rather than needing a deliberate decision every time someone starts a new product area.
+
+**Ask whether to keep this one local-only.** Use `AskUserQuestion`, defaulting to shared:
+
+> "This wiki will be shared with the team by default, in the shared `uw-knowledgebase-content` repo — the same way the Cashback Card and Brand & Design System wikis work. Keep it shared (recommended), or keep this one local-only?"
+
+- **Shared (default):**
+  1. **Check access.** Same check as `setup-my-knowledge-base`'s Step 5: run `git ls-remote https://github.com/utilitywarehouse/uw-knowledgebase-content.git`. Succeeds → continue. Fails on access (or the check can't run cleanly — fall back to asking directly): don't block project setup over this. Tell them plainly that sharing isn't available right now (missing access), fall through to the **Local-only** branch below instead, and mention they can come back once access is approved.
+  2. **Check for a name clash.** Two people could independently start the same product area. Reuse or clone `uw-knowledgebase-content` (suggest `~/Documents/Github/uw-knowledgebase-content`, outside the knowledge base, same convention as `setup-my-knowledge-base`) and check whether `[Product Name]/Wiki/` already exists there. If it does, this isn't a new wiki — treat it like A1a's "restarting" case: tell the user, and symlink in the existing shared wiki instead of creating a duplicate.
+  3. **Create the Wiki inside the clone**, not inside the knowledge base: `<clone>/[Product Name]/Wiki/` (empty for now — A4 and A5 below populate it).
+  4. **Symlink it in:** `1-Projects/[Product Name]/Wiki` → `<clone>/[Product Name]/Wiki`. Use a real symlink (`ln -s`), never a macOS Finder alias — a Finder alias only resolves from Finder itself, while a symlink is transparent to every tool that reads or writes through it, including the steps below.
+- **Local-only:** create `1-Projects/[Product Name]/Wiki/` directly, as a normal folder. Nothing shared, nothing pushed anywhere.
+
+Either way, also create:
 
 ```
-CLAUDE.md
-Wiki/
-Wiki/index.md
-Wiki/log.md
+1-Projects/[Product Name]/CLAUDE.md
 ```
 
 ### A3 — Write the parent CLAUDE.md
@@ -220,6 +231,14 @@ A record of all changes to the [Product Name] wiki.
 - [today's date]: Wiki created.
 ```
 
+A4 and A5 write through the `1-Projects/[Product Name]/Wiki/` path either way — if A2 set that up as a symlink into the shared clone, the files land there automatically, no special handling needed.
+
+### A5a — Push the new wiki, if shared
+
+Skip this step if A2 ended up local-only (either by choice or because access wasn't there).
+
+Branch off `main` in the shared repo clone, commit the new `[Product Name]/Wiki/` folder, push, and open a pull request against `uw-knowledgebase-content` — same rule as everywhere else this repo is touched: never push to `main` directly, and never merge the PR. Tell the user the wiki works locally right away (the symlink resolves immediately), and that it's now up for review in the shared repo before the rest of the team can see it.
+
 ### A6 — Update the Routing Map
 
 Add a new row to the Routing Map in the root `CLAUDE.md` so future sessions load it automatically.
@@ -229,6 +248,7 @@ Add a new row to the Routing Map in the root `CLAUDE.md` so future sessions load
 Tell the user:
 - The product area folder has been created
 - Where it lives and what's inside
+- Whether the Wiki is shared with the team or local-only, and if shared, that it's live locally now but waiting on PR review before the team sees it
 - That the Wiki is ready to grow as they add sources
 - Next step: use `new-project-setup` again to add the first sub-project
 
