@@ -56,6 +56,6 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
 - Confirm with whoever's asking *why* the skill is being retired — superseded by another skill, no longer used, merged into something else, whatever it is. Don't remove a folder on a vague "we don't need this anymore" without pinning down the actual reason; that reason is about to become the only record of why this happened.
 - `git rm -r plugins/ux/skills/<name>/` — deleting the folder is correct, git keeps the full content in history, so nothing is actually lost. A retired skill left in place (even renamed or moved) risks still being loaded as live.
 - Remove its entry from `smoke-tests.md` in the same commit — a smoke test for a skill that no longer exists is dead weight, and running it would fail for the wrong reason.
-- Commit message must state the reason plainly, not just the mechanical fact of removal — e.g. "Retire figma-craft: folded into figma-dev-handoff" tells a future reader something "Remove figma-craft" does not.
+- Commit message must state the reason plainly, not just the mechanical fact of removal — e.g. "Retire old-transcript-cleaner: folded into research-transcript-cleaner" tells a future reader something "Remove old-transcript-cleaner" does not.
 - Branch: `retire-<name>` · PR title: "Retire `<name>` skill"
 - PR body's "Why" section carries the same reason as the commit message — this is the one flow where that section is doing real work, not just a formality, since it's the only place the reason survives.

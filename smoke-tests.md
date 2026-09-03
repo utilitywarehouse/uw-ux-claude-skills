@@ -11,6 +11,14 @@ will notice breaking.
 **Prompt:** "we're done for today, anything worth capturing before we close out?"
 **Expect:** Reviews the session for corrections, wiki-worthy facts, project state changes, and behaviour rules, then shows proposed changes grouped by destination (Wiki, MEMORY.md, CLAUDE.md, auto-memory) and waits for approval before writing anything.
 
+## figma-craft
+**Prompt:** "the fill on this row I just grouped is showing white behind the cards — can you check what's happening?" (with a Figma file open via the Figma MCP connector)
+**Expect:** Identifies that an auto-layout frame defaults to a white fill and flags clearing it (`frame.fills = []`) as the fix, rather than treating a screenshot that "looks right" in the Plugin API response as confirmation. Requires the Figma MCP connector to be connected.
+
+## figma-dev-handoff
+**Prompt:** "this journey page is done — can you convert those screens into components and get instances back on the page so engineering can pick it up?" (with a Figma file open via the Figma MCP connector)
+**Expect:** Captures every existing annotation to disk BEFORE converting anything, and warns that annotations do not carry from a component onto its instances, so they must be re-applied afterwards. Confirms the grouping, the variant names, and the addition to the file's master-components page before writing. Requires the Figma MCP connector to be connected.
+
 ## knowledgebase-health-check
 **Prompt:** "can you run a health check on my vault, graph view looks really sparse lately"
 **Expect:** Checks link health across the knowledge base (orphans, broken links, stale Routing Map rows) and, for any project with a Wiki, its content health too — not just a mechanical link count.
