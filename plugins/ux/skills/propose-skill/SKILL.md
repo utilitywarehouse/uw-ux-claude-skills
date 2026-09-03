@@ -1,6 +1,6 @@
 ---
 name: propose-skill
-version: 2
+version: 3
 description: Ship a finished skill change — a brand-new skill, an edit to an existing one, or retiring one entirely — from this repo (uw-ux-claude-skills) into a pull request for repo admins to review and merge. Use this whenever a team member has just finished writing a new skill (typically with skill-creator), editing an existing one here, or decided a skill should be removed, and now wants to submit it, share it with the team, open a PR, or get it added to (or taken out of) the shared UX skills repo. Trigger on phrases like "propose this skill", "submit my skill", "ship this to the team repo", "send this for review", "open a PR for this skill", "retire this skill", "remove this skill", or "how do I get this merged". This skill NEVER merges anything itself — main is protected and only repo admins approve merges. It runs this repo's smoke test for the skill before every push, but does not package a .skill file or touch Cowork — this repo ships purely via GitHub pull request, nothing else.
 ---
 
@@ -11,6 +11,8 @@ Takes a finished skill change in this repo — a new skill folder, or an edit to
 ## Before you start
 
 This picks up *after* the skill content is finished. If the SKILL.md still needs writing, editing, or fixing — use `skill-creator` first (it validates that every file a SKILL.md references actually exists, among other checks this skill doesn't repeat). Don't ship a half-finished draft just because someone asked to "submit" it — check the skill actually reads as complete before treating it as ready to ship.
+
+If Claude Code's Bash tool is sandboxed, git will fail here with something like `Unable to create '.git/index.lock': Operation not permitted` — the sandbox is blocking writes to this repo's local folder. Fix it once per machine: add this clone's full local path (e.g. `/Users/you/Documents/Github/uw-ux-claude-skills`) to both `allowWrite` and `allowRead` under `sandbox.filesystem` in your `.claude/settings.json`, then retry. If you can't edit that file yourself, ask whoever administers your Claude Code setup to add it.
 
 ## Workflow
 
