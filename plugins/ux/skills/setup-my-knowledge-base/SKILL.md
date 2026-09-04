@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 11
+version: 12
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -10,15 +10,12 @@ Builds a new knowledge base from nothing: the core folders, a starter `CLAUDE.md
 
 This only runs once per knowledge base — it's the very first skill someone touches. If a `CLAUDE.md` already exists at the location they name, this isn't the right skill; say so and point at `new-project-setup` instead.
 
-## Step 1 — Check for VS Code and Markdown All in One
+## Step 1 — Check for VS Code
 
-Check whether VS Code is installed (`code --version` on the PATH, or `/Applications/Visual Studio Code.app`), and if so whether the Markdown All in One extension is too (`code --list-extensions | grep -i yzhang.markdown-all-in-one`).
+VS Code with the Claude Code extension is the taught setup for this programme — not one option among several, so this step requires it rather than just recommending it. Check whether VS Code is installed (`code --version` on the PATH, or `/Applications/Visual Studio Code.app`).
 
-- **Both found:** continue to Step 2.
-- **Either missing:** ask a yes/no question: "VS Code with the Markdown All in One extension isn't fully set up. Want to install what's missing? It gives you a live markdown preview and easier note-linking — though the knowledge base works fine as plain markdown folders in any editor without it." Use `AskUserQuestion` with Yes/No options, and put the benefit line on the Yes option itself.
-  - **Yes:** for VS Code, give them the download link — `https://code.visualstudio.com/download`. For the extension, once VS Code is in, run `code --install-extension yzhang.markdown-all-in-one` or point them at its marketplace page. Ask them to say "done" when ready, then repeat this check.
-    - Still missing something: ask again — "Still not showing up — want to try again, or carry on without it?" Loop as many times as they want to keep trying. The moment they choose to carry on without it, treat that the same as a No answer below.
-  - **No:** say once that it's recommended but not required, and that the knowledge base works fine as plain markdown folders in any editor, Obsidian included if that's what they already use. Continue to Step 2 either way — never force the install.
+- **Found:** continue to Step 2. (VS Code's own built-in markdown preview covers note-reading and -linking — no separate extension needed for that.)
+- **Missing:** stop here rather than continuing without it. Give them the download link — `https://code.visualstudio.com/download` — and ask them to say "done" once it's installed, then repeat this check. If they push back on installing it, explain why it's required now (the rest of this setup, and the shared-repo clones in Step 4, assume the VS Code extension is how they're running Claude Code) rather than quietly letting them skip it.
 
 ## Step 2 — Ask where the knowledge base should live
 
@@ -69,11 +66,9 @@ Ask where the clone should live — suggest `~/Documents/Github/uw-knowledgebase
 - If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
 - Otherwise, `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder they chose.
 
-### Add the clone to their VS Code workspace, if they're using the VS Code extension
+### Add the clone to their VS Code workspace
 
-Skip this if they're running Claude Code from a plain terminal instead — it doesn't apply there.
-
-If Claude Code is running as a VS Code extension, it can only read and write inside the folders VS Code has open. The knowledge base folder is already one of those; this clone isn't, since it lives in a separate folder outside the knowledge base. Without this step, `contribute-to-shared-knowledgebase` will fail later with a sandbox permissions error when it tries to write to the clone.
+Claude Code, running as a VS Code extension, can only read and write inside the folders VS Code has open. The knowledge base folder is already one of those; this clone isn't, since it lives in a separate folder outside the knowledge base. Without this step, `contribute-to-shared-knowledgebase` will fail later with a sandbox permissions error when it tries to write to the clone.
 
 In VS Code: **File → Add Folder to Workspace…**, and pick the clone folder from the step above. Don't save the workspace file yet — the skills-repo clone below joins the same workspace, and it only needs saving once.
 
@@ -98,9 +93,9 @@ Ask where the clone should live — suggest `~/Documents/Github/uw-ux-claude-ski
 - Otherwise, `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder they chose.
 - If the clone fails on access, tell them plainly and skip this step without blocking the rest of setup — same handling as the knowledge-content access check above.
 
-If they're using the VS Code extension, add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
+Add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
 
-### Save the workspace, if they're using the VS Code extension
+### Save the workspace
 
 Now that the knowledge base folder and both clones are all open together, save that as a workspace file so VS Code remembers the set — otherwise it only lasts for this session.
 
