@@ -1,6 +1,6 @@
 ---
 name: propose-skill
-version: 2
+version: 3
 description: Ship a finished skill change — a brand-new skill, an edit to an existing one, or retiring one entirely — from this repo (uw-ux-claude-skills) into a pull request for repo admins to review and merge. Use this whenever a team member has just finished writing a new skill (typically with skill-creator), editing an existing one here, or decided a skill should be removed, and now wants to submit it, share it with the team, open a PR, or get it added to (or taken out of) the shared UX skills repo. Trigger on phrases like "propose this skill", "submit my skill", "ship this to the team repo", "send this for review", "open a PR for this skill", "retire this skill", "remove this skill", or "how do I get this merged". This skill NEVER merges anything itself — main is protected and only repo admins approve merges. It runs this repo's smoke test for the skill before every push, but does not package a .skill file or touch Cowork — this repo ships purely via GitHub pull request, nothing else.
 ---
 
@@ -16,7 +16,7 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
 
 1. **See what actually changed.** Run `git status` and `git diff --stat` from the repo root. Confirm which skill folder(s) under `plugins/ux/skills/` are touched, and whether it's a new skill, an edit to an existing one, or a folder being removed entirely.
 2. **Scope the change.** If the diff touches files outside the intended skill folder — something unrelated got picked up, or another in-progress edit is sitting in the working tree — stop and ask before staging anything. A PR should contain one skill's change, not whatever else happens to be lying around.
-3. **Branch off `main`.** Never commit directly on `main` — even though GitHub would reject the push anyway, working on a branch from the start avoids the wasted round-trip. Name it for what's happening:
+3. **Branch off `main`.** Never commit directly on `main` — even though GitHub would reject the push anyway, working on a branch from the start avoids the wasted round-trip. First check the branch you're already on isn't a leftover from an earlier, unrelated change: run `git branch --show-current`, then `gh pr list --head <that branch> --state all`. If that comes back merged or closed, this branch has already done its job — switch to `main`, pull it fast-forward, and branch fresh from there. Building a new, unrelated change on top of an already-merged branch either bundles two different changes into one PR without anyone noticing, or fails to push cleanly. Name the new branch for what's happening:
    - New skill: `add-<skill-name>`
    - Update: `update-<skill-name>`
    - Retiring a skill: `retire-<skill-name>`
