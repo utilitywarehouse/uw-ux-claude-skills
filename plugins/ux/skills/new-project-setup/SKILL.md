@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 6
+version: 7
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -253,7 +253,9 @@ A4 and A5 write through the `1-Projects/[Product Name]/Wiki/` path either way �
 
 Skip this step if A2 ended up local-only (either by choice or because access wasn't there).
 
-Branch off `main` in the shared repo clone, commit the new `[Product Name]/Wiki/` folder, push, and open a pull request against `uw-knowledgebase-content` — same rule as everywhere else this repo is touched: never push to `main` directly, and never merge the PR. Tell the user the wiki works locally right away (the symlink resolves immediately), and that it's now up for review in the shared repo before the rest of the team can see it.
+Also copy `1-Projects/[Product Name]/CLAUDE.md` (written in A3) to `<clone>/[Product Name]/CLAUDE.md`, so the next teammate who sets up their own knowledge base finds a starter CLAUDE.md waiting next to the Wiki, instead of an empty folder. It's already generic — A3 never writes anything personal to this person into it — so it needs no stripping before it goes up.
+
+Branch off `main` in the shared repo clone, commit the new `[Product Name]/Wiki/` folder and that `CLAUDE.md`, push, and open a pull request against `uw-knowledgebase-content` — same rule as everywhere else this repo is touched: never push to `main` directly, and never merge the PR. Tell the user the wiki works locally right away (the symlink resolves immediately), and that it's now up for review in the shared repo before the rest of the team can see it.
 
 ### A6 — Update the Routing Map
 

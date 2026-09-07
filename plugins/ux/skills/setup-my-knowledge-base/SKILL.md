@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 13
+version: 14
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -85,6 +85,7 @@ Walk the clone's actual top-level contents rather than a fixed list, since new s
 
 - The clone's `Research Repository/` folder → symlink to `2-Areas/Research Repository` in the new knowledge base.
 - Any other top-level folder in the clone that contains a `Wiki/` subfolder — each one is a shared product area, e.g. `Cashback Card`, `Brand & Design System` — create `1-Projects/<same name>/` if it doesn't already exist, then symlink that folder's `Wiki/` to `1-Projects/<same name>/Wiki`.
+- If that same clone folder also has a `CLAUDE.md` sitting next to its `Wiki/`, copy it (not symlink) to `1-Projects/<same name>/CLAUDE.md`, unless a file is already there. It's a generic starting point for that area, meant to be personalised locally afterward — a symlink would force every edit through a PR, which defeats that.
 
 Confirm the links resolved by listing one of them before moving on.
 
