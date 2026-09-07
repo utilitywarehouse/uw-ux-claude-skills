@@ -1,6 +1,6 @@
 ---
 name: knowledgebase-health-check
-version: 11
+version: 12
 description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), shared wikis or the Research Repository missing their symlink into this knowledge base, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
@@ -14,14 +14,31 @@ A knowledge base can look healthy and be badly disconnected. One knowledge base 
 
 A previous lint had reported "no orphans found" three months earlier. It was scoped to pages inside one wiki, so it was blind to everything outside it. **Scope the audit to the whole knowledge base, not to a folder** — that single mistake is why the problem ran undetected.
 
+## Pick a mode first
+
+The full audit reads every note and every wiki page, so it can take a while on a large knowledge base. Before running anything, ask which mode is wanted:
+
+1. **Full check** — everything below: link health across the whole knowledge base, plus the wiki content reading pass for any project with a `Wiki/` folder. Slower, most thorough. Use this after a bulk ingest, a reorganisation, or when nothing's been checked in a while.
+2. **Quick check for new wikis** — just `shared_content_sync.py`, to see if a shared wiki or the Research Repository has appeared in the team's shared clone without a symlink into this knowledge base yet. Seconds, not minutes. Use this when the only question is "did anyone add a new shared wiki since I last set up?"
+
+Everything from here on describes the full check. For the quick check, skip straight to "Shared folders with no symlink yet" below and run only that script.
+
 ## Running it
+
+Full check:
 
 ```bash
 python scripts/vault_lint.py "/path/to/vault"
 python scripts/shared_content_sync.py "/path/to/vault"
 ```
 
-Options: `--quiet` omits the full orphan list (useful when it's long), `--json` emits machine-readable output for further analysis.
+Quick check for new wikis:
+
+```bash
+python scripts/shared_content_sync.py "/path/to/vault"
+```
+
+Options: `--quiet` omits the full orphan list (useful when it's long), `--json` emits machine-readable output for further analysis. Both apply to `vault_lint.py` only — irrelevant to the quick check.
 
 Both scripts are read-only against the knowledge base — `shared_content_sync.py` does pull the shared clone (fast-forward only), same as the "pull before editing" habit already expected of any shared-content edit, but it never touches the clone's content or the knowledge base itself.
 
@@ -59,7 +76,7 @@ The judgement call that remains is whether the source is worth a graph edge at a
 
 ## Wiki content checks
 
-The checks above are mechanical — they read link syntax, not content, so a script can run them anywhere. When the lint target is (or includes) a project with a `Wiki/` subfolder, e.g. `1-Projects/Cashback Card/`, also read through the wiki's pages and run these seven. They need judgement about what a page says, so there's no script for them — do this as a reading pass, not a step to skip because it isn't automated.
+Full check only — skip this whole section for the quick check. The checks above are mechanical — they read link syntax, not content, so a script can run them anywhere. When the lint target is (or includes) a project with a `Wiki/` subfolder, e.g. `1-Projects/Cashback Card/`, also read through the wiki's pages and run these seven. They need judgement about what a page says, so there's no script for them — do this as a reading pass, not a step to skip because it isn't automated.
 
 This section replaces what used to live in a project's own `CLAUDE.md` under a `## Lint` heading — a checklist people used to trigger by saying "lint the wiki" before this skill existed. That heading is retired now; this skill is the one place both halves live. If you ever find a `## Lint` section in a project CLAUDE.md, it's a leftover — flag it to the user and offer to remove it.
 
@@ -95,6 +112,8 @@ Two of the checks above land differently on a sealed page:
 The single edit a sealed page can take is a figure mistyped from the raw source it already cites — that's a correction, and it gets recorded alongside the fix. New data is never a correction.
 
 ## Reporting findings
+
+For a quick check, don't write a full report file — the finding is just "found a new unsymlinked wiki" or "nothing new", so say it directly in the session output and offer to create the symlink as described above. Everything below this point is for the full check.
 
 Write the report to `2-Areas/Knowledgebase Maintenance/YYYY-MM-DD Knowledgebase Health Check Report.md` for a knowledge-base-wide run. For a run scoped to one area's wiki rather than the whole knowledge base, name it `2-Areas/Knowledgebase Maintenance/YYYY-MM-DD [Area] Knowledgebase Health Check Report.md` instead (e.g. `2026-06-03 Cashback Card Knowledgebase Health Check Report.md`). `0-Inbox/` is reserved for Obsidian's own daily notes, so these reports don't belong there even though they're dated files — knowledgebase upkeep is an ongoing responsibility, not a day's inbox item. Lead with the counts, then the findings that need a decision.
 
