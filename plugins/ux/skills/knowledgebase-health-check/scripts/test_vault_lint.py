@@ -77,6 +77,9 @@ FILES = {
     ),
     "1-Projects/Live Project/index.md": "still here\n",
     "4-Archives/Old Area/Gone Project/index.md": "moved here\n",
+    # a note that links into a shared-repo folder mounted via symlink (the
+    # setup every product Wiki/ and the Research Repository actually use)
+    "notes/citer.md": "see [[shared-page]]\n",
 }
 
 failures = []
@@ -97,7 +100,21 @@ with tempfile.TemporaryDirectory() as root:
         with open(p, "w", encoding="utf-8") as fh:
             fh.write(body)
 
-    r = vl.lint(vl.Vault(root))
+    # Every product Wiki/ and the Research Repository are symlinks out to a
+    # separate shared-content clone, not real folders inside the vault. An
+    # earlier version of the scanner used a plain os.walk, which never
+    # descends into a symlinked directory — it saw neither the pages inside
+    # nor any link pointing into or out of them, and reported ~100 real pages'
+    # worth of links as broken. The clone lives outside root on purpose, so
+    # this fixture has to build the same shape: a real directory elsewhere,
+    # symlinked into the vault.
+    with tempfile.TemporaryDirectory() as shared_clone:
+        with open(os.path.join(shared_clone, "shared-page.md"), "w", encoding="utf-8") as fh:
+            fh.write("shared content\n")
+        os.symlink(shared_clone, os.path.join(root, "notes", "shared"), target_is_directory=True)
+
+        vault = vl.Vault(root)
+        r = vl.lint(vault)
     cites = r["plain_text_citations"]
     broken = r["broken_links"]
 
@@ -131,15 +148,20 @@ with tempfile.TemporaryDirectory() as root:
     check("flags a genuinely broken link", "No Such Note" in broken)
     check("ignores links inside a code fence", "placeholder-name" not in broken)
     check("ignores data: URIs", not any("base64" in k for k in broken))
-    # Exactly two links in this fixture are real: good.md -> Workshop summary,
-    # and wiki-index.md -> Ingest notes (the already-linked entry in the
-    # Sources-ingested list). Asserting the exact number is the point — an
-    # earlier scanner counted fenced and backticked examples as edges, which
-    # made a vault look far more connected than it was and hid the orphans
-    # entirely. Update this number when the fixture gains a real link, never to
-    # make a failure go away.
+    check("follows a symlinked folder instead of skipping it",
+          "shared-page" not in broken, f"got {list(broken)}")
+    check("sees a page that only exists inside a symlinked folder",
+          any(p.endswith("shared-page.md") for p in vault.md))
+    # Exactly three links in this fixture are real: good.md -> Workshop summary,
+    # wiki-index.md -> Ingest notes (the already-linked entry in the
+    # Sources-ingested list), and citer.md -> shared-page (through the
+    # symlinked folder). Asserting the exact number is the point — an earlier
+    # scanner counted fenced and backticked examples as edges, which made a
+    # vault look far more connected than it was and hid the orphans entirely.
+    # Update this number when the fixture gains a real link, never to make a
+    # failure go away.
     check("counts exactly the real edges, no over-counting",
-          r["counts"]["edges"] == 2, f"got {r['counts']['edges']}")
+          r["counts"]["edges"] == 3, f"got {r['counts']['edges']}")
     check("reports orphans", isinstance(r["orphans"], list) and len(r["orphans"]) > 0)
 
     stale = {row["row_path"]: row for row in r["stale_routing_map_rows"]}

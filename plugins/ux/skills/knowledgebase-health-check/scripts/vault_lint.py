@@ -59,7 +59,7 @@ class Vault:
     def __init__(self, root):
         self.root = os.path.abspath(root)
         self.md, self.other = [], []
-        for base, dirs, files in os.walk(self.root):
+        for base, dirs, files in os.walk(self.root, followlinks=True):
             dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
             for f in files:
                 rel = os.path.relpath(os.path.join(base, f), self.root)
@@ -140,7 +140,7 @@ def stale_routing_rows(root, claude_md_text):
         archived_at = None
         archives_dir = os.path.join(root, '4-Archives')
         if os.path.isdir(archives_dir):
-            for base, dirs, _ in os.walk(archives_dir):
+            for base, dirs, _ in os.walk(archives_dir, followlinks=True):
                 dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
                 if name in dirs:
                     archived_at = os.path.relpath(os.path.join(base, name), root)
