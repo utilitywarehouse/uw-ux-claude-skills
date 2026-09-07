@@ -25,7 +25,7 @@ will notice breaking.
 
 ## knowledgebase-health-check
 **Prompt:** "can you run a health check on my vault, graph view looks really sparse lately"
-**Expect:** Checks link health across the knowledge base (orphans, broken links, stale Routing Map rows) and, for any project with a Wiki, its content health too — not just a mechanical link count. Also runs `shared_content_sync.py`, which pulls the shared `uw-knowledgebase-content` clone and flags any shared wiki or the Research Repository that exists there but has no symlink into this knowledge base yet — the gap left when a new shared wiki is created after this knowledge base's own setup already ran.
+**Expect:** Asks whether to run a full check or just a quick check for new shared wikis before running anything. On "full", checks link health across the knowledge base (orphans, broken links, stale Routing Map rows) and, for any project with a Wiki, its content health too — not just a mechanical link count. Also runs `shared_content_sync.py`, which pulls the shared `uw-knowledgebase-content` clone and flags any shared wiki or the Research Repository that exists there but has no symlink into this knowledge base yet — the gap left when a new shared wiki is created after this knowledge base's own setup already ran.
 
 ## new-project-setup
 **Prompt:** "I want to start a new top-level product area for Insurance"
