@@ -1,7 +1,7 @@
 ---
 name: knowledgebase-health-check
-version: 9
-description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
+version: 10
+description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), shared wikis or the Research Repository missing their symlink into this knowledge base, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
 # Knowledgebase Health Check
@@ -18,11 +18,12 @@ A previous lint had reported "no orphans found" three months earlier. It was sco
 
 ```bash
 python scripts/vault_lint.py "/path/to/vault"
+python scripts/shared_content_sync.py "/path/to/vault"
 ```
 
 Options: `--quiet` omits the full orphan list (useful when it's long), `--json` emits machine-readable output for further analysis.
 
-The script is read-only. It never edits, moves, or deletes anything, so it's safe to run before you've agreed what to fix.
+Both scripts are read-only against the knowledge base — `shared_content_sync.py` does pull the shared clone (fast-forward only), same as the "pull before editing" habit already expected of any shared-content edit, but it never touches the clone's content or the knowledge base itself.
 
 To verify the script itself still behaves after any edit:
 
@@ -53,6 +54,8 @@ The judgement call that remains is whether the source is worth a graph edge at a
 **Filenames differing only by case** — `About me.md` and `About Me.md` collide on macOS, so a short link can silently resolve to the wrong one. Use a path-qualified link (`[About Me](3-Resources/About%20Me/About%20Me.md)`) or rename one.
 
 **Files in the knowledge base root** — the convention is that nothing lives in the root; everything files into one of the top-level folders. If notes keep appearing there, the cause is usually Obsidian's "Default location for new notes" being unset, which makes the root the default target for every new note including ones created by clicking a broken link.
+
+**Shared folders with no symlink yet** — a wiki or the Research Repository exists in the team's shared clone (`utilitywarehouse/uw-knowledgebase-content`) but has no symlink into this knowledge base. `setup-my-knowledge-base` only walks the shared clone once, during a person's own setup, so a wiki someone else creates *afterward* — via `new-project-setup`, sharing it — lands in the clone but never reaches anyone whose setup already ran. `git pull` on an existing symlink refreshes what's inside it; it does nothing for a folder that was never symlinked in the first place, so this can only be caught by re-walking the clone, which is what `shared_content_sync.py` does. If it reports a miss, offer to create the symlink exactly as `setup-my-knowledge-base` Step 4 would (same `ln -s` pattern, same naming), and add the matching Routing Map row per that skill's Step 6 if the user accepts. If the script instead reports the pull itself failed, say so and treat the missing-folder list as possibly stale rather than acting on it — don't fix a real gap on top of a result that might already be out of date.
 
 ## Wiki content checks
 
