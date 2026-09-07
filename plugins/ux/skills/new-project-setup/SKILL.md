@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 5
+version: 6
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -44,6 +44,8 @@ Use the `AskUserQuestion` tool with a multiple-choice prompt:
 >
 > - **Top-level product area** — a whole product you'll be working on long-term (e.g. Insurance, Energy, Broadband)
 > - **Sub-project** — a specific piece of work within an existing product area (e.g. a research study, a feature redesign)"
+
+Never name a specific existing product area in the question or its options, and never mark either option "Recommended" — present both options neutrally, exactly as scripted above, regardless of what product areas already exist in the vault.
 
 Then follow the appropriate branch below.
 

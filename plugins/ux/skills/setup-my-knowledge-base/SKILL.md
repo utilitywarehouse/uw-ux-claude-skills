@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 12
+version: 13
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -17,13 +17,16 @@ VS Code with the Claude Code extension is the taught setup for this programme �
 - **Found:** continue to Step 2. (VS Code's own built-in markdown preview covers note-reading and -linking — no separate extension needed for that.)
 - **Missing:** stop here rather than continuing without it. Give them the download link — `https://code.visualstudio.com/download` — and ask them to say "done" once it's installed, then repeat this check. If they push back on installing it, explain why it's required now (the rest of this setup, and the shared-repo clones in Step 4, assume the VS Code extension is how they're running Claude Code) rather than quietly letting them skip it.
 
-## Step 2 — Ask where the knowledge base should live
+## Step 2 — Set the knowledge base location
 
-Ask for a folder path. If they already have a folder they've been using for notes, that's the one to use — don't create a new one nested inside it.
+The knowledge base always lives at `~/Documents/Knowledge Base`. No question to the user about notes or paths.
+
+- If that folder already exists, use it.
+- If it doesn't exist, create it.
 
 ## Step 3 — Create the core folder structure
 
-Create this inside the location from Step 2. Nothing beyond this — no extra folders, no placeholder files beyond what's listed:
+Create the `Knowledge Base` folder first if it doesn't already exist, then create the PARA structure inside it. Nothing beyond this — no extra folders, no placeholder files beyond what's listed:
 
 ```
 0-Inbox/
@@ -61,10 +64,10 @@ git ls-remote https://github.com/utilitywarehouse/uw-knowledgebase-content.git
 
 ### Clone the shared repo
 
-Ask where the clone should live — suggest `~/Documents/Github/uw-knowledgebase-content`, outside the knowledge base folder entirely. It's a separate git repo and must never be git-nested inside the knowledge base (that's what breaks the "no raw git for contributors" design — the linking skill for actually contributing back handles pulling and PRs on their behalf).
+Check the default location first, `~/Documents/Github/uw-knowledgebase-content`, outside the knowledge base folder entirely — it's a separate git repo and must never be git-nested inside the knowledge base (that's what breaks the "no raw git for contributors" design — the linking skill for actually contributing back handles pulling and PRs on their behalf).
 
-- If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
-- Otherwise, `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder they chose.
+- If a clone already exists there, skip asking. Tell the user the repo is already cloned, state the location, and run `git pull` to bring it current rather than re-cloning.
+- If no clone exists there, default to creating it at that location, but give the user the option to choose a different location instead of asking open-endedly. Then `git clone https://github.com/utilitywarehouse/uw-knowledgebase-content.git` into the folder chosen.
 
 ### Add the clone to their VS Code workspace
 
@@ -73,6 +76,8 @@ Claude Code, running as a VS Code extension, can only read and write inside the 
 In VS Code: **File → Add Folder to Workspace…**, and pick the clone folder from the step above. Don't save the workspace file yet — the skills-repo clone below joins the same workspace, and it only needs saving once.
 
 ### Link it into the new knowledge base
+
+Before running the linking command, explain in plain language what it's about to do and why — e.g. "I'm about to create shortcuts linking the shared team folders into your knowledge base, so you always see the latest version. Say yes to continue." The permission prompt itself is a Claude Code feature and can't be changed, but this way the person reads a plain explanation first, then sees the prompt with context already in hand.
 
 Use real symlinks (`ln -s`), never macOS Finder aliases. A Finder alias only resolves from Finder itself; a symlink is transparent to every tool that touches the file — Claude Code, `grep`, and other skills like `study-writeup` and `end-session` that read straight through `Research Repository/CLAUDE.md` without knowing (or needing to know) that it's shared.
 
@@ -87,10 +92,10 @@ Confirm the links resolved by listing one of them before moving on.
 
 Everyone gets a local clone of `utilitywarehouse/uw-ux-claude-skills`, the repo these skills themselves ship from — not just the installed plugin. The clone is what lets someone propose a change to a skill later, via `propose-skill`, rather than only ever consuming skills read-only.
 
-Ask where the clone should live — suggest `~/Documents/Github/uw-ux-claude-skills`, the same pattern as the knowledge-content clone above.
+Check the default location first, `~/Documents/Github/uw-ux-claude-skills`, the same pattern as the knowledge-content clone above.
 
-- If that folder already exists and is already a clone of this repo, reuse it: run `git pull` to bring it current rather than re-cloning.
-- Otherwise, `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder they chose.
+- If a clone already exists there, skip asking. Tell the user the repo is already cloned, state the location, and run `git pull` to bring it current rather than re-cloning.
+- If no clone exists there, default to creating it at that location, but give the user the option to choose a different location instead of asking open-endedly. Then `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder chosen.
 - If the clone fails on access, tell them plainly and skip this step without blocking the rest of setup — same handling as the knowledge-content access check above.
 
 Add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
@@ -99,9 +104,9 @@ Add this clone to the VS Code workspace too — **File → Add Folder to Workspa
 
 Now that the knowledge base folder and both clones are all open together, save that as a workspace file so VS Code remembers the set — otherwise it only lasts for this session.
 
-**File → Save Workspace As…**, save it as `<knowledge base folder name>.code-workspace`, right next to the knowledge base folder itself (a sibling, not inside it — this file isn't part of the PARA structure). E.g. if the knowledge base folder is `~/Documents/Obsidian/Second Brain - Work`, save the workspace file as `~/Documents/Obsidian/Second Brain - Work.code-workspace`.
+**File → Save Workspace As…**, save it as `Knowledge Base.code-workspace`, right next to the knowledge base folder itself (a sibling, not inside it — this file isn't part of the PARA structure). E.g. save it as `~/Documents/Knowledge Base.code-workspace`.
 
-Tell them to reopen that `.code-workspace` file (instead of just the knowledge base folder) from now on, so all three folders come back together automatically.
+Tell them: "I've saved a VS Code workspace file — a shortcut that opens VS Code with your Knowledge Base and the shared team folders together automatically. From now on, when you open VS Code, open that workspace (not the Knowledge Base folder) to ensure Claude can operate seamlessly." Name the actual workspace file's name and location in that message, not just "that workspace" in the abstract.
 
 ### Optional — install the Figma plugin
 
@@ -119,6 +124,8 @@ Another of Anthropic's own official plugins (`claude-md-management@claude-plugin
 
 Use `assets/about-me-template.md` as the question set — it's already written for a newcomer and needs no changes. Walk through it conversationally rather than dumping the whole template as a form; skip anything they say doesn't apply. Write their answers into `3-Resources/About Me/About Me.md`, keeping the template's structure and frontmatter.
 
+When you reach the "Career history" question, suggest they can take a few screenshots of their LinkedIn profile (experience section) and paste them into the chat, rather than typing it all out from memory.
+
 ## Step 6 — Write the root CLAUDE.md
 
 Copy `assets/claude-md-template.md` to `CLAUDE.md` at the root of the new knowledge base. It already carries its own Routing Map and link-style rule — nothing in it needs to be filled in with this person's specifics, and it already has static rows for the content every teammate gets (Research Repository, DESIGN.md).
@@ -134,6 +141,8 @@ Copy `assets/start-here-template.md` to `Start here.md` at the root, unchanged.
 ## Step 8 — Hand off to new-project-setup
 
 Tell them setup is done, briefly summarise what now exists (the folders, the linked shared content, `CLAUDE.md`, their `About Me.md`, `Start here.md`), and then invoke the `new-project-setup` skill so they turn one real, live piece of work into an actual project — not a demo. That's the point of ending the session this way.
+
+Always call it the "knowledge base" (or "Knowledge Base," matching the folder name from Step 2), never "notes folder," "notes," or similar, anywhere in the summary.
 
 ## What this skill deliberately doesn't do
 
