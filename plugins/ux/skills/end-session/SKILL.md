@@ -1,7 +1,7 @@
 ---
 name: end-session
-version: 5
-description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, and cross-session facts to auto-memory. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
+version: 6
+description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, cross-session facts to auto-memory, new personal facts to About Me.md, and new standing design/product heuristics to Design Principles.md. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
 # End session
@@ -68,7 +68,7 @@ Then filter hard. Drop anything you already wrote to a file during the session, 
 
 ## Step 3: Route each finding
 
-Five destinations, distinguished by what kind of thing the finding is:
+Seven destinations, distinguished by what kind of thing the finding is:
 
 | Destination | It goes here when | Examples |
 | :--- | :--- | :--- |
@@ -77,6 +77,12 @@ Five destinations, distinguished by what kind of thing the finding is:
 | **Project MEMORY.md** | It is a fact about *this project* that could change | Status, decisions, scope, dates, next step, who is involved |
 | **CLAUDE.md** | It prescribes behaviour | "Always check the T&Cs pages before assuming a product rule" |
 | **Auto-memory** | It is a fact or preference that matters across sessions and surfaces | Project status worth carrying between chats, feedback on how you work |
+| **About Me.md** | It is a new or changed personal fact about the user — background, working style, preferences, daily routine — the same categories About Me.md already covers | A new role, a changed working setup, a new stated preference for how they work |
+| **Design Principles.md** | It is a new standing design/product-decision heuristic — a judgement call that applies across projects, not a visual specification | "Frame gating copy as cause, not step"; a rule the user stated or implied should apply beyond this one project |
+
+**About Me.md versus auto-memory's `user` type.** Both cover the user's role and preferences, so don't write the same fact to both. About Me.md is the durable personal-context document referenced across the vault — it's where a fact lives. Auto-memory's `user` entries are tailoring notes for how to communicate in a given session — pointers to what's in About Me.md, not a second copy of it. If a finding is a durable personal fact, write it to About Me.md; only add an auto-memory entry alongside it if the fact also needs to shape *how* you communicate before About Me.md would normally be read.
+
+**Design Principles.md stays restricted to non-visual judgement/logic heuristics** — this is a deliberate split with the Hearth `DESIGN.md`, which owns visual/component specification for UW-branded output. Don't route visual decisions here. Match the note's existing entry format (H2 heading, prose explanation, bolded Example, italic backlink/date citation), and no YAML frontmatter, consistent with sibling files in `3-Resources/`.
 
 The line that catches people out is Wiki versus MEMORY.md. Ask whether the fact would still be true if the project were cancelled tomorrow. The 1% cap tiering by service count is true regardless, so it is wiki. "Step 6 done, step 7 next" is only true this week, so it is MEMORY.md.
 

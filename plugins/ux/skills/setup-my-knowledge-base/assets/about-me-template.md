@@ -26,17 +26,19 @@ tags: []
 
 # How I think and work
 
-## Problem-solving approach
-
-[How do you typically start on a problem? Do you research first, sketch, jump in, talk it through? Any tendencies worth knowing about?]
-
 ## Communication style
 
 [How do you prefer to communicate — async or sync? Are you direct, considered, collaborative? Any known gaps between how you intend something and how it lands?]
 
 ## Strengths
 
-[What do you do well? Be honest — this helps Claude play to them rather than over-explain things you already know.]
+Rate yourself on each — Basic / Good / Excellent:
+
+- **HTML & CSS** — the code that lays out and styles a page: [Basic / Good / Excellent]
+- **JavaScript** — the code that makes a prototype interactive: [Basic / Good / Excellent]
+- **General coding concepts** — things like variables, functions, APIs: [Basic / Good / Excellent]
+- **Git / version control** — the system used to track and share code changes, e.g. when publishing a skill: [Basic / Good / Excellent]
+- **Databases** — e.g. structured data, queries, saved records (comes up around Artifacts with saved data, research data pulls): [Basic / Good / Excellent]
 
 ## Weaknesses
 
@@ -64,7 +66,7 @@ tags: []
 
 # How I use AI
 
-[What's worked well for you so far? What frustrates you about AI tools? What do you most want Claude to help with?]
+[What's worked well for you so far? What frustrates you about AI tools?]
 
 ---
 
