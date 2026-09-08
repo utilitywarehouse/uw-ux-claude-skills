@@ -44,6 +44,7 @@ Some folders here aren't local — they're symlinks into a separate clone of the
 - Before quoting a count, re-run the query without any filters added just for readability — a narrowed grep will undercount, and the number still reads as authoritative.
 - If the same correction shows up a second time — whether it's sitting in a `feedback`-type memory or in a project's own `MEMORY.md` — that's the signal it belongs in a permanent instruction file (this CLAUDE.md, Design Principles.md, etc.), not left to keep accumulating as memory notes.
 - Anything with a second audience — this CLAUDE.md if it's ever shared with a team, or a skill built and shared with others — shouldn't name this person specifically. Use role-based phrasing instead ("the vault owner", "repo admins", "whoever owns this"). A shared document that talks about one specific person by name reads as personal rather than shared, even after it's handed off. Doesn't apply to personal files (About Me, personal-voice writing skills) or private notes only this person reads.
+- Before running any bash command, explain in plain words what it does.
 
 ## New Project Detection
 
