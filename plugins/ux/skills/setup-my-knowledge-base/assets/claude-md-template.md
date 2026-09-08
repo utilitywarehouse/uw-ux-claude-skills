@@ -56,6 +56,7 @@ When you're about to create a file for the first time in a session and there's n
 - To release a change to a shared UX team skill — a new skill, an edit to an existing one, or retiring one — use the `propose-skill` skill. It opens a PR against `uw-ux-claude-skills` and stops there; it never merges, since that repo's `main` needs review and sign-off from whoever owns it.
 - GitHub is the source of truth: don't keep permanent skill sources in this knowledge base; any copy here is a distribution artefact and will go stale.
 - Eval runs are throwaway. Keep them wherever the session can write, for as long as they're useful. They don't get committed and don't belong in this knowledge base.
+- After pushing a skill change, the local plugin cache needs a manual refresh — pushing to GitHub doesn't update what's installed. This always runs in a sandboxed session, so don't run the refresh commands yourself — they fail with an `EPERM`/permission error here. Instead, tell the vault owner to run these two in their own regular terminal: `claude plugin marketplace update <marketplace-name>` then `claude plugin update <plugin-name>@<marketplace-name>`, and check it worked with `claude plugin list`.
 
 ## Personality and preferences
 
