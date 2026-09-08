@@ -9,7 +9,7 @@ Usage:
 
 Every check here exists because it caught something real. The comments say what.
 """
-import os, re, sys, json, collections
+import os, re, sys, json, difflib, collections
 from urllib.parse import unquote
 
 SKIP_DIRS = {'.obsidian', '.git', '.trash', '.smart-env', 'node_modules',
@@ -36,6 +36,93 @@ ALREADY_LINKED = re.compile(r'\[\[[^\]]*\]\]|\[[^\]]*\]\([^)]*\)')
 # since that's the only file this vault's routing convention lives in — a
 # vault-wide scan would also match unrelated backticked table cells.
 ROUTING_ROW = re.compile(r'^\|\s*`([^`]+)`\s*\|', re.M)
+
+# --- Root CLAUDE.md drift against the template ---------------------------
+# `setup-my-knowledge-base` writes every new root CLAUDE.md from
+# `../setup-my-knowledge-base/assets/claude-md-template.md`, but nothing ever
+# re-syncs the two afterwards. A person edits their own root CLAUDE.md over
+# time (a new Routing Map row, a tweaked rule) and the template drifts the
+# same way independently, so the parts that were meant to stay generic and
+# shared quietly diverge with no signal either side has moved. This check
+# only flags that divergence — it never edits either file, and it is not
+# meant to catch every difference: `## Preferences`, `## Vibe`,
+# `## Personality and preferences`, and any live-project Routing Map row are
+# expected to differ per person and are skipped on purpose.
+H2_HEADING = re.compile(r'^##[ \t]+(.+?)\s*$', re.M)
+# A Routing Map row's first cell is a backtick-wrapped path — same shape
+# ROUTING_ROW matches above, but this captures the whole row so a text diff
+# can be shown, keyed by the path so a template row and a live row for the
+# same folder can be compared even if the row text itself has changed.
+ROUTING_ROW_FULL = re.compile(r'^(\|\s*`([^`]+)`\s*\|.*)$', re.M)
+# Sections that are expected to be personal, not shared — never flagged.
+DRIFT_SKIP_SECTIONS = {'Preferences', 'Vibe', 'Personality and preferences', 'Routing Map'}
+
+
+def h2_sections(text):
+    """Split text into an ordered {heading: body} map of its H2 sections."""
+    sections = collections.OrderedDict()
+    matches = list(H2_HEADING.finditer(text))
+    for i, m in enumerate(matches):
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        sections[m.group(1).strip()] = text[start:end].strip('\n')
+    return sections
+
+
+def routing_map_rows(text):
+    """{folder_path: full row text}, keyed by the row's backtick-wrapped path."""
+    rows = {}
+    for m in ROUTING_ROW_FULL.finditer(text):
+        rows[m.group(2).strip().rstrip('/')] = m.group(1).strip()
+    return rows
+
+
+def root_claude_md_drift(vault_root, template_path):
+    """Diff the live root CLAUDE.md against the shared starter template,
+    scoped to the sections confirmed generic. Returns None if either file is
+    unavailable, so callers can skip the section entirely rather than report
+    a false gap."""
+    if not template_path:
+        return None
+    live_path = os.path.join(vault_root, 'CLAUDE.md')
+    if not os.path.exists(live_path) or not os.path.exists(template_path):
+        return None
+    with open(live_path, encoding='utf-8', errors='replace') as fh:
+        live_text = fh.read()
+    with open(template_path, encoding='utf-8', errors='replace') as fh:
+        template_text = fh.read()
+
+    live_sections = h2_sections(live_text)
+    template_sections = h2_sections(template_text)
+
+    section_diffs = []
+    for name, t_body in template_sections.items():
+        if name in DRIFT_SKIP_SECTIONS:
+            continue
+        l_body = live_sections.get(name)
+        if l_body is None:
+            section_diffs.append({'section': name, 'status': 'missing_from_live', 'diff': []})
+        elif l_body.strip() != t_body.strip():
+            diff = list(difflib.unified_diff(
+                t_body.splitlines(), l_body.splitlines(),
+                fromfile='template', tofile='live root CLAUDE.md', lineterm=''))
+            section_diffs.append({'section': name, 'status': 'different', 'diff': diff})
+
+    # Routing Map: only compare rows the template itself defines (the parts
+    # confirmed generic). A live-only row is a real project and is never
+    # touched — this loop never iterates the live rows at all.
+    template_rows = routing_map_rows(template_sections.get('Routing Map', ''))
+    live_rows = routing_map_rows(live_sections.get('Routing Map', ''))
+    routing_diffs = []
+    for path, t_row in template_rows.items():
+        l_row = live_rows.get(path)
+        if l_row is None:
+            routing_diffs.append({'path': path, 'status': 'missing_from_live', 'template_row': t_row, 'live_row': None})
+        elif l_row != t_row:
+            routing_diffs.append({'path': path, 'status': 'different', 'template_row': t_row, 'live_row': l_row})
+
+    return {'section_diffs': section_diffs, 'routing_map_diffs': routing_diffs}
+
 
 # A "## Sources ingested" list is the one place a wiki deliberately
 # inventories its own provenance — and neither pattern above can see it,
@@ -149,7 +236,7 @@ def stale_routing_rows(root, claude_md_text):
     return stale
 
 
-def lint(vault):
+def lint(vault, claude_md_template_path=None):
     out_links = collections.defaultdict(set)
     in_links = collections.defaultdict(set)
     broken = collections.defaultdict(list)
@@ -233,6 +320,7 @@ def lint(vault):
 
     claude_md_text = vault.text.get('CLAUDE.md', '')
     stale_routing = stale_routing_rows(vault.root, claude_md_text) if claude_md_text else []
+    root_drift = root_claude_md_drift(vault.root, claude_md_template_path)
 
     return {
         'counts': {
@@ -250,6 +338,7 @@ def lint(vault):
         'case_collisions': case_clashes,
         'vault_root_files': sorted(root_files),
         'stale_routing_map_rows': stale_routing,
+        'root_claude_md_drift': root_drift,
     }
 
 
@@ -296,6 +385,24 @@ def report(r, quiet=False):
             else:
                 lines.append(f"  `{row['row_path']}` — not found anywhere in the vault")
         lines.append("")
+    drift = r.get('root_claude_md_drift')
+    if drift and (drift['section_diffs'] or drift['routing_map_diffs']):
+        n = len(drift['section_diffs']) + len(drift['routing_map_diffs'])
+        lines.append(f"## Root CLAUDE.md drift against the shared template ({n})")
+        for d in drift['section_diffs']:
+            if d['status'] == 'missing_from_live':
+                lines.append(f"  ## {d['section']} — in the template, not found in the live root CLAUDE.md")
+            else:
+                lines.append(f"  ## {d['section']} — differs from the template")
+                lines.extend(f"    {ln}" for ln in d['diff'])
+        for d in drift['routing_map_diffs']:
+            if d['status'] == 'missing_from_live':
+                lines.append(f"  Routing Map row `{d['path']}` — in the template, not found in the live root CLAUDE.md")
+            else:
+                lines.append(f"  Routing Map row `{d['path']}` — differs from the template")
+                lines.append(f"    template: {d['template_row']}")
+                lines.append(f"    live:     {d['live_row']}")
+        lines.append("")
     if not quiet and r['orphans']:
         lines.append(f"## Orphans — no links in or out ({len(r['orphans'])})")
         for p in r['orphans']:
@@ -304,10 +411,23 @@ def report(r, quiet=False):
     return '\n'.join(lines)
 
 
+def default_claude_md_template_path():
+    # Ships as a sibling skill in the same plugin: .../skills/knowledgebase-health-check/scripts/
+    # and .../skills/setup-my-knowledge-base/assets/claude-md-template.md. Resolved from this
+    # script's own location so the check works regardless of the vault path passed in.
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.normpath(os.path.join(
+        here, '..', '..', 'setup-my-knowledge-base', 'assets', 'claude-md-template.md'))
+
+
 if __name__ == '__main__':
+    template_arg = next((a[len('--template='):] for a in sys.argv[1:] if a.startswith('--template=')), None)
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     vault = Vault(args[0] if args else '.')
-    result = lint(vault)
+    template_path = template_arg or default_claude_md_template_path()
+    if not os.path.exists(template_path):
+        template_path = None
+    result = lint(vault, claude_md_template_path=template_path)
     if '--json' in sys.argv:
         print(json.dumps(result, indent=1))
     else:
