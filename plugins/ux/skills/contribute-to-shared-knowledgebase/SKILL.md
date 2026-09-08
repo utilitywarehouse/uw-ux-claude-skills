@@ -1,6 +1,6 @@
 ---
 name: contribute-to-shared-knowledgebase
-version: 1
+version: 2
 description: Submit an edit made inside the shared knowledge-content repo (the Research Repository, or any shared product wiki, linked in via symlink) back to the team as a pull request — without the person ever typing a raw git command. Use this whenever someone says they've edited a shared file and want to "submit", "contribute", "send this back", "open a PR for this", "push my changes to the team repo", or asks how to share an edit they just made to a wiki or research page. Do not use this for edits inside a person's own private folders (0-Inbox, personal 1-Projects work) — those never go through a PR, only the shared content does.
 ---
 
