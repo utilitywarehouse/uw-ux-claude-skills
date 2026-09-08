@@ -58,6 +58,7 @@ When you're about to create a file for the first time in a session and there's n
 - GitHub is the source of truth: don't keep permanent skill sources in this knowledge base; any copy here is a distribution artefact and will go stale.
 - Eval runs are throwaway. Keep them wherever the session can write, for as long as they're useful. They don't get committed and don't belong in this knowledge base.
 - After pushing a skill change, the local plugin cache needs a manual refresh — pushing to GitHub doesn't update what's installed. This always runs in a sandboxed session, so don't run the refresh commands yourself — they fail with an `EPERM`/permission error here. Instead, tell the vault owner to run these two in their own regular terminal: `claude plugin marketplace update <marketplace-name>` then `claude plugin update <plugin-name>@<marketplace-name>`, and check it worked with `claude plugin list`.
+- After a PR opened from a skills repo is confirmed merged, switch back to `main`, pull the latest changes, and delete the merged branch (locally, and remotely if GitHub hasn't already removed it) — do this automatically, without being asked.
 
 ## Personality and preferences
 

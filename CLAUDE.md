@@ -3,3 +3,4 @@ This is the UX team's shared skills repo. It ships purely through GitHub pull re
 ## Working rules
 
 - After editing any `SKILL.md` or `plugin.json` under `plugins/ux/`, don't just report the edit as done and stop there — in the same turn, ask whether to commit and ship it via `propose-skill`. Don't wait to be asked. An edit left sitting uncommitted is easy to miss, and not everyone working in this repo knows to ask for it.
+- After a PR opened from this repo is confirmed merged, switch back to `main`, pull the latest changes, and delete the merged branch (locally, and remotely if GitHub hasn't already removed it) — do this automatically, without being asked.
