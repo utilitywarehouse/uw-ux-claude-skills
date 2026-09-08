@@ -31,6 +31,7 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
    [one or two plain sentences]
    ```
 7. **Report the PR link and stop there.** Say plainly that this is now waiting on review — don't imply the skill is live, updated, or removed for the team yet. None of that is true until a repo admin merges it.
+8. **Switch back to `main` and pull it fast-forward.** The pushed branch stays on the remote — that's what the PR points at — only the local checkout moves back to `main`. Do this now rather than waiting for the next run's leftover-branch check in step 3 — that check is a safety net for an interrupted run, not the normal cleanup path.
 
 ## Guardrails
 

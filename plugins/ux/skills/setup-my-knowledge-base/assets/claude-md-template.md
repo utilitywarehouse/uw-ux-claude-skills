@@ -25,7 +25,7 @@ This knowledge base uses **markdown links**, not wikilinks: `[Page Title](page-t
 
 ## Shared content freshness
 
-Some folders here aren't local — they're symlinks into a separate clone of the team's shared repo (see `2-Areas/Research Repository/CLAUDE.md`, or any product wiki's own `CLAUDE.md`, for how that works). At the start of a session, check each of those clones for uncommitted local changes: resolve the symlink to find the real clone, then run `git status --short` there. If any clone has changes sitting in it, mention this once near the start of the session and offer to submit them with `contribute-to-shared-knowledgebase` — don't submit anything without being asked, and don't repeat the reminder more than once per session.
+Some folders here aren't local — they're symlinks into a separate clone of the team's shared repo (see `2-Areas/Research Repository/CLAUDE.md`, or any product wiki's own `CLAUDE.md`, for how that works). At the start of a session, before responding to the first request, check each of those clones: resolve the symlink to find the real clone, then run `git status --short` there for uncommitted local changes, and `git fetch` plus `git status -sb` to see whether it's behind `origin/main` or sitting on a branch that isn't `main`. If any clone has uncommitted changes, mention this once near the start of the session and offer to submit them with `contribute-to-shared-knowledgebase`. If a clone is behind `main`, or stuck on a branch that isn't `main`, mention that once too and offer to switch it to `main` and pull. Don't act on either without being asked, and don't repeat either reminder more than once per session.
 
 ## Working rules
 
