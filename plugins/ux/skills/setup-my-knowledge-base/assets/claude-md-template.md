@@ -25,17 +25,36 @@ This knowledge base uses **markdown links**, not wikilinks: `[Page Title](page-t
 
 ## Shared content freshness
 
-Some folders here aren't local — they're symlinks into a separate clone of the team's shared repo (see `2-Areas/Research Repository/CLAUDE.md`, or any product wiki's own `CLAUDE.md`, for how that works). At the start of a session, before responding to the first request, check each of those clones: resolve the symlink to find the real clone, then run `git status --short` there for uncommitted local changes, and `git fetch` plus `git status -sb` to see whether it's behind `origin/main` or sitting on a branch that isn't `main`. If any clone has uncommitted changes, mention this once near the start of the session and offer to submit them with `contribute-to-shared-knowledgebase`. If a clone is behind `main`, or stuck on a branch that isn't `main`, mention that once too and offer to switch it to `main` and pull. Don't act on either without being asked, and don't repeat either reminder more than once per session.
+Some folders here aren't local — they're symlinks into a separate clone of the team's shared repo (see `2-Areas/Research Repository/CLAUDE.md`, or any product wiki's own `CLAUDE.md`, for how that works). At the start of a session, before responding to the first request, check each of those clones: resolve the symlink to find the real clone, then run `git status --short` there for uncommitted local changes, and `git fetch` plus `git status -sb` to see whether it's behind `origin/main` or sitting on a branch that isn't `main`. If any clone has uncommitted changes, mention this once near the start of the session and offer to submit them with `contribute-to-shared-knowledgebase`. If a clone is behind `main`, name the specific file(s) that changed upstream (e.g. via `git diff --name-only HEAD..origin/main`) rather than just saying it's behind, and offer to switch it to `main` and pull if it's stuck on another branch. Don't act on either without being asked, and don't repeat either reminder more than once per session.
 
 ## Working rules
 
 - Always ask before making changes to existing files.
+- Show a file's contents before creating it (any markdown file — project note, log entry, doc — not just daily notes).
+- Draft emails and other messages and show them before sending — never send without approval. Ask before any other external or public-facing action (Slack, publishing, and the like).
 - Never delete files without asking first.
+- Before deleting a project folder under `1-Projects/`, check whether its `Wiki/` is a symlink (shared with the team) rather than a plain folder (personal). If it's shared, warn before doing anything else: it's linked to the whole team's shared knowledge base, so it might be used by, or belong to, a teammate. Only proceed once they confirm. After a shared project's deletion is confirmed and done, check whether its shared copy (in the linked knowledge-base clone) still exists — if so, offer cleanup in this order: restore from Trash first (safest, nothing lost), or pull a fresh copy back down, and only if they're completely sure it should be gone for good, delete the shared copy via `contribute-to-shared-knowledgebase` (opens a PR, never merges it directly).
 - Never write files to the root of this knowledge base, other than `CLAUDE.md` and `Start here.md` themselves — everything else belongs inside one of the folders above.
-- If a request is unclear or incomplete, ask rather than guessing.
+- If a request is unclear or incomplete, use the `AskUserQuestion` tool rather than filling the gap with generic filler.
 - Before finalising any substantial written content — notes, comms, customer copy, specs — check it against `3-Resources/AI Writing Guidelines.md` for common AI-tell patterns.
 - Before creating any UW-branded output — UI, prototypes, slide decks, or other visual assets — read `1-Projects/Brand & Design System/Wiki/DESIGN.md` first.
+- When a file needs visual verification via the in-app browser (screenshot), place it in a `00-Scratch/` subfolder inside the active project — files in the session scratchpad render only as static, non-interactive snapshots and can't be screenshotted. Ask before deleting scratch files, same as anywhere else in this knowledge base.
+- Cite sources as markdown links, not bare filenames — always keep the file extension in the link target, and only quote a link in frontmatter if the value needs quoting for other YAML reasons. A plain-text citation is invisible to the graph, so the source it names reads as an orphan.
+- When writing a fact into a note from an external source — a Miro board, Google Sheet, Figma file, Confluence page, a screenshot or link pasted in chat — record the source's name and its location (local path or URL) alongside the claim. If you can't see a name or URL, ask for it rather than writing an unciteable note.
+- Before quoting a count, re-run the query without any filters added just for readability — a narrowed grep will undercount, and the number still reads as authoritative.
 - Anything with a second audience — this CLAUDE.md if it's ever shared with a team, or a skill built and shared with others — shouldn't name this person specifically. Use role-based phrasing instead ("the vault owner", "repo admins", "whoever owns this"). A shared document that talks about one specific person by name reads as personal rather than shared, even after it's handed off. Doesn't apply to personal files (About Me, personal-voice writing skills) or private notes only this person reads.
+
+## New Project Detection
+
+When you're about to create a file for the first time in a session and there's no obvious home for it in `1-Projects/`, pause and ask whether this is a new project that needs a folder structure first. If they say yes, use the `new-project-setup` skill to run the setup flow — it handles confirming, checking for an existing or archived folder, and setup itself.
+
+## Building and updating skills
+
+- To build or improve a skill, use the `skill-creator` skill, working in a checkout of the repo that owns it, rather than in this knowledge base.
+- Skills must only be edited in the checkout that owns them. If a skill has been edited anywhere else, flag it and ask for the changes to be moved into the right repo before proceeding.
+- To release a change to a shared UX team skill — a new skill, an edit to an existing one, or retiring one — use the `propose-skill` skill. It opens a PR against `uw-ux-claude-skills` and stops there; it never merges, since that repo's `main` needs review and sign-off from whoever owns it.
+- GitHub is the source of truth: don't keep permanent skill sources in this knowledge base; any copy here is a distribution artefact and will go stale.
+- Eval runs are throwaway. Keep them wherever the session can write, for as long as they're useful. They don't get committed and don't belong in this knowledge base.
 
 ## Personality and preferences
 
