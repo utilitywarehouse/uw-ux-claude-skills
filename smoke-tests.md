@@ -29,7 +29,7 @@ will notice breaking.
 
 ## new-project-setup
 **Prompt:** "I want to start a new top-level product area for Insurance"
-**Expect:** Confirms it's genuinely new (checks for an existing or archived folder first, and for a new product area, checks the shared repo for a name clash too) before creating anything. Asks whether the new Wiki should be shared with the team, defaulting to yes, and if shared, links it into the `uw-knowledgebase-content` repo via a symlink, copies the area's own CLAUDE.md up alongside it, and opens a PR rather than pushing straight to main.
+**Expect:** Confirms it's genuinely new (checks for an existing or archived folder first, and for a new product area, checks the shared repo for a name clash too) before creating anything. Asks whether the new Wiki should be shared with the team, defaulting to yes, and if shared, links it into the `uw-knowledgebase-content` repo via a symlink. Writes a local `CLAUDE.md` holding only the product-area half (folder structure, starting-a-session steps) plus a pointer to `Wiki/Area-Conventions.md`; writes the Wiki-half conventions (purpose, ingest workflow, page format, citation rules) into `Wiki/Area-Conventions.md` itself, inside the symlinked folder, and opens a PR rather than pushing straight to main.
 
 ## propose-skill
 **Prompt:** "I've finished editing the study-writeup skill, can you get it merged in?"
