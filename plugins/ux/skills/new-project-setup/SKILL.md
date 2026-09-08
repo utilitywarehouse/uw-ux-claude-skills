@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 7
+version: 8
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -93,13 +93,13 @@ Either way, also create:
 1-Projects/[Product Name]/CLAUDE.md
 ```
 
-### A3 — Write the parent CLAUDE.md
+### A3 — Write the parent CLAUDE.md and Wiki/Area-Conventions.md
 
-Write this file to `1-Projects/[Product Name]/CLAUDE.md`:
+This step writes two files, not one: the product-area half goes to `1-Projects/[Product Name]/CLAUDE.md`, and the Wiki half goes to `Wiki/Area-Conventions.md` (inside the Wiki folder set up in A2 — already the shared clone if the Wiki is shared, so this file is part of the same commit/PR as the rest of the new Wiki).
 
-**Fence the `## Page format` block in the file you write.** It contains placeholder links (`[wiki-links](wiki-links.md)`, `[related-concept-1](related-concept-1.md)`, `[page-name](page-name.md)`) that are illustrations, not real targets. Left unfenced they become live broken links once opened in a linked-notes tool, and clicking one can create an empty note. Wrap that block in a ```` ```markdown ```` fence in the generated file, the same way it's fenced here.
+**Fence the `## Page format` block in the Area-Conventions.md file you write.** It contains placeholder links (`[wiki-links](wiki-links.md)`, `[related-concept-1](related-concept-1.md)`, `[page-name](page-name.md)`) that are illustrations, not real targets. Left unfenced they become live broken links once opened in a linked-notes tool, and clicking one can create an empty note. Wrap that block in a ```` ```markdown ```` fence in the generated file, the same way it's fenced here.
 
-**If the Wiki is shared** (per A2), insert this section into the Wiki half of the template below, directly after `## Purpose`:
+**If the Wiki is shared** (per A2), insert this section into the Area-Conventions.md template below, directly after `## Purpose`:
 
 ```markdown
 ## This content is shared
@@ -113,6 +113,8 @@ After editing, the change goes up as a pull request from that clone — never a 
 
 Skip this section entirely if the Wiki ended up local-only.
 
+Write this to `1-Projects/[Product Name]/CLAUDE.md`:
+
 ```markdown
 # [Product Name]
 
@@ -121,9 +123,12 @@ This is the shared workspace for all [Product Name] projects.
 ## Folder structure
 
 [Product Name]/
-  CLAUDE.md       ← this file
-  Wiki/           ← shared knowledge base across all projects
-  [Project Name]/ ← one folder per project
+  CLAUDE.md               ← this file (points to Wiki/Area-Conventions.md for wiki rules)
+  Wiki/
+    Area-Conventions.md   ← shared wiki conventions
+    index.md
+    log.md
+  [Project Name]/         ← one folder per project
     CLAUDE.md
     MEMORY.md
     01-Inputs/    ← source documents for that project (immutable — never modify)
@@ -139,8 +144,14 @@ This is the shared workspace for all [Product Name] projects.
 2. Navigate to that project folder and read its CLAUDE.md.
 3. You're ready to respond to the initial question or task.
 
----
+## Wiki conventions
 
+This area's Wiki has its own shared conventions — purpose, ingest workflow, page format, citation rules — kept in [Wiki/Area-Conventions.md](Wiki/Area-Conventions.md). Read it before making any change under `Wiki/`; it's shared and kept current by the team, not by this file.
+```
+
+Write this to `Wiki/Area-Conventions.md`:
+
+```markdown
 # Wiki
 
 A shared knowledge base maintained across all [Product Name] projects.
@@ -233,6 +244,7 @@ _No pages yet. Add pages here as the wiki grows._
 - Each page covers one concept, entity, or source
 - Link between pages using markdown links (`[Page Title](page-title.md)`)
 - Update this index whenever a page is added or significantly changed
+- `Area-Conventions.md` is a housekeeping file, not a content page — it won't appear in this list
 ```
 
 ### A5 — Write Wiki/log.md
@@ -253,7 +265,7 @@ A4 and A5 write through the `1-Projects/[Product Name]/Wiki/` path either way �
 
 Skip this step if A2 ended up local-only (either by choice or because access wasn't there).
 
-Also copy `1-Projects/[Product Name]/CLAUDE.md` (written in A3) to `<clone>/[Product Name]/CLAUDE.md`, so the next teammate who sets up their own knowledge base finds a starter CLAUDE.md waiting next to the Wiki, instead of an empty folder. It's already generic — A3 never writes anything personal to this person into it — so it needs no stripping before it goes up.
+Also copy `1-Projects/[Product Name]/CLAUDE.md` (written in A3) to `<clone>/[Product Name]/CLAUDE.md`, so the next teammate who sets up their own knowledge base finds a starter CLAUDE.md waiting next to the Wiki, instead of an empty folder. It's already generic — A3 never writes anything personal to this person into it — so it needs no stripping before it goes up. `Wiki/Area-Conventions.md` needs no separate copy step — A3 already wrote it straight into `<clone>/[Product Name]/Wiki/`, so it's already there alongside the rest of the new Wiki, in the same commit and PR.
 
 Branch off `main` in the shared repo clone, commit the new `[Product Name]/Wiki/` folder and that `CLAUDE.md`, push, and open a pull request against `uw-knowledgebase-content` — same rule as everywhere else this repo is touched: never push to `main` directly, and never merge the PR. Tell the user the wiki works locally right away (the symlink resolves immediately), and that it's now up for review in the shared repo before the rest of the team can see it.
 
