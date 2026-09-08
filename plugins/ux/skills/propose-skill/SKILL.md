@@ -1,6 +1,6 @@
 ---
 name: propose-skill
-version: 3
+version: 4
 description: Ship a finished skill change — a brand-new skill, an edit to an existing one, or retiring one entirely — from this repo (uw-ux-claude-skills) into a pull request for repo admins to review and merge. Use this whenever a team member has just finished writing a new skill (typically with skill-creator), editing an existing one here, or decided a skill should be removed, and now wants to submit it, share it with the team, open a PR, or get it added to (or taken out of) the shared UX skills repo. Trigger on phrases like "propose this skill", "submit my skill", "ship this to the team repo", "send this for review", "open a PR for this skill", "retire this skill", "remove this skill", or "how do I get this merged". This skill NEVER merges anything itself — main is protected and only repo admins approve merges. It runs this repo's smoke test for the skill before every push, but does not package a .skill file or touch Cowork — this repo ships purely via GitHub pull request, nothing else.
 ---
 
@@ -31,6 +31,7 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
    [one or two plain sentences]
    ```
 7. **Report the PR link and stop there.** Say plainly that this is now waiting on review — don't imply the skill is live, updated, or removed for the team yet. None of that is true until a repo admin merges it.
+8. **Switch back to `main` and pull it fast-forward.** The pushed branch stays on the remote — that's what the PR points at — only the local checkout moves back to `main`. Do this now rather than waiting for the next run's leftover-branch check in step 3 — that check is a safety net for an interrupted run, not the normal cleanup path.
 
 ## Guardrails
 

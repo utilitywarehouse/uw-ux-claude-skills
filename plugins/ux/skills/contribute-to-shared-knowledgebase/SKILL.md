@@ -1,6 +1,6 @@
 ---
 name: contribute-to-shared-knowledgebase
-version: 1
+version: 2
 description: Submit an edit made inside the shared knowledge-content repo (the Research Repository, or any shared product wiki, linked in via symlink) back to the team as a pull request — without the person ever typing a raw git command. Use this whenever someone says they've edited a shared file and want to "submit", "contribute", "send this back", "open a PR for this", "push my changes to the team repo", or asks how to share an edit they just made to a wiki or research page. Do not use this for edits inside a person's own private folders (0-Inbox, personal 1-Projects work) — those never go through a PR, only the shared content does.
 ---
 
@@ -28,7 +28,9 @@ If they didn't say which file, ask which shared folder they were working in, or 
 
 ## Step 2 — Confirm there's something to contribute
 
-From the clone root, run `git status`. If there's nothing uncommitted and no local commits ahead of `origin/main`, say so plainly and stop — there's nothing to submit.
+From the clone root, check the current branch first: run `git branch --show-current`. If it isn't `main`, run `gh pr list --head <that branch> --state all` — if that branch's PR already shows merged or closed, this branch already did its job from an earlier contribution. Switch to `main`, pull it fast-forward, and continue from there instead of assuming it's mid-contribution.
+
+Then run `git status`. If there's nothing uncommitted and no local commits ahead of `origin/main`, say so plainly and stop — there's nothing to submit.
 
 If there is a change, show them a short summary of what changed (`git status` plus `git diff --stat`) so they can confirm it's what they meant to submit, not a stray edit from something else.
 
@@ -59,6 +61,8 @@ Shared content has no locking system (someone else could have merged a change to
 ## Step 6 — Hand back the result
 
 Give them the PR URL and say plainly that it's now waiting on review — nothing changes for the rest of the team until someone merges it. Don't imply the edit is live anywhere yet.
+
+Then switch the clone back to `main` and pull it fast-forward. The pushed branch stays on the remote — that's what the PR points at — only the local checkout moves back to `main`. This keeps the clone from sitting on the contribution branch until someone notices; don't delete the local branch, since it may still be needed if the PR gets review comments to address.
 
 ## Guardrails
 
