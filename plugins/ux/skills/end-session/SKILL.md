@@ -1,6 +1,6 @@
 ---
 name: end-session
-version: 6
+version: 7
 description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, cross-session facts to auto-memory, new personal facts to About Me.md, and new standing design/product heuristics to Design Principles.md. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
@@ -34,7 +34,7 @@ If the session produced or touched research, also read `2-Areas/Research Reposit
 
 If the session touched no project at all (a general question, a bit of knowledge-base admin, a skills change), your scope is the root `CLAUDE.md` and auto-memory. Say so, and do not go hunting for a project to attach findings to.
 
-The area `CLAUDE.md` usually defines the wiki's own conventions: page format, citation rules, whether `index.md` and `log.md` must be updated. Follow those rather than anything you assume. They differ between areas and they win over this skill.
+The area's wiki conventions — page format, citation rules, whether `index.md` and `log.md` must be updated — usually live in the area `CLAUDE.md` itself, or in `Wiki/Area-Conventions.md` for an area set up under the newer split layout. Follow those rather than anything you assume. They differ between areas and they win over this skill.
 
 ## Step 2: Sweep the session
 
@@ -133,7 +133,7 @@ Then stop and wait. Do not write on the assumption they will approve.
 
 Work through the approved findings. Two things are easy to forget and both are load-bearing:
 
-- **Wiki housekeeping.** If you added or changed a page, update `index.md` (with its one-line description) and append to `log.md`, following whatever the area's `CLAUDE.md` specifies. Add links both ways so the new page is reachable, otherwise it is an orphan and the next session will not find it. Match the log's existing date-heading order rather than imposing a new one.
+- **Wiki housekeeping.** If you added or changed a page, update `index.md` (with its one-line description) and append to `log.md`, following whatever the area's wiki conventions specify (the area `CLAUDE.md`, or `Wiki/Area-Conventions.md` under the newer split layout). Add links both ways so the new page is reachable, otherwise it is an orphan and the next session will not find it. Match the log's existing date-heading order rather than imposing a new one.
 - **Both halves of a correction.** Fixing a wiki page that was wrong often means fixing the MEMORY.md or auto-memory line that repeated the error. Check for the same wrong fact in the other files you read in Step 1.
 
 Follow the knowledge base's own standing rules while you write — check its root `CLAUDE.md` for specifics, but the common ones are: nothing in the root, point-in-time files date-prefixed as `YYYY-MM-DD Description.md`, living documents not date-prefixed.
@@ -143,3 +143,5 @@ Follow the knowledge base's own standing rules while you write — check its roo
 List what you wrote and where, in a few lines. If the user skipped anything, note it once so they know it was dropped rather than quietly lost, and leave it there. No summary of the whole session, no suggestions for next time unless they ask.
 
 Before you close out, also check whether anything is waiting to go up to the shared repo. This is unrelated to the capture pass above — it's a second natural moment to catch it, alongside the same check that runs at the start of a session. For each shared folder touched this session (a symlink into the team's shared-content clone — the Research Repository, or a product wiki), resolve it to the real clone and run `git status --short` there. If anything is uncommitted, mention it once and offer to submit it with `contribute-to-shared-knowledgebase`. Don't submit anything without being asked, and don't hold up the rest of this skill's report waiting for an answer.
+
+This same moment is also the natural place to check the other direction: has the shared content changed *upstream* since this clone last synced, so the local Wiki pages this session read might already be stale? For each shared folder touched this session, after the outbound check above, compare the clone's current `main` against the commit it was on at its last `git pull`. Don't rely on per-file read-tracking for this — use the clone's own git history: `git reflog show origin/main` (or `git log -g HEAD@{u}` if the reflog is thin) to find the commit `main` was at right after the last pull, then compare it to the current `origin/main` tip. If they differ, the clone has unpulled upstream commits. Mention this once, non-blockingly, in the same closing note as the outbound check, e.g.: "Cashback Card's Wiki/Area-Conventions.md changed upstream since your last pull — worth a skim before your next edit." Don't pull automatically and don't block the rest of the report on an answer.

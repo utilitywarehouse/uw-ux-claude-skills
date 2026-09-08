@@ -13,7 +13,7 @@ will notice breaking.
 
 ## end-session
 **Prompt:** "we're done for today, anything worth capturing before we close out?"
-**Expect:** Reviews the session for corrections, wiki-worthy facts, project state changes, and behaviour rules, then shows proposed changes grouped by destination (Wiki, MEMORY.md, CLAUDE.md, auto-memory, About Me.md, Design Principles.md) and waits for approval before writing anything. Separately, on the way out, checks any shared-repo clones touched this session for uncommitted changes and offers `contribute-to-shared-knowledgebase` if it finds any — without submitting anything unasked.
+**Expect:** Reviews the session for corrections, wiki-worthy facts, project state changes, and behaviour rules, then shows proposed changes grouped by destination (Wiki, MEMORY.md, CLAUDE.md, auto-memory, About Me.md, Design Principles.md) and waits for approval before writing anything. Separately, on the way out, checks any shared-repo clones touched this session for uncommitted changes and offers `contribute-to-shared-knowledgebase` if it finds any — without submitting anything unasked. Also checks the other direction: for each shared clone, compares its `origin/main` against the commit it was on at the last `git pull`, and mentions once, non-blockingly, if it's changed upstream since.
 
 ## figma-craft
 **Prompt:** "the fill on this row I just grouped is showing white behind the cards — can you check what's happening?" (with a Figma file open via the Figma MCP connector)
