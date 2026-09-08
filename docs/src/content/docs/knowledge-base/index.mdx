@@ -1,0 +1,71 @@
+---
+title: Your knowledge base
+description: How the personal knowledge base, the shared wikis, and the contribution loop fit together.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Your knowledge base is a personal folder on your own machine — created by `/ux:setup-my-knowledge-base` at `~/Documents/Knowledge Base` — that Claude Code reads and writes directly. It's built on the [PARA method](https://fortelabs.com/blog/para/) and holds your own projects, but it's also linked, via symlinks, into content the whole team shares.
+
+## The folder structure
+
+```
+Knowledge Base/
+  CLAUDE.md                 ← root rules: routing map, link-style conventions
+  Start here.md
+  0-Inbox/
+  1-Projects/
+    [Product Area]/
+      CLAUDE.md
+      Wiki/                  ← symlinked into the shared repo, if this area's wiki is shared
+      [Project Name]/
+        CLAUDE.md
+        MEMORY.md
+        01-Inputs/  02-Planning/  03-Research/  04-Competitive/  05-Synthesis/  06-Deliverables/
+  2-Areas/
+    Research Repository/     ← symlinked into the shared repo
+  3-Resources/
+    About Me/
+    Design Principles.md
+  4-Archives/
+```
+
+Two things in that tree are not local copies — they're symlinks resolving to a separate clone of `utilitywarehouse/uw-knowledgebase-content` on disk:
+
+- **`2-Areas/Research Repository`** — the team's shared research findings, always linked in for everyone.
+- **`1-Projects/[Product Area]/Wiki`** — each shared product wiki (Cashback Card, Brand & Design System, and any new one a teammate starts as shared), linked in per product area.
+
+That's deliberate: everyone reads the same underlying files, and a `git pull` in the shared clone is all it takes to catch up — no re-syncing, no manual copying.
+
+## Per-folder rules, not one global rule file
+
+Different folders carry different `CLAUDE.md` rule files. The root `CLAUDE.md` sets knowledge-base-wide conventions (a routing map, link-style rules). Each product area under `1-Projects/` has its own `CLAUDE.md`, and each shared `Wiki/` has its own `Area-Conventions.md` — covering that area's own ingest workflow, page format, and citation rules, kept current by whoever contributes to that wiki. A generic wiki tool has no equivalent for this: it's one wiki, one set of conventions (if any).
+
+## FAQ
+
+### Why not just use Slab + an MCP connector?
+
+It's a fair question — Slab is the team's existing wiki, and Claude could write into it directly via an MCP connector. That's a real capability, not one we're dismissing. But here's what this system has that a Slab-plus-connector setup doesn't, and what it would take to close the gap.
+
+**What we actually have:**
+
+- **Per-folder rule files.** Different rules apply in different folders — the Research Repository has its own ingest workflow and citation rules, a product wiki has its own page format, a project folder has its own memory conventions. A generic wiki tool has no equivalent for this: it's one wiki, one set of rules for everything in it, if any rules exist at all.
+- **A pull-request review gate.** Every shared edit ships as a reviewed pull request against `uw-knowledgebase-content`, not something saved straight through. Someone looks at it before it lands for the whole team.
+- **A health-check skill.** `knowledgebase-health-check` scans the whole knowledge base for broken links, orphaned notes, and stale or drifted rule files — the kind of rot that accumulates silently in any wiki and that nobody notices until graph view looks sparse or a link 404s.
+- **A family of skills a wiki has no concept of.** Transcript cleaning, transcript coding, study write-ups, project scaffolding — these aren't wiki pages, they're workflows. A plain wiki, even one with an AI chat bolted on, doesn't model "clean this transcript" or "set up a new project" as first-class actions.
+
+**The "write and forget" problem.** A Slab page sits static until a human happens to remember to update it. This system doesn't wait to be noticed: `end-session` runs a capture pass at the end of every session looking for anything that should outlive it, and a session-start check actively flags stale or unshared content and prompts someone to deal with it — rather than the rot sitting there until someone stumbles on it months later.
+
+**The counterpoint, taken seriously.** Yes, Claude could write into Slab through an MCP connector — that's real, and worth acknowledging rather than waving away. But three things would still be missing, and all three would need to be rebuilt outside Slab to match what this system already does:
+
+1. The per-folder rule files telling Claude what to do and when.
+2. The pull-request review gate before a shared edit lands.
+3. The health-check scan for rot and drift.
+
+Rebuilding all three outside Slab is building this system again — just running on top of Slab instead of git.
+
+**Bottom line:** Slab plus an MCP connector gets you a chat interface bolted onto a static wiki. Closing the real gap means rebuilding what this system already has, for a worse result.
+
+<Aside type="tip" title="Getting set up or adding a project">
+  See [Install](/install/) for the two skills that build and grow this structure — `setup-my-knowledge-base` for the very first run, `new-project-setup` for every project after that.
+</Aside>

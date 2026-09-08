@@ -1,0 +1,47 @@
+---
+title: Start here
+description: Claude Code skills for the UW UX team — what this is, and where to go next.
+template: splash
+hero:
+  tagline: A set of Claude Code skills for the UW UX team's research and design workflow — knowledge base setup, project scaffolding, transcript cleaning and coding, study write-ups, health checks, and Figma craft.
+  actions:
+    - text: Install the plugin
+      link: /install/
+      icon: right-arrow
+      variant: primary
+    - text: Browse the skills
+      link: /skills/
+      icon: right-arrow
+      variant: minimal
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
+<Aside type="note" title="Not an official UW product">
+  This is a self-development project built and maintained by members of the UX team, shared here for anyone on the team who wants to use or improve it. It isn't an official Utility Warehouse product, and it isn't supported the way one would be.
+</Aside>
+
+## What this actually is
+
+This repo ships a Claude Code **plugin** called `ux`, containing around a dozen **skills** — packaged instructions that teach [Claude Code](https://claude.com/claude-code) how to do specific pieces of UX work the way this team does them: setting up a personal knowledge base, scaffolding a new research project, cleaning and coding interview transcripts, writing up a finished study, auditing a knowledge base for rot, and more.
+
+Skills are namespaced under the plugin they ship from. That means the command you actually type is **`/ux:setup-my-knowledge-base`**, not `/setup-my-knowledge-base` — the `ux:` prefix is not optional, and it's the first thing that trips people up. See [Install](/install/) for the full picture.
+
+<CardGrid>
+  <Card title="New to this?" icon="rocket">
+    Install the plugin, then run `/ux:setup-my-knowledge-base` in Claude Code. It builds your personal knowledge base from nothing and hands you off into your first real project.
+  </Card>
+  <Card title="Already set up?" icon="open-book">
+    Head to [Your knowledge base](/knowledge-base/) to understand how the folder structure, the shared wikis, and the contribution workflow fit together.
+  </Card>
+  <Card title="Want the full skill list?" icon="list-format">
+    [The skills](/skills/) section covers every skill in the plugin, with deep dives on the two you'll use most: `setup-my-knowledge-base` and `new-project-setup`.
+  </Card>
+  <Card title="Improving a skill?" icon="pencil">
+    This repo ships purely through reviewed GitHub pull request. [Contribute](/contribute/) walks through the whole loop, including the part where changes don't appear automatically.
+  </Card>
+</CardGrid>
+
+## Where this lives
+
+The plugin's source is [`utilitywarehouse/uw-ux-claude-skills`](https://github.com/utilitywarehouse/uw-ux-claude-skills) on GitHub — public, so anyone can read the skills even without team access. This documentation site is built from the `docs/` folder in that same repo, so a change to a skill and a change to its docs can ship in the same pull request.
