@@ -65,7 +65,10 @@ FILES = {
         "- Ingest notes.md is discussed here as prose, not cited\n"
     ),
     "notes/Ingest notes.md": "another source\n",
-    # a Routing Map whose folders exist, don't exist, or were archived
+    # a Routing Map whose folders exist, don't exist, or were archived — this
+    # doubles as the "live root CLAUDE.md" side of the drift check below, so
+    # it also carries a File naming section (identical to the template, must
+    # not be flagged) and a Working rules section (reworded, must be flagged).
     "CLAUDE.md": (
         "## Routing Map\n\n"
         "| Folder | Use when... |\n"
@@ -74,6 +77,13 @@ FILES = {
         "| `1-Projects/Gone Project/` | archived but the row was never removed |\n"
         "| `1-Projects/Never Existed/` | never had a folder at all |\n"
         "| `2-Areas/Some Guide.md` | a machine-specific path **[replace on setup]** |\n"
+        "| `4-Archives/` | Looking for work that has ended. |\n"
+        "\n## File naming\n\n"
+        "Point-in-time files are named `YYYY-MM-DD Description.md`.\n"
+        "\n## Working rules\n\n"
+        "- Always ask before making changes to existing files.\n"
+        "\n## Preferences\n\n"
+        "- Address me by my first name.\n"
     ),
     "1-Projects/Live Project/index.md": "still here\n",
     "4-Archives/Old Area/Gone Project/index.md": "moved here\n",
@@ -92,6 +102,27 @@ def check(label, condition, detail=""):
         print(f"  FAIL  {label}  {detail}")
         failures.append(label)
 
+
+# The shared starter template, compared against the live "CLAUDE.md" fixture
+# above by the root-CLAUDE.md-drift check. Deliberately covers all four
+# outcomes: a section identical to the live copy (must not be flagged), a
+# section reworded in the live copy (must be flagged as different), a
+# Routing Map row missing from the live copy entirely (must be flagged), and
+# a Preferences section that differs but sits in the skip list (must never
+# be flagged, however different it is).
+TEMPLATE_TEXT = (
+    "## Routing Map\n\n"
+    "| Folder | Use when... |\n"
+    "|---|---|\n"
+    "| `4-Archives/` | Looking for work that has ended. |\n"
+    "| `2-Areas/Research Repository/` | Needing a research finding, or adding a new study. |\n"
+    "\n## File naming\n\n"
+    "Point-in-time files are named `YYYY-MM-DD Description.md`.\n"
+    "\n## Working rules\n\n"
+    "- Always ask before making any change.\n"
+    "\n## Preferences\n\n"
+    "- This should never be compared, no matter how different.\n"
+)
 
 with tempfile.TemporaryDirectory() as root:
     for rel, body in FILES.items():
@@ -115,6 +146,11 @@ with tempfile.TemporaryDirectory() as root:
 
         vault = vl.Vault(root)
         r = vl.lint(vault)
+
+        template_path = os.path.join(shared_clone, "claude-md-template.md")
+        with open(template_path, "w", encoding="utf-8") as fh:
+            fh.write(TEMPLATE_TEXT)
+        r_drift = vl.lint(vault, claude_md_template_path=template_path)["root_claude_md_drift"]
     cites = r["plain_text_citations"]
     broken = r["broken_links"]
 
@@ -177,6 +213,29 @@ with tempfile.TemporaryDirectory() as root:
           and stale["1-Projects/Never Existed/"]["archived_at"] is None)
     check("does not flag a row marked [replace on setup]",
           "2-Areas/Some Guide.md" not in stale, f"got {list(stale)}")
+
+    check("root CLAUDE.md drift check is skipped when no template is given",
+          r["root_claude_md_drift"] is None)
+
+    section_diffs = {d["section"]: d for d in r_drift["section_diffs"]}
+    routing_diffs = {d["path"]: d for d in r_drift["routing_map_diffs"]}
+    check("does not flag a section identical to the template",
+          "File naming" not in section_diffs, f"got {list(section_diffs)}")
+    check("flags a section reworded from the template",
+          section_diffs.get("Working rules", {}).get("status") == "different",
+          f"got {section_diffs.get('Working rules')}")
+    check("never flags a skip-listed section, however different",
+          "Preferences" not in section_diffs, f"got {list(section_diffs)}")
+    check("flags a Routing Map row the template has and the live copy doesn't",
+          routing_diffs.get("2-Areas/Research Repository", {}).get("status") == "missing_from_live",
+          f"got {routing_diffs.get('2-Areas/Research Repository')}")
+    check("does not flag a Routing Map row identical to the template",
+          "4-Archives" not in routing_diffs, f"got {list(routing_diffs)}")
+    check("does not flag a live-only Routing Map row the template never had",
+          "1-Projects/Live Project" not in routing_diffs
+          and "1-Projects/Gone Project" not in routing_diffs
+          and "2-Areas/Some Guide.md" not in routing_diffs,
+          f"got {list(routing_diffs)}")
 
 print()
 if failures:
