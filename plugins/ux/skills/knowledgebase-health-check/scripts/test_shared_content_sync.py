@@ -59,6 +59,10 @@ with tempfile.TemporaryDirectory() as tmp:
     found = scs.find_clone_root(vault)
     check("finds the clone root via an existing symlink", found == os.path.realpath(clone))
 
+    # A note elsewhere in the vault still mentions Broadband (e.g. a Routing
+    # Map row) — so this is "never linked yet", not an orphan.
+    write(vault, "CLAUDE.md", "Row for Broadband lives here.\n")
+
     result = scs.check(vault)
     check("clone_found is True", result["clone_found"] is True)
     missing_names = {f["name"] for f in result["missing"]}
@@ -67,6 +71,8 @@ with tempfile.TemporaryDirectory() as tmp:
           "Research Repository" not in missing_names)
     check("does not flag the already-linked Cashback Card wiki",
           "Cashback Card" not in missing_names)
+    check("does not orphan Broadband while a note still mentions it",
+          result["orphaned"] == [])
 
 # Add the missing symlink in a fresh copy of the same setup and confirm the
 # check clears — proves this is a live re-check, not a cached verdict.
@@ -98,6 +104,32 @@ with tempfile.TemporaryDirectory() as tmp:
               "pull_output": "Already up to date.", "missing": []}
     check("report() is empty when everything is already linked (a real pass, not 'no clone found')",
           scs.report(synced) == "")
+
+# A shared folder that WAS linked, deleted from the vault, and now has
+# nothing in the vault mentioning it at all -- must report as orphaned, not
+# as "never linked yet".
+with tempfile.TemporaryDirectory() as tmp:
+    clone = os.path.join(tmp, "clone")
+    vault = os.path.join(tmp, "vault")
+    os.makedirs(clone)
+    write(clone, "Research Repository/index.md", "x\n")
+    write(clone, "Test Pigs/Wiki/index.md", "x\n")  # deleted from the vault, left behind
+    subprocess.run(["git", "init", "-q"], cwd=clone, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=clone, check=True)
+    subprocess.run(["git", "-c", "user.email=t@t", "-c", "user.name=t",
+                     "commit", "-q", "-m", "init"], cwd=clone, check=True)
+
+    os.makedirs(os.path.join(vault, "2-Areas"))
+    os.symlink(os.path.join(clone, "Research Repository"),
+               os.path.join(vault, "2-Areas", "Research Repository"))
+    # No 1-Projects/Test Pigs/ at all, and no note anywhere mentions it.
+
+    result = scs.check(vault)
+    orphaned_names = {f["name"] for f in result["orphaned"]}
+    check("flags the deleted Test Pigs wiki as orphaned, not missing",
+          orphaned_names == {"Test Pigs"})
+    check("does not also list it under missing",
+          "Test Pigs" not in {f["name"] for f in result["missing"]})
 
 # No shared clone linked in at all -- must not crash, must report cleanly.
 with tempfile.TemporaryDirectory() as tmp:

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Catch-up check for shared-repo folders that never got a symlink.
+"""Catch-up check for shared-repo folders that never got a symlink — and for
+shared folders whose vault side has since been deleted.
 
 `setup-my-knowledge-base` walks the shared clone's top-level contents and
 symlinks each one in — but only once, during that person's own setup. If a
@@ -9,6 +10,13 @@ nobody else's knowledge base ever re-walks the clone to notice it. A `git
 pull` on an existing symlink refreshes content inside it; it does nothing for
 a folder that has no symlink at all yet. This script re-runs that walk as a
 catch-up pass, so a health check catches the gap instead of it going silent.
+
+An un-symlinked shared folder can mean two different things, though: brand
+new (nothing else in the vault mentions it yet) or orphaned (a project that
+WAS linked in got deleted from the vault without its shared copy being
+cleaned up). Those need opposite fixes — link it in, versus offer to clean
+it up — so this script tells them apart by checking whether the folder's
+name is mentioned anywhere else in the vault's own note text.
 
 Read-only: pulls the shared clone (fast-forward only) but never touches the
 knowledge base itself. Creating the missing symlink(s) it reports is a
@@ -99,6 +107,28 @@ def linked_targets(vault_root):
     return linked
 
 
+def mentioned_in_vault(vault_root, name):
+    """Whether `name` turns up anywhere in the vault's own note text.
+
+    Distinguishes two reasons a shared folder can be un-symlinked: a brand
+    new folder nobody has linked in yet (some note still refers to it — a
+    Routing Map row, a MEMORY.md line) versus a project that WAS linked and
+    got deleted from the vault, leaving nothing that mentions it at all.
+    """
+    for root, dirs, files in os.walk(vault_root):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        for fn in files:
+            if not fn.endswith('.md'):
+                continue
+            try:
+                with open(os.path.join(root, fn), 'r', encoding='utf-8', errors='ignore') as fh:
+                    if name in fh.read():
+                        return True
+            except OSError:
+                continue
+    return False
+
+
 def check(vault_root):
     clone_root = find_clone_root(vault_root)
     if not clone_root:
@@ -106,8 +136,10 @@ def check(vault_root):
 
     pulled, pull_output = git_pull(clone_root)
     linked = linked_targets(vault_root)
-    missing = [f for f in shared_folders(clone_root)
-               if os.path.realpath(f['clone_path']) not in linked]
+    unlinked = [f for f in shared_folders(clone_root)
+                if os.path.realpath(f['clone_path']) not in linked]
+    missing = [f for f in unlinked if mentioned_in_vault(vault_root, f['name'])]
+    orphaned = [f for f in unlinked if f not in missing]
 
     return {
         'clone_found': True,
@@ -115,6 +147,7 @@ def check(vault_root):
         'pull_ok': pulled,
         'pull_output': pull_output,
         'missing': missing,
+        'orphaned': orphaned,
     }
 
 
@@ -136,6 +169,16 @@ def report(r):
                 lines.append(f"  {f['name']} — not linked at 1-Projects/{f['name']}/Wiki")
         lines.append("  Offer to create the missing symlink(s), mirroring setup-my-knowledge-base")
         lines.append("  Step 4 — and add a Routing Map row per Step 6, for each one accepted.")
+        lines.append("")
+    if r.get('orphaned'):
+        lines.append(f"## Orphaned shared folders ({len(r['orphaned'])})")
+        for f in r['orphaned']:
+            lines.append(f"  {f['name']} — still in the shared clone, but nothing in the vault mentions it anymore")
+        lines.append("  Likely a deleted project whose shared copy never got cleaned up. Don't just")
+        lines.append("  re-link it in — ask the user first: check Trash for the deleted local folder")
+        lines.append("  and restore it (safest), or pull a fresh copy back down, or, only if they're")
+        lines.append("  sure, delete it from the shared clone via contribute-to-shared-knowledgebase")
+        lines.append("  (opens a PR for someone else to review — never merge it directly).")
         lines.append("")
     return '\n'.join(lines)
 
