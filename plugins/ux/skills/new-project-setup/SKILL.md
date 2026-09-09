@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 8
+version: 9
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -364,7 +364,7 @@ Write a lean `CLAUDE.md` into the project folder:
 
 At the start of every session, read `MEMORY.md` before responding. Read this to pick up where we left off. Don't announce what you found, just be informed by it. If auto-memory contains relevant project context, reconcile it against the knowledge base's `MEMORY.md` — that file is the source of truth.
 
-When I say "remember this," write the information to `MEMORY.md` in the knowledge base immediately, then mirror it to auto-memory. Confirm you've done both.
+When I say "remember this," write the information to `MEMORY.md` in the knowledge base immediately. Confirm you've done it.
 
 **Update it at the end of every session** by appending new entries or updating existing ones. This is how you remember what we've been working on.
 
