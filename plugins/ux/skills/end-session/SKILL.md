@@ -1,6 +1,6 @@
 ---
 name: end-session
-version: 7
+version: 8
 description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, cross-session facts to auto-memory, new personal facts to About Me.md, and new standing design/product heuristics to Design Principles.md. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
@@ -76,7 +76,7 @@ Seven destinations, distinguished by what kind of thing the finding is:
 | **Research Repository** | It is what a study found | A figure, a theme across verbatims, a study that has just run. Goes to `2-Areas/Research Repository/` as a *new* study page, never as an edit to an existing one |
 | **Project MEMORY.md** | It is a fact about *this project* that could change | Status, decisions, scope, dates, next step, who is involved |
 | **CLAUDE.md** | It prescribes behaviour | "Always check the T&Cs pages before assuming a product rule" |
-| **Auto-memory** | It is a fact or preference that matters across sessions and surfaces | Project status worth carrying between chats, feedback on how you work |
+| **Auto-memory** | It is a fact or preference that would matter in a different project or a general session, not just this one | A standing correction on how you work, a fact about the user, an org-wide constraint or deadline, a pointer to an external system |
 | **About Me.md** | It is a new or changed personal fact about the user — background, working style, preferences, daily routine — the same categories About Me.md already covers | A new role, a changed working setup, a new stated preference for how they work |
 | **Design Principles.md** | It is a new standing design/product-decision heuristic — a judgement call that applies across projects, not a visual specification | "Frame gating copy as cause, not step"; a rule the user stated or implied should apply beyond this one project |
 
@@ -95,7 +95,7 @@ A product wiki page describing how the product *works* stays living and can be u
 
 For CLAUDE.md findings, prefer the most specific file that covers the behaviour. A rule about how to handle CBC transcripts belongs in the project or area file, not the knowledge base's root.
 
-For auto-memory, follow the format described in your memory instructions, and mirror rather than duplicate: the knowledge base is the source of truth, auto-memory is the pointer that survives into the next chat.
+For auto-memory, follow the format described in your memory instructions. Don't write a pointer-copy of a project-scoped fact that's already going to that project's MEMORY.md — write to auto-memory only when the fact would also matter in a different project or a general session, the same test used for About Me.md above.
 
 When a finding genuinely could go two places, say which you think it is and why, and let the user decide. Do not silently pick.
 
