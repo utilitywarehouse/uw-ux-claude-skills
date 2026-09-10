@@ -21,7 +21,7 @@ Work down this table in order when deciding where something goes: which row's "U
 
 ## Link style
 
-This knowledge base uses **markdown links**, not wikilinks: `[Page Title](page-title.md)`, never `[[Page Title]]`. Every skill in this plugin reads and writes links this way. If Obsidian is in use, "Use [[Wikilinks]]" should be turned off in Settings → Files and Links.
+This knowledge base uses **markdown links**, not wikilinks: `[Page Title](page-title.md)`, never `[[Page Title]]`. Every skill in this plugin reads and writes links this way. If Obsidian is in use, `"Use [[Wikilinks]]"` should be turned off in Settings → Files and Links.
 
 ## Shared content freshness
 
