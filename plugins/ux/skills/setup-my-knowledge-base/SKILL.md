@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 21
+version: 22
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -83,10 +83,10 @@ Use real symlinks (`ln -s`), never macOS Finder aliases. A Finder alias only res
 
 Walk the clone's actual top-level contents rather than a fixed list, since new shared wikis land in it over time (decision #31) and this step should pick them up automatically:
 
-- The clone's `Research Repository/` folder → symlink to `2-Areas/Research Repository` in the new knowledge base.
-- Any other top-level folder in the clone that contains a `Wiki/` subfolder — each one is a shared product area, e.g. `Cashback Card`, `Brand & Design System` — create `1-Projects/<same name>/` if it doesn't already exist, then symlink that folder's `Wiki/` to `1-Projects/<same name>/Wiki`.
+- The clone's `Research Repository/` folder → symlink to `2-Areas/Research Repository` in the new knowledge base. Fully shared, the whole folder as one symlink.
+- The clone's `Brand and Design System/` folder → symlink to `2-Areas/Brand and Design System` in the new knowledge base, the same way — also fully shared as one symlink (its `CLAUDE.md` included), not the per-product pattern below.
+- Any other top-level folder in the clone that contains a `Wiki/` subfolder — each one is a shared product area, e.g. `Cashback Card` — create `1-Projects/<same name>/` if it doesn't already exist, then symlink that folder's `Wiki/` to `1-Projects/<same name>/Wiki`.
 - If that same clone folder also has a `CLAUDE.md` sitting next to its `Wiki/`, copy it (not symlink) to `1-Projects/<same name>/CLAUDE.md`, unless a file is already there. It's a generic starting point for that area, meant to be personalised locally afterward — a symlink would force every edit through a PR, which defeats that.
-- Symlink every other real file or folder sitting alongside that `Wiki/` too (e.g. `Brand & Design System/DESIGN.md`, `Brand & Design System/design-system/`), the same way as `Wiki/` itself — these are shared team assets, not just the wiki.
 
 Confirm the links resolved by listing one of them before moving on.
 
@@ -130,9 +130,9 @@ When you reach the "Career history" question, suggest they can take a few screen
 
 ## Step 6 — Write the root CLAUDE.md
 
-Copy `assets/claude-md-template.md` to `CLAUDE.md` at the root of the new knowledge base. It already carries its own Routing Map and link-style rule — nothing in it needs to be filled in with this person's specifics, and it already has static rows for the content every teammate gets (Research Repository, DESIGN.md).
+Copy `assets/claude-md-template.md` to `CLAUDE.md` at the root of the new knowledge base. It already carries its own Routing Map and link-style rule — nothing in it needs to be filled in with this person's specifics, and it already has static rows for the content every teammate gets (Research Repository, Brand and Design System, DESIGN.md).
 
-Then add one Routing Map row for each *product* wiki Step 4 actually linked (e.g. `Cashback Card`) — these vary from one teammate's setup to another and can't be baked into the template as a fixed list. Skip any wiki that already has a static row in the template (Research Repository, Brand & Design System). For each row, use the pattern already in the table: `1-Projects/<Product>/Wiki/` in the folder column, and a one-line "Use when..." pulled from that wiki's own `index.md` summary. If Step 4 was skipped or blocked (no repo access), skip this too — there's nothing linked to add a row for.
+Then add one Routing Map row for each *product* wiki Step 4 actually linked (e.g. `Cashback Card`) — these vary from one teammate's setup to another and can't be baked into the template as a fixed list. Skip any wiki that already has a static row in the template (Research Repository, Brand and Design System). For each row, use the pattern already in the table: `1-Projects/<Product>/Wiki/` in the folder column, and a one-line "Use when..." pulled from that wiki's own `index.md` summary. If Step 4 was skipped or blocked (no repo access), skip this too — there's nothing linked to add a row for.
 
 The Routing Map is also what `new-project-setup` adds a row to every time a new project or area is created, so it stays accurate as the knowledge base grows. The "Personality and preferences" section at the bottom stays blank; that's deliberate, it fills in as you work together over time.
 

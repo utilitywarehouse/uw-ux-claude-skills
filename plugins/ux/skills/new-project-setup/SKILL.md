@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 9
+version: 10
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -78,7 +78,7 @@ New wikis are shared with the team by default (decision #31 in the Build Plan) �
 
 **Ask whether to keep this one local-only.** Use `AskUserQuestion`, defaulting to shared:
 
-> "This wiki will be shared with the team by default, in the shared `uw-knowledgebase-content` repo — the same way the Cashback Card and Brand & Design System wikis work. Keep it shared (recommended), or keep this one local-only?"
+> "This wiki will be shared with the team by default, in the shared `uw-knowledgebase-content` repo — the same way the Cashback Card and Brand and Design System wikis work. Keep it shared (recommended), or keep this one local-only?"
 
 - **Shared (default):**
   1. **Check access.** Same check as `setup-my-knowledge-base`'s Step 5: run `git ls-remote https://github.com/utilitywarehouse/uw-knowledgebase-content.git`. Succeeds → continue. Fails on access (or the check can't run cleanly — fall back to asking directly): don't block project setup over this. Tell them plainly that sharing isn't available right now (missing access), fall through to the **Local-only** branch below instead, and mention they can come back once access is approved.

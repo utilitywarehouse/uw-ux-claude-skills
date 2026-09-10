@@ -9,8 +9,9 @@ Work down this table in order when deciding where something goes: which row's "U
 | `0-Inbox/` | Quick, unsorted capture. Anything that hasn't been filed yet lands here first. |
 | `1-Projects/` | Looking for active work with an end date. |
 | `2-Areas/Research Repository/` | Needing a research finding, or adding a new study. See its own `CLAUDE.md`. |
-| `1-Projects/Brand & Design System/DESIGN.md` | Building any UW-branded output — UI, prototypes, slides, or other assets. The canonical design-system spec, written for AI agents to read and act on directly. |
-| `1-Projects/Brand & Design System/design-system/` | Building for Claude Design, or an asset type DESIGN.md doesn't cover (decks, social templates, ads, starter React components). A fuller, multi-file repackaging of DESIGN.md. Load its own `design-system/CLAUDE.md` first. |
+| `2-Areas/Brand and Design System/` | Working on UW brand identity, design tokens, components, or the UW DESIGN.md. Fully shared with the team, like Research Repository. See its own `CLAUDE.md`. |
+| `2-Areas/Brand and Design System/DESIGN.md` | Building any UW-branded output — UI, prototypes, slides, or other assets. The canonical design-system spec, written for AI agents to read and act on directly. |
+| `2-Areas/Brand and Design System/design-system/` | Building for Claude Design, or an asset type DESIGN.md doesn't cover (decks, social templates, ads, starter React components). A fuller, multi-file repackaging of DESIGN.md. Load its own `design-system/CLAUDE.md` first. |
 | `3-Resources/About Me/About Me.md` | Needing personal context about this person — role, working style, preferences. |
 | `3-Resources/Design Principles.md` | Making a design or product decision that isn't purely visual — check here for standing heuristics, and add new ones as they emerge. |
 | `4-Archives/` | Looking for work that has ended. Don't treat anything here as current status. |
@@ -38,7 +39,7 @@ Some folders here aren't local — they're symlinks into a separate clone of the
 - Never write files to the root of this knowledge base, other than `CLAUDE.md` and `Start here.md` themselves — everything else belongs inside one of the folders above.
 - If a request is unclear or incomplete, use the `AskUserQuestion` tool rather than filling the gap with generic filler.
 - Before finalising any substantial written content — notes, comms, customer copy, specs — check it against `3-Resources/AI Writing Guidelines.md` for common AI-tell patterns.
-- Before creating any UW-branded output — UI, prototypes, slide decks, or other visual assets — read `1-Projects/Brand & Design System/DESIGN.md` first.
+- Before creating any UW-branded output — UI, prototypes, slide decks, or other visual assets — read `2-Areas/Brand and Design System/DESIGN.md` first.
 - When a file needs visual verification via the in-app browser (screenshot), place it in a `00-Scratch/` subfolder inside the active project — files in the session scratchpad render only as static, non-interactive snapshots and can't be screenshotted. Ask before deleting scratch files, same as anywhere else in this knowledge base.
 - Cite sources as markdown links, not bare filenames — always keep the file extension in the link target, and only quote a link in frontmatter if the value needs quoting for other YAML reasons. A plain-text citation is invisible to the graph, so the source it names reads as an orphan.
 - When writing a fact into a note from an external source — a Miro board, Google Sheet, Figma file, Confluence page, a screenshot or link pasted in chat — record the source's name and its location (local path or URL) alongside the claim. If you can't see a name or URL, ask for it rather than writing an unciteable note.
