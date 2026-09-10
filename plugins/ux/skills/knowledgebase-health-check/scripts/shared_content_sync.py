@@ -70,11 +70,16 @@ def git_pull(clone_root):
         return False, str(e)
 
 
+FULLY_SHARED_NAMES = {'Research Repository', 'Brand and Design System'}
+
+
 def shared_folders(clone_root):
     """Every folder in the clone this vault is meant to link to.
 
-    Mirrors setup-my-knowledge-base Step 4 exactly: the Research Repository
-    by name, plus any top-level folder containing a Wiki/ subfolder.
+    Mirrors setup-my-knowledge-base Step 4 exactly: each name in
+    FULLY_SHARED_NAMES symlinks whole (CLAUDE.md included) to 2-Areas/<name>,
+    plus any other top-level folder containing a Wiki/ subfolder, which
+    symlinks just its Wiki/ into 1-Projects/<name>/Wiki.
     """
     out = []
     for name in sorted(os.listdir(clone_root)):
@@ -83,8 +88,8 @@ def shared_folders(clone_root):
         full = os.path.join(clone_root, name)
         if not os.path.isdir(full):
             continue
-        if name == 'Research Repository':
-            out.append({'name': name, 'clone_path': full, 'kind': 'research-repository'})
+        if name in FULLY_SHARED_NAMES:
+            out.append({'name': name, 'clone_path': full, 'kind': 'fully-shared'})
         elif os.path.isdir(os.path.join(full, 'Wiki')):
             out.append({'name': name, 'clone_path': os.path.join(full, 'Wiki'), 'kind': 'wiki'})
     return out
@@ -163,8 +168,8 @@ def report(r):
     if r['missing']:
         lines.append(f"## Shared folders with no symlink yet ({len(r['missing'])})")
         for f in r['missing']:
-            if f['kind'] == 'research-repository':
-                lines.append(f"  {f['name']} — not linked at 2-Areas/Research Repository")
+            if f['kind'] == 'fully-shared':
+                lines.append(f"  {f['name']} — not linked at 2-Areas/{f['name']}")
             else:
                 lines.append(f"  {f['name']} — not linked at 1-Projects/{f['name']}/Wiki")
         lines.append("  Offer to create the missing symlink(s), mirroring setup-my-knowledge-base")

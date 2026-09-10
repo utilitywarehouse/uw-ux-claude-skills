@@ -273,7 +273,7 @@ def lint(vault, claude_md_template_path=None):
         # the fully-stripped `body` used above for the link graph. A Sources
         # line wrapping a filename in single backticks (`` `export.png` ``) is
         # a citation choosing a display style, not an illustrative code
-        # example — the CBC and Brand & Design System wikis both write real
+        # example — the CBC and Brand and Design System wikis both write real
         # citations this way, and the fully-stripped body made every one of
         # them invisible to this check.
         linkless = ALREADY_LINKED.sub(lambda m: ' ' * len(m.group(0)), fence_only)
