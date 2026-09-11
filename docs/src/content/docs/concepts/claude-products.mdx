@@ -1,0 +1,38 @@
+---
+title: Claude Chat, Cowork, and Code
+description: What Claude Chat, Claude Cowork, Claude Code, and the Claude Code CLI each are — and which one everything in these docs actually runs on.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Anthropic ships Claude in a few different wrappers, and it's easy to assume they're all the same thing with a different coat of paint. They're not. The intelligence underneath — the model itself — is identical across all of them: ask any of them to critique a Figma flow or write UX copy and you get the same reasoning. What differs is what each wrapper can actually *do* with that reasoning.
+
+## The three products
+
+**Claude Chat** (`claude.ai`) is the plain conversational interface — the one most people meet first. You type, Claude replies. It can read a file you paste or upload, but it doesn't work directly on a folder of files on your computer, and it has no memory of files it edited yesterday because there's nothing on your machine for it to remember.
+
+**Claude Cowork** is built for document, spreadsheet, research, and browser-based work — the kind of task a design team recognises immediately. It runs inside a chat window that feels familiar, like Slack. Cowork can technically run tools behind the scenes, but you don't see any of that — no view of what's about to change, nothing to look back through, no way to undo a step that went wrong.
+
+**Claude Code** is built for working directly on files on disk, with a full view of what it's about to change before it changes it. It has its own desktop app with a GUI, so using it doesn't feel like using a bare terminal — same chat pane, same file view as Cowork — but a terminal is quietly doing the work underneath, the same way an image editor runs its own processing under the hood without showing it to you. Claude Code also ships as a **CLI** (command-line interface) — the same underlying tool, run by typing commands directly into a terminal window rather than through the desktop app.
+
+This whole knowledge base system — the skills, the plugin, everything these docs walk through — runs on **Claude Code**, not Cowork, and mostly through its terminal / CLI form. When these docs say "run `/ux:setup-my-knowledge-base`", that command is typed into Claude Code.
+
+<Aside type="tip" title="An analogy">
+  Think of it like the difference between commenting on a shared Figma file from a browser tab (Chat), asking someone else to make edits for you in a chat thread (Cowork), and having edit access to the file yourself with full version history and undo (Code). All three can result in the file changing — only one shows you exactly what's changing and lets you roll it back.
+</Aside>
+
+## Why a design team defaults to Cowork — and why that doesn't hold up here
+
+Code reads as "not for me" if you're not an engineer, because it's marketed around dev workflows — git, code review, IDEs. But the actual work a UX team does — prototyping, working through research transcripts, building a personal knowledge base — is exactly the kind of file-on-disk task Code is built for, even though it doesn't look like "developer work" on the surface. Building a self-contained HTML prototype for a usability test, or coding a batch of transcripts, are both native file tasks, not code-writing tasks.
+
+You never have to read or understand any code to use Claude Code for this. The input is still plain English — "add a screen for what happens when the top-up payment method is unavailable" — never a line of HTML you write yourself. You review the result in a browser preview, the same way you'd review a Figma frame.
+
+## Code asks before it acts
+
+By default, Claude Code asks permission for everything — every file edit, every command, one at a time. You can loosen that as trust builds: let it edit files freely but still ask before running commands, or hand it full autonomy for a task while a background safety check still blocks the genuinely risky stuff (deleting things in bulk, for example). Cowork has permission modes too, but its default is already more autonomous — it runs a batch of changes and reports back, with a background safety check watching for anything unsafe. The real difference is the starting point: Code starts maximally cautious and you loosen it; Cowork starts looser and tightens only around the riskiest actions, like permanently deleting something, which both products always gate no matter the mode.
+
+## Why staying in one product matters
+
+Claude Code and Claude Cowork don't share any memory of past conversations or files between them. Start a piece of work in one and switch to the other, and the second one has no idea what happened in the first — you'd have to re-explain everything from scratch. Keeping a whole piece of work inside Claude Code, start to finish, is what keeps its memory of your knowledge base and your projects consistent.
+
+It's also what makes a shared team skills library possible at all. A skill built and shared through Claude Code lives in one place — a GitHub repo the whole team can install from — so one update reaches everyone automatically. Cowork has no equivalent: a packaged skill there has to be re-uploaded into each teammate's own account by hand, every time it changes, which makes it easy for someone to fall behind on a fix without realising.

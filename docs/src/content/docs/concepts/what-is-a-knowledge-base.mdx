@@ -1,0 +1,34 @@
+---
+title: What is a knowledge base?
+description: What a knowledge base is, why it beats a notes app or a wiki-plus-chatbot, and what "wiki" means in this specific system.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## The short version
+
+A knowledge base, in this system, is a folder of plain files on your own computer — organised by a consistent structure, read and written directly by Claude Code — that holds everything from your active projects to reference material to a shared layer the whole team draws from. It's not an app you log into. It's a folder, plus an AI that knows how to read and write to it correctly.
+
+## Why not just a notes app, or a wiki with a chatbot bolted on
+
+A normal notes app or wiki stores what you write, and that's the whole of what it does. Two things are missing, and both matter more than they sound:
+
+**Different folders can carry different rules.** The Research Repository has its own ingest workflow and citation rules; a product Wiki has its own page format; a project folder has its own memory conventions. A generic wiki tool has one wiki and one set of rules for everything in it, if it has rules at all. Here, a file called `CLAUDE.md` sits in each folder and tells Claude Code exactly how that folder works, so the right convention applies automatically depending on where you're working.
+
+**It doesn't wait to be noticed.** A wiki page in a normal tool sits static until a human happens to remember to update it — that's the "write and forget" problem. This system runs periodic health checks that actively look for problems: a skill scans the whole knowledge base for broken links, stale rules, and orphaned notes; another runs at the end of a session specifically looking for anything worth writing down before it's lost. Nobody has to remember to do either.
+
+Bolting a chatbot onto an existing wiki (Slab, for instance, with an AI connector) gets you a chat interface on top of a still-static wiki. It doesn't give you per-folder rules, a review step before a shared page changes, or a standing health check — you'd have to build all three yourself, on top of the wiki, to actually close the gap. The [knowledge base FAQ](/knowledge-base/faq/) covers this comparison in more depth if you want the fuller argument.
+
+## What "wiki" means here specifically
+
+Elsewhere, "wiki" might mean any editable reference page. In this system it means something more specific: a **shared, living reference document that more than one person on the team reads and edits** — a product Wiki, for instance, holding what the team currently believes about how a product works. It lives inside the shared repo (see [Git and GitHub](/concepts/git-and-github/)), not just inside your own personal folder, and edits to it go through a review step before they reach everyone else.
+
+<Aside type="tip" title="An analogy">
+  Think of a shared Wiki the way you'd think of a shared Figma library file that the whole team's files point to, as opposed to a personal draft file that only you own. Editing the shared one affects everyone who references it; editing your own draft affects only you.
+</Aside>
+
+Your personal project notes, by contrast, are never shared automatically — they stay in your own folder until you deliberately decide something belongs in a shared Wiki instead.
+
+## Where to go next
+
+This page is deliberately just the "why" and the vocabulary. For what the knowledge base's actual folder structure looks like, see [Your knowledge base](/knowledge-base/); for how to build one from nothing, see [setup-my-knowledge-base](/skills/setup-my-knowledge-base/).

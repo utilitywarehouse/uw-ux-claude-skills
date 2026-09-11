@@ -1,0 +1,44 @@
+---
+title: propose-skill
+description: Ship a finished skill change — new, edited, or retired — from this repo into a pull request for repo admins to review and merge.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:propose-skill
+```
+
+Takes a finished skill change inside this repo — a new skill folder, an edit to an existing one, or a retirement — and turns it into a pull request against `main`, for repo admins to review and merge. It picks up *after* the skill content itself is finished; if a `SKILL.md` still needs writing or fixing, that's `skill-creator`'s job first.
+
+<Aside type="caution" title="Never merges anything itself">
+  `main` is a GitHub-protected branch — a direct push is rejected regardless. This skill's whole job is getting a clean, reviewable PR in front of the people who own this repo. The actual sign-off happens in the PR, not in the chat, even if you ask it to merge.
+</Aside>
+
+## What it does, step by step
+
+<Steps>
+
+1. **Checks what actually changed** (`git status`, `git diff --stat`) and confirms the change is scoped to one skill folder — if something unrelated got swept in, it stops and asks before staging anything.
+
+2. **Branches off `main`**, named for what's happening: `add-<skill-name>`, `update-<skill-name>`, or `retire-<skill-name>`.
+
+3. **Bumps the plugin version** in `plugins/ux/.claude-plugin/plugin.json` by one patch number, in the same commit as the skill change. This step matters more than it looks: this is the number `claude plugin update` actually checks to decide whether there's anything new — a skill's own internal version number means nothing to that check. Skipping it means every installed copy reports "already up to date" and keeps serving stale content, silently.
+
+4. **Runs this repo's smoke test** for the skill before doing anything else — if the expected behaviour doesn't hold, it stops and reports what broke rather than opening a PR for a regression. Skipped for a retirement, since there's nothing left to test.
+
+5. **Pushes the branch and opens the PR** with a short summary and a one- or two-sentence reason.
+
+6. **Reports the PR link and stops there** — plainly stating it's waiting on review, not implying the skill is live for the team yet.
+
+7. **Switches back to `main`** and pulls fast-forward, leaving the pushed branch on the remote for the PR to point at.
+
+</Steps>
+
+## The three flows
+
+- **New skill** — confirms the `SKILL.md` looks complete, and adds its entry to this repo's `smoke-tests.md` in the same commit. A skill with no smoke test is one nobody will notice breaking.
+- **Update to an existing skill** — if the change affects actual behaviour (not just wording), its smoke-test entry gets updated too, so it isn't left checking the wrong thing.
+- **Retiring a skill** — confirms the actual reason for retiring it first, since the commit message is the only place that reason survives; removes the skill folder (`git rm -r`, so the history isn't actually lost) and its smoke-test entry in the same commit.
+
+This is literally how this documentation site's own source skills got written up — see [Contribute](/contribute/) for the fuller loop this fits inside.

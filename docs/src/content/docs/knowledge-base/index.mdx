@@ -1,0 +1,54 @@
+---
+title: Your knowledge base
+description: How the personal knowledge base, the shared wikis, and the contribution loop fit together.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Your knowledge base is a personal folder on your own machine — created by `/ux:setup-my-knowledge-base` at `~/Documents/Knowledge Base` — that Claude Code reads and writes directly. It's built on the [PARA method](https://fortelabs.com/blog/para/) and holds your own projects, but it's also linked, via symlinks, into content the whole team shares.
+
+## The folder structure
+
+```
+Knowledge Base/
+  CLAUDE.md                 ← root rules: routing map, link-style conventions
+  Start here.md
+  0-Inbox/
+  1-Projects/
+    [Product Area]/
+      CLAUDE.md
+      Wiki/                  ← symlinked into the shared repo, if this area's wiki is shared
+      [Project Name]/
+        CLAUDE.md
+        MEMORY.md
+        01-Inputs/  02-Planning/  03-Research/  04-Competitive/  05-Synthesis/  06-Deliverables/
+  2-Areas/
+    Research Repository/     ← symlinked into the shared repo
+  3-Resources/
+    About Me/
+    Design Principles.md
+  4-Archives/
+```
+
+Two things in that tree are not local copies — they're symlinks resolving to a separate clone of `utilitywarehouse/uw-knowledgebase-content` on disk:
+
+- **`2-Areas/Research Repository`** — the team's shared research findings, always linked in for everyone.
+- **`1-Projects/[Product Area]/Wiki`** — each shared product wiki (Cashback Card, Brand & Design System, and any new one a teammate starts as shared), linked in per product area.
+
+That's deliberate: everyone reads the same underlying files, and a `git pull` in the shared clone is all it takes to catch up — no re-syncing, no manual copying.
+
+## Per-folder rules, not one global rule file
+
+Different folders carry different `CLAUDE.md` rule files. The root `CLAUDE.md` sets knowledge-base-wide conventions (a routing map, link-style rules). Each product area under `1-Projects/` has its own `CLAUDE.md`, and each shared `Wiki/` has its own `Area-Conventions.md` — covering that area's own ingest workflow, page format, and citation rules, kept current by whoever contributes to that wiki. A generic wiki tool has no equivalent for this: it's one wiki, one set of conventions (if any). See [CLAUDE.md and memory](/knowledge-base/claude-md-and-memory/) for how these files nest and how they differ from `MEMORY.md`.
+
+## Go deeper
+
+- [Folder structure](/knowledge-base/folder-structure/) — PARA explained plainly, the routing table, and shared vs personal folders.
+- [CLAUDE.md and memory](/knowledge-base/claude-md-and-memory/) — how rule files nest, and how `MEMORY.md` differs from `CLAUDE.md`.
+- [Worked example: Brand and Design System](/knowledge-base/worked-example-design-system/) — a case study of one area's own extension to this structure.
+- [Research Repository](/knowledge-base/research-repository/) — how the shared research store is organised.
+- [FAQ](/knowledge-base/faq/) — why this beats a wiki with a chatbot bolted on.
+
+<Aside type="tip" title="Getting set up or adding a project">
+  See [Install](/install/) for the two skills that build and grow this structure — `setup-my-knowledge-base` for the very first run, `new-project-setup` for every project after that.
+</Aside>

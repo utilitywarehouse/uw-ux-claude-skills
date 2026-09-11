@@ -1,0 +1,52 @@
+---
+title: Install
+description: How to install the ux plugin and run its skills in Claude Code.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+This plugin ships from a single public repo, [`utilitywarehouse/uw-ux-claude-skills`](https://github.com/utilitywarehouse/uw-ux-claude-skills), as a [Claude Code plugin marketplace](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces). Installing it is two commands, run inside Claude Code.
+
+## Add the marketplace and install the plugin
+
+<Steps>
+
+1. Add this repo as a plugin marketplace:
+
+   ```
+   claude plugin marketplace add utilitywarehouse/uw-ux-claude-skills
+   ```
+
+2. Install the `ux` plugin from it:
+
+   ```
+   claude plugin install ux@uw-ux-claude-skills
+   ```
+
+</Steps>
+
+That's it — the skills are now available in any Claude Code session.
+
+<Aside type="caution" title="Skills are namespaced">
+  Every skill in this plugin runs under the `ux:` prefix, because the plugin itself is called `ux`. The command is **`/ux:setup-my-knowledge-base`**, not `/setup-my-knowledge-base` — and the same goes for every other skill in [The skills](/skills/): `/ux:new-project-setup`, `/ux:end-session`, `/ux:propose-skill`, and so on. Typing the bare skill name without the `ux:` prefix won't find it.
+
+  You don't have to type the slash command yourself, either — describing what you want in plain language (*"help me set up my knowledge base"*) is usually enough for Claude Code to pick the right skill on its own. The prefix mostly matters when you're being precise about which skill to invoke, or reading these docs.
+</Aside>
+
+## What to run first
+
+If you've never used this before, the first skill to run is:
+
+```
+/ux:setup-my-knowledge-base
+```
+
+It builds your personal knowledge base from scratch — folders, a starter `CLAUDE.md`, your own `About Me` note — links you into the team's shared Research Repository and product wikis, and then hands off into `/ux:new-project-setup` so you leave with one real project started, not an empty shell. See [Your knowledge base](/knowledge-base/) for what that structure looks like once it exists, and [setup-my-knowledge-base](/skills/setup-my-knowledge-base/) for the full walkthrough.
+
+If your knowledge base already exists, skip straight to [new-project-setup](/skills/new-project-setup/) instead — `setup-my-knowledge-base` deliberately refuses to run a second time.
+
+## Requirements
+
+- **Claude Code**, installed and signed in.
+- **VS Code**, with the Claude Code extension — `setup-my-knowledge-base` checks for this and won't proceed without it, since the rest of onboarding (adding shared-repo clones to your workspace) assumes it.
+- Access to `utilitywarehouse/uw-knowledgebase-content`, the private repo holding the team's shared Research Repository and product wikis — needed to link into shared content, not to install the plugin itself. If you don't have access yet, `setup-my-knowledge-base` still completes everything else and tells you how to request it.

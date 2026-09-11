@@ -1,0 +1,52 @@
+---
+title: Contribute
+description: How an edit to shared content or to a skill actually gets to the rest of the team.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+There are two separate things people mean by "contribute" here, and they go through two different skills, but the shape of the loop is the same for both: **edit locally → open a PR → an admin merges it → everyone else picks it up on their next pull.** Nothing you edit locally reaches anyone else automatically.
+
+## Contributing a wiki or Research Repository edit
+
+You edit shared content the same way you edit anything else in your knowledge base — directly, in place, inside the symlinked folder (`2-Areas/Research Repository`, or `1-Projects/[Product]/Wiki`). You don't need to think about the fact that it's shared while you're editing it.
+
+When you're ready to send that edit back to the team:
+
+<Steps>
+
+1. **Say so.** Tell Claude Code you've made an edit and want to submit it — "submit this", "send this back", "open a PR for this wiki page" all work.
+
+2. **`contribute-to-shared-knowledgebase` takes over.** It resolves the symlink you edited back to the real clone on disk (e.g. `~/Documents/Github/uw-knowledgebase-content`), confirms there's actually something to submit, and asks you for a one-line description if it isn't obvious from the diff.
+
+3. **It branches, commits, pulls the latest `main`, and — if that merges cleanly — pushes and opens a pull request** against `utilitywarehouse/uw-knowledgebase-content`. You never type a raw `git` command yourself. If pulling the latest `main` conflicts with your edit, the skill stops and tells you plainly which file conflicts rather than guessing which version is right.
+
+4. **An admin reviews and merges the PR.** This skill never merges anything itself, and `main` is a protected branch — a direct push would be rejected by GitHub regardless.
+
+5. **Everyone else sees it on their next pull.** Their local clone of `uw-knowledgebase-content` doesn't update itself — it's a live symlink into a shared repo, not a live shared filesystem. The change appears once `git pull` runs in their clone, whether that happens automatically (this system's usual "pull before editing" habit) or because they run it by hand.
+
+</Steps>
+
+<Aside type="caution" title="This is not automatic sync">
+  A merged PR does not appear for anyone else the moment it merges. Every teammate's copy is a separate clone on their own machine, and it only catches up the next time something pulls it — most commonly, the next time they (or a skill acting on their behalf) edit something in that same shared folder and the "pull before editing" habit kicks in first. It's easy to assume this behaves like a live wiki where everyone sees the same page update in real time. It doesn't. If you need someone to see a change today, tell them, or wait to confirm it's landed in their own knowledge base.
+</Aside>
+
+## Contributing a skill change
+
+This repo — `uw-ux-claude-skills` itself — ships purely through reviewed GitHub pull request, the same review-gated shape as above, but through a different skill: `propose-skill`.
+
+<Steps>
+
+1. **Finish the skill first**, typically with `skill-creator` — writing or editing a new or existing `SKILL.md` under `plugins/ux/skills/`.
+
+2. **Say you want to ship it.** "Propose this skill", "submit my skill", "ship this to the team repo" all trigger `propose-skill`.
+
+3. **It checks scope, branches off `main`, runs this repo's smoke test for the skill, commits, and opens a PR** against `utilitywarehouse/uw-ux-claude-skills` for repo admins to review.
+
+4. **An admin reviews and merges.** Same as the wiki flow: `propose-skill` never merges anything itself, and `main` is protected.
+
+5. **Everyone picks up the new or changed skill the way Claude Code plugins normally update** — it isn't instantly live in a session that's already running.
+
+</Steps>
+
+Either way, the shape holds: your edit is real and usable locally the moment you make it — the PR step is what makes it *shared*.

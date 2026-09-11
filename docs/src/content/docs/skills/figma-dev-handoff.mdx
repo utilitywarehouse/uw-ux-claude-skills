@@ -1,0 +1,48 @@
+---
+title: figma-dev-handoff
+description: Turn a working Figma journey page into a dev-ready one, without losing engineering annotations along the way.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:figma-dev-handoff
+```
+
+Converts loose screens on a journey page into proper component sets, files them on the file's master-components page, places instances back on the journey page, and keeps every engineering annotation visible where developers actually read it. Deliberately not something to do by hand — the sequence has several silent failure modes that destroy annotations or ship mangled text to engineers, and none of them throw an error when they happen.
+
+<Aside type="danger" title="The thing that breaks most often">
+  Annotations are attached to one specific node and do not flow from a component to its instances. Componentise a screen and place a fresh instance, and the instance comes back with no notes on it — nothing errors, so the first sign is usually a developer asking where the notes went. This skill is built around capturing every annotation first and re-applying them last, specifically because of this.
+</Aside>
+
+## Before any write happens
+
+Three things get agreed with you up front, because they're expensive to undo: how screens should be grouped into component sets, what the variant names should be (taken from the page's own scenario labels, not a paraphrase), and — since it's the highest-stakes single step — confirmation before anything gets added to the file's master-components page.
+
+## What it does, step by step
+
+<Steps>
+
+1. **Discovers the file's own conventions** rather than inventing them — finds an already-dev-ready feature and copies its layout, spacing, and variant naming exactly.
+
+2. **Captures every annotation to disk first** — text, node identifiers, and which screen it came from — and verifies the saved count matches what's on the page.
+
+3. **Creates the feature frame** on the master-components page, named for the feature.
+
+4. **Converts screens to components one set at a time**, verifying each before starting the next. Positions are read and stored immediately before each conversion, since journey pages can get rearranged mid-session.
+
+5. **Moves the sets into the feature frame** in journey order, and verifies the annotation total still matches.
+
+6. **Places instances back on the journey page** at the exact stored coordinates, so the page reassembles itself around them.
+
+7. **Re-applies every annotation**, watching for three specific silent failure points: straight quotes getting HTML-escaped, a write invalidating node handles for the rest of that script, and slot id segments disappearing from the middle of a path after conversion. Only once the instances are confirmed correct does it clear the masters.
+
+8. **Files any remaining loose components** onto the right page — shared, if more than one feature could use it; feature-specific otherwise.
+
+9. **Does a final pass** — screenshots every screen, confirms nothing changed visually, confirms nothing is left loose, and reports the annotation count one last time.
+
+</Steps>
+
+## What you get at the end
+
+Set IDs, frame locations, the final annotation count, and — importantly — anything it couldn't finish. Figma sometimes leaves orphaned fragments behind that the API can't remove; this skill says so plainly rather than letting it surface later as a mystery.

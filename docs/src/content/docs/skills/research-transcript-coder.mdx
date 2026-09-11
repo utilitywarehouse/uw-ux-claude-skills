@@ -1,0 +1,40 @@
+---
+title: research-transcript-coder
+description: Apply qualitative codes to a cleaned transcript, ready for thematic analysis, and keep a shared codebook consistent across a study.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:research-transcript-coder
+```
+
+Takes a cleaned transcript and tags meaningful segments with qualitative codes ready for thematic analysis, while maintaining one shared codebook across every session in a study so cross-session synthesis stays consistent. It pairs naturally right after [research-transcript-cleaner](/skills/research-transcript-cleaner/) finishes.
+
+<Aside type="caution" title="Same participant rule as the cleaner">
+  Only for sessions with a real research participant — not internal meetings, which don't fit this workflow's codebook model.
+</Aside>
+
+## What it produces
+
+Per session: a coded transcript with inline `[code]` tags, and a "quotes by code" section grouping every coded excerpt together for easy synthesis. Per study, shared and updated after each session: a living codebook of every code used, with descriptions and cumulative frequency counts.
+
+## What it does, step by step
+
+<Steps>
+
+1. **Gathers what it needs** — the transcript, the discussion guide (to understand what the session was trying to answer), and the existing codebook if this isn't the first session in the study.
+
+2. **Picks a coding approach.** First session: derives 3–5 seed codes from the discussion guide, then adds new codes inductively as the data warrants. Every session after that: applies the existing codebook deductively, adding a new code only when something genuinely doesn't fit anything already there.
+
+3. **Works through the transcript sequentially**, tagging meaningful segments — a behaviour, mental model, pain point, workaround, need, or reaction — in `[square-bracket]` codes. Not everything needs a code; facilitator questions and filler don't.
+
+4. **Holds the line on code discipline.** Aims for 8–20 codes per session. Before adding a new one, it checks whether it would actually group different quotes than an existing code — `[competitor-reference]` and `[competitor-mention]` are the same code, so only one survives. When in doubt, it goes broader: merging codes later is harder than splitting a broad one.
+
+5. **Writes the coded transcript**, linked in its frontmatter back to the cleaned source it came from and the codebook it applied — so both directions are navigable without reconstructing the relationship from filenames.
+
+6. **Updates the shared `Codebook.md`** — created on the first session, updated after every one — with any new codes and refreshed frequency counts.
+
+7. **Reports back**: which session this is, how the codebook now stands, the top codes this session and whether they're consistent with earlier sessions, whether the discussion guide's topics got covered, and — if this is the last session in the study — a nudge toward moving to synthesis.
+
+</Steps>

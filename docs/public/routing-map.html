@@ -1,0 +1,733 @@
+<title>The Routing Map — Knowledge Base</title>
+<style>
+  :root {
+    --bg: #EEF0E6;
+    --surface: #FFFFFF;
+    --surface-2: #E3E7D9;
+    --ink: #1E2A22;
+    --ink-muted: #56635A;
+    --border: #C9D0BE;
+
+    --line-inbox: #D9581F;
+    --line-tasks: #2472A4;
+    --line-projects: #1C7A5E;
+    --line-product: #6B4A93;
+    --line-resources: #B98A1E;
+    --line-aios: #A83250;
+
+    --board-bg: #12161C;
+    --board-bg-2: #191F27;
+    --board-text: #F0A93E;
+    --board-text-dim: #7C6A46;
+    --board-border: #2A323D;
+
+    --font-display: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12160F;
+      --surface: #1B2318;
+      --surface-2: #212B1D;
+      --ink: #ECEFE3;
+      --ink-muted: #9BAA92;
+      --border: #333F2C;
+
+      --line-inbox: #F0813F;
+      --line-tasks: #52A9DA;
+      --line-projects: #34BB8F;
+      --line-product: #A484CF;
+      --line-resources: #E0B84A;
+      --line-aios: #E0607A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12160F;
+    --surface: #1B2318;
+    --surface-2: #212B1D;
+    --ink: #ECEFE3;
+    --ink-muted: #9BAA92;
+    --border: #333F2C;
+
+    --line-inbox: #F0813F;
+    --line-tasks: #52A9DA;
+    --line-projects: #34BB8F;
+    --line-product: #A484CF;
+    --line-resources: #E0B84A;
+    --line-aios: #E0607A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 56px 24px 72px;
+  }
+
+  header.intro {
+    max-width: 62ch;
+    margin-bottom: 36px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(32px, 5vw, 46px);
+    line-height: 1.1;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .subtitle code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  /* ---- Departures board ---- */
+  .board {
+    background: var(--board-bg);
+    border: 1px solid var(--board-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    box-shadow: 0 18px 40px -24px rgba(0,0,0,0.55);
+  }
+
+  .board-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .board-title {
+    color: var(--board-text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .board-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 4px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: opacity 0.18s ease;
+  }
+
+  .board-row + .board-row { margin-top: 6px; }
+
+  .board-row .label {
+    color: var(--board-text-dim);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    align-self: start;
+    padding-top: 2px;
+  }
+
+  .board-row .value {
+    color: var(--board-text);
+    letter-spacing: 0.01em;
+  }
+
+  .board-row .value.note {
+    color: #C9B685;
+    font-size: 12.5px;
+  }
+
+  .board.updating .board-row { opacity: 0.25; }
+
+  /* ---- Controls ---- */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+
+  .ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .ctrl-btn:hover { border-color: var(--ink-muted); }
+  .ctrl-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .ctrl-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 4px;
+    flex-wrap: wrap;
+  }
+
+  .ctrl-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
+    border: none;
+    background: var(--border);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .ctrl-dot:hover { background: var(--ink-muted); }
+  .ctrl-dot.active { background: var(--ink); transform: scale(1.35); }
+  .ctrl-dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .ctrl-counter {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ---- Map ---- */
+  .map-wrap {
+    margin-top: 28px;
+    overflow-x: auto;
+  }
+
+  svg#map {
+    width: 100%;
+    height: auto;
+    display: block;
+    min-width: 640px;
+  }
+
+  .line {
+    fill: none;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.32;
+    transition: opacity 0.35s ease, filter 0.35s ease;
+  }
+  .line.active {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 55%, transparent));
+  }
+
+  .hub circle { fill: var(--surface); stroke: var(--ink); stroke-width: 3; }
+  .hub text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    fill: var(--ink);
+    text-anchor: middle;
+  }
+
+  .station circle.node {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 2.5;
+    transition: stroke 0.3s ease, r 0.3s ease;
+  }
+  .station.active circle.node {
+    stroke-width: 3.5;
+    r: 12;
+  }
+  .station text.path {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    fill: var(--ink-muted);
+    dominant-baseline: middle;
+    transition: fill 0.3s ease, font-weight 0.3s ease;
+  }
+  .station text.note {
+    font-family: var(--font-body);
+    font-size: 12px;
+    fill: var(--ink-muted);
+    dominant-baseline: middle;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .station.active text.path { fill: var(--ink); font-weight: 600; }
+  .station.active text.note { opacity: 1; }
+
+  .wiki rect {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 2.5;
+    transition: stroke 0.3s ease, stroke-width 0.3s ease;
+  }
+  .wiki.active rect {
+    stroke: var(--line-projects);
+    stroke-width: 3.5;
+  }
+  .wiki text.path {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-anchor: middle;
+    fill: var(--ink-muted);
+    transition: fill 0.3s ease, font-weight 0.3s ease;
+  }
+  .wiki text.note {
+    font-family: var(--font-body);
+    font-size: 11px;
+    text-anchor: middle;
+    fill: var(--ink-muted);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .wiki.active text.path { fill: var(--ink); font-weight: 600; }
+  .wiki.active text.note { opacity: 1; }
+
+  .transfer {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 2;
+    stroke-dasharray: 2 5;
+    stroke-linecap: round;
+    opacity: 0.6;
+    transition: stroke 0.3s ease, opacity 0.3s ease;
+  }
+  .transfer.active {
+    stroke: var(--line-product);
+    opacity: 1;
+  }
+  .transfer-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ink-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .transfer.active + .transfer-label,
+  .transfer-label.active { opacity: 1; }
+
+  #train {
+    fill: var(--surface);
+    stroke: var(--ink);
+    stroke-width: 3;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  #train.on { opacity: 1; }
+  #train-core { transition: fill 0.2s ease; }
+
+  /* ---- Legend ---- */
+  .legend {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px 28px;
+  }
+
+  .legend-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .swatch.diamond {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: transparent;
+    border: 2px solid var(--ink-muted);
+    transform: rotate(45deg);
+    margin-top: 8px;
+  }
+
+  .swatch.dashed {
+    width: 14px;
+    height: 0;
+    border-radius: 0;
+    background: transparent;
+    border-top: 2px dashed var(--ink-muted);
+    margin-top: 9px;
+  }
+
+  .legend-item .path {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .legend-item .desc {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.45;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+</style>
+
+<div class="page">
+  <header class="intro">
+    <p class="eyebrow">Knowledge Base</p>
+    <h1>The routing map</h1>
+    <p class="subtitle">One knowledge base, six routes. Every prompt starts in the same place — <code>CLAUDE.md</code> reads it and picks the route it takes to the right folder. Seven real prompts — step through them below.</p>
+  </header>
+
+  <div class="board" id="board">
+    <div class="board-top">
+      <span class="board-title">Routing example</span>
+    </div>
+    <div class="board-row">
+      <span class="label">Prompt</span>
+      <span class="value" id="b-prompt">—</span>
+    </div>
+    <div class="board-row">
+      <span class="label">Folder</span>
+      <span class="value" id="b-shelf">—</span>
+    </div>
+    <div class="board-row">
+      <span class="label"> </span>
+      <span class="value note" id="b-note">—</span>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+    <button type="button" class="ctrl-btn" id="btn-prev" aria-label="Previous example">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M11 2 L5 8 L11 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+    <button type="button" class="ctrl-btn" id="btn-next" aria-label="Next example">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M5 2 L11 8 L5 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+    <div class="ctrl-dots" id="ctrl-dots" role="tablist" aria-label="Jump to example"></div>
+    <span class="ctrl-counter" id="ctrl-counter">1 / 7</span>
+  </div>
+
+  <div class="map-wrap">
+    <svg id="map" viewBox="0 0 1360 790" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" style="fill:var(--border)" opacity="0.5" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="1360" height="790" fill="url(#dots)" />
+
+      <path id="line-inbox"    class="line" style="color:var(--line-inbox)"    stroke="currentColor"    d="M140,422.5 L420,422.5 L420,110 L1040,110" />
+      <path id="line-tasks"    class="line" style="color:var(--line-tasks)"    stroke="currentColor"    d="M140,422.5 L420,422.5 L420,360 L1040,360" />
+      <path id="line-projects" class="line" style="color:var(--line-projects)" stroke="currentColor" d="M140,422.5 L420,422.5 L420,235 L1040,235" />
+      <path id="line-product"  class="line" style="color:var(--line-product)"  stroke="currentColor"  d="M140,422.5 L420,422.5 L420,485 L1040,485" />
+      <path id="line-resources" class="line" style="color:var(--line-resources)" stroke="currentColor" d="M140,422.5 L420,422.5 L420,610 L1040,610" />
+      <path id="line-aios"      class="line" style="color:var(--line-aios)"      stroke="currentColor"  d="M140,422.5 L420,422.5 L420,735 L1040,735" />
+
+      <path id="transfer-projects-company" class="transfer" d="M1040,235 L1010,235 L1010,485 L1040,485" />
+      <text class="transfer-label" x="997" y="364" text-anchor="end">transfer</text>
+
+      <g class="hub">
+        <circle cx="140" cy="422.5" r="17" />
+        <circle cx="140" cy="422.5" r="6" style="fill:var(--ink)" />
+        <text x="140" y="466.5">PROMPT</text>
+      </g>
+
+      <g id="wiki-node" class="wiki">
+        <rect x="486" y="225" width="20" height="20" rx="2" transform="rotate(45 496 235)" />
+        <text class="path" x="496" y="208">Wiki</text>
+        <text class="note" x="496" y="271">Cashback Card Wiki — first port of call</text>
+      </g>
+
+      <g class="station" data-line="inbox">
+        <circle class="node" cx="1040" cy="110" r="9" />
+        <text class="path" x="1062" y="106">0-Inbox/</text>
+        <text class="note" x="1062" y="126">daily notes — reference, not a task list</text>
+      </g>
+      <g class="station" data-line="projects">
+        <circle class="node" cx="1040" cy="235" r="9" />
+        <text class="path" x="1062" y="231">1-Projects/</text>
+        <text class="note" x="1062" y="251">any current or past project</text>
+      </g>
+      <g class="station" data-line="tasks">
+        <circle class="node" cx="1040" cy="360" r="9" />
+        <text class="path" x="1062" y="356">2-Areas/Tasks.md</text>
+        <text class="note" x="1062" y="376">one file, not a folder — Work / Personal</text>
+      </g>
+      <g class="station" data-line="product">
+        <circle class="node" cx="1040" cy="485" r="9" />
+        <text class="path" x="1062" y="481">2-Areas/Company Knowledge/</text>
+        <text class="note" x="1062" y="501">org structure — one layer above any product</text>
+      </g>
+      <g class="station" data-line="resources">
+        <circle class="node" cx="1040" cy="610" r="9" />
+        <text class="path" x="1062" y="606">3-Resources/Useful links.md</text>
+        <text class="note" x="1062" y="626">"where do I find that link"</text>
+      </g>
+      <g class="station" data-line="aios">
+        <circle class="node" cx="1040" cy="735" r="9" />
+        <text class="path" x="1062" y="731">4-Archives/</text>
+        <text class="note" x="1062" y="751">finished work — read for history, never treated as current</text>
+      </g>
+
+      <circle id="train" cx="140" cy="422.5" r="8"><title>Claude, reading the prompt</title></circle>
+      <circle id="train-core" cx="140" cy="422.5" r="3.5" fill="var(--ink)" />
+    </svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch" style="background:var(--line-inbox)"></span><div><span class="path">0-Inbox/</span><span class="desc">Daily notes created in Obsidian — reference for context on a day, not a task list or an outstanding-items queue.</span></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--line-projects)"></span><div><span class="path">1-Projects/</span><span class="desc">Any current or past project — the biggest, busiest route.</span></div></div>
+    <div class="legend-item"><span class="swatch diamond"></span><div><span class="path">Wiki</span><span class="desc">First port of call for any question about the project — read before the project folder, not alongside it.</span></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--line-tasks)"></span><div><span class="path">2-Areas/Tasks.md</span><span class="desc">A single file, not a folder — add, delete, or update a line under its Work or Personal heading.</span></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--line-product)"></span><div><span class="path">2-Areas/Company Knowledge/</span><span class="desc">Org structure & terminology, not product-specific — one layer above any project's own Wiki, checked second.</span></div></div>
+    <div class="legend-item"><span class="swatch dashed"></span><div><span class="path">Transfer</span><span class="desc">A project prompt can go on to Company Knowledge when its own Wiki doesn't cover something — not its own trip, just a link between two folders.</span></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--line-resources)"></span><div><span class="path">3-Resources/Useful links.md</span><span class="desc">Pointer to a specific saved link.</span></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--line-aios)"></span><div><span class="path">4-Archives/</span><span class="desc">Work that's ended — a finished project or closed area. Read for history; never edited or treated as current status.</span></div></div>
+  </div>
+
+  <footer>
+    <span>Knowledge Base</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var examples = [
+    { line: 'inbox',     prompt: "What did I note about the CBC cancellation form issue?",    shelf: '0-Inbox/2026-07-27.md',             note: 'No index in this folder — Claude searches across daily notes to find the one that mentions it.' },
+    { line: 'projects',  prompt: "What should the alert say when a top-up payment method's unavailable?", shelf: '1-Projects/Cashback Card/Top-up Payment Method Unavailability/', note: '"Treat the wiki as the first port of call — before project folders." Project folder covered second, for status & decisions.', wiki: true },
+    { line: 'projects',  prompt: "Is this Smart Tips work CBC-only, or does Insurance need to weigh in?", shelf: '1-Projects/Cashback Card/Smart Tips (App Home Screen)/', note: "Cashback Card Wiki doesn't cover team/pillar structure — transfers to Company Knowledge for that.", wiki: true, viaCompanyKnowledge: true },
+    { line: 'tasks',     prompt: "Add 'schedule a meeting with Lee' to my list",              shelf: '2-Areas/Tasks.md',                  note: "Not a folder — a single file. Appended under '## Work', tagged ➕ with today's date." },
+    { line: 'product',   prompt: "What does OGI stand for, and which team owns it?",          shelf: '2-Areas/Company Knowledge/fs-pillar.md', note: "Organisational, not product-specific — wouldn't belong in a project's own Wiki." },
+    { line: 'resources', prompt: "Where's the link to the design principles doc?",           shelf: '3-Resources/Useful links.md',       note: 'Points to the saved link, not a paraphrase.' },
+    { line: 'aios',      prompt: "Where did we keep the old Hearth Design System notes?",       shelf: '4-Archives/Hearth Design System/',  note: 'Finished work moves here — read for history, never treated as current status.' }
+  ];
+
+  var board = document.getElementById('board');
+  var bPrompt = document.getElementById('b-prompt');
+  var bShelf = document.getElementById('b-shelf');
+  var bNote = document.getElementById('b-note');
+  var train = document.getElementById('train');
+  var trainCore = document.getElementById('train-core');
+  var lines = document.querySelectorAll('.line');
+  var stations = document.querySelectorAll('.station');
+  var wikiNode = document.getElementById('wiki-node');
+  var transferPath = document.getElementById('transfer-projects-company');
+  var transferLabel = document.querySelector('.transfer-label');
+  var companyStation = document.querySelector('.station[data-line="product"]');
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var currentIndex = 0;
+  var cycleTimer = null;
+  var runToken = 0;
+
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+  var dotsWrap = document.getElementById('ctrl-dots');
+  var counterEl = document.getElementById('ctrl-counter');
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function setActive(lineKey) {
+    lines.forEach(function (l) { l.classList.toggle('active', l.id === 'line-' + lineKey); });
+    stations.forEach(function (s) { s.classList.toggle('active', s.getAttribute('data-line') === lineKey); });
+  }
+
+  function updateBoard(ex) {
+    board.classList.add('updating');
+    setTimeout(function () {
+      bPrompt.textContent = '“' + ex.prompt + '”';
+      bShelf.textContent = ex.shelf;
+      bNote.textContent = ex.note;
+      board.classList.remove('updating');
+    }, 160);
+  }
+
+  function moveDotTo(pt) {
+    train.setAttribute('cx', pt.x);
+    train.setAttribute('cy', pt.y);
+    trainCore.setAttribute('cx', pt.x);
+    trainCore.setAttribute('cy', pt.y);
+  }
+
+  function tween(fromFrac, toFrac, duration, path, len, token, onDone) {
+    var t0 = performance.now();
+    function step(now) {
+      if (token !== runToken) return;
+      var t = Math.min(1, (now - t0) / duration);
+      var eased = easeInOutCubic(t);
+      var frac = fromFrac + (toFrac - fromFrac) * eased;
+      moveDotTo(path.getPointAtLength(frac * len));
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else if (onDone) {
+        onDone();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function updateControlsUI() {
+    var dots = dotsWrap.querySelectorAll('.ctrl-dot');
+    dots.forEach(function (d, i) { d.classList.toggle('active', i === currentIndex); });
+    counterEl.textContent = (currentIndex + 1) + ' / ' + examples.length;
+  }
+
+  function playExample(i) {
+    clearTimeout(cycleTimer);
+    runToken++;
+    var token = runToken;
+    currentIndex = i;
+    updateControlsUI();
+
+    var ex = examples[i];
+    var path = document.getElementById('line-' + ex.line);
+    var len = path.getTotalLength();
+
+    stations.forEach(function (s) { s.classList.remove('active'); });
+    wikiNode.classList.remove('active');
+    transferPath.classList.remove('active');
+    transferLabel.classList.remove('active');
+    setActive(ex.line);
+    trainCore.setAttribute('fill', getComputedStyle(path).stroke);
+    updateBoard(ex);
+
+    var stationEl = document.querySelector('.station[data-line="' + ex.line + '"]');
+    var wikiFrac = 0.5;
+
+    function arrive() {
+      if (token !== runToken) return;
+      stationEl.classList.add('active');
+
+      if (!ex.viaCompanyKnowledge) return;
+
+      if (reduced) {
+        transferPath.classList.add('active');
+        transferLabel.classList.add('active');
+        companyStation.classList.add('active');
+        return;
+      }
+
+      cycleTimer = setTimeout(function () {
+        if (token !== runToken) return;
+        trainCore.setAttribute('fill', getComputedStyle(document.getElementById('line-product')).stroke);
+        var tLen = transferPath.getTotalLength();
+        tween(0, 1, 700, transferPath, tLen, token, function () {
+          if (token !== runToken) return;
+          transferPath.classList.add('active');
+          transferLabel.classList.add('active');
+          companyStation.classList.add('active');
+        });
+      }, 500);
+    }
+
+    if (reduced) {
+      moveDotTo(path.getPointAtLength(len));
+      train.classList.add('on');
+      if (ex.wiki) wikiNode.classList.add('active');
+      arrive();
+      return;
+    }
+
+    train.classList.remove('on');
+    moveDotTo(path.getPointAtLength(0));
+
+    cycleTimer = setTimeout(function () {
+      if (token !== runToken) return;
+      train.classList.add('on');
+
+      if (ex.wiki) {
+        // wiki is the first port of call — dwell there longer than at the destination
+        tween(0, wikiFrac, 1200, path, len, token, function () {
+          if (token !== runToken) return;
+          wikiNode.classList.add('active');
+          cycleTimer = setTimeout(function () {
+            if (token !== runToken) return;
+            tween(wikiFrac, 1, 900, path, len, token, arrive);
+          }, 1400);
+        });
+      } else {
+        tween(0, 1, 1500, path, len, token, arrive);
+      }
+    }, 250);
+  }
+
+  function goTo(i) {
+    var next = ((i % examples.length) + examples.length) % examples.length;
+    playExample(next);
+  }
+
+  function buildDots() {
+    examples.forEach(function (ex, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ctrl-dot';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', 'Example ' + (i + 1) + ': ' + ex.prompt);
+      b.addEventListener('click', function () { goTo(i); });
+      dotsWrap.appendChild(b);
+    });
+  }
+
+  btnPrev.addEventListener('click', function () { goTo(currentIndex - 1); });
+  btnNext.addEventListener('click', function () { goTo(currentIndex + 1); });
+
+  buildDots();
+  playExample(currentIndex);
+})();
+</script>

@@ -1,0 +1,46 @@
+---
+title: end-session
+description: An end-of-session capture pass that finds what a session taught and hasn't been written down yet, and routes it to the right file.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:end-session
+```
+
+A knowledge base only remembers what gets written down. During a session you correct something, decide something, or answer a question whose answer is genuinely new — and if none of that lands in a file, the next session starts from scratch and you have to say it all again. This skill can't tell when a session is ending on its own; you have to say so, by telling Claude Code you're wrapping up, or asking what's worth saving.
+
+<Aside type="note">
+  This is a review pass, not a writing spree. Most sessions produce one or two things worth keeping, some produce none. It's not a tidy-up either — no reorganising folders, no linting the wiki, no rewriting pages that are merely imperfect. Those are real, separate asks.
+</Aside>
+
+## What it does, step by step
+
+<Steps>
+
+1. **Works out what's in scope.** Reads every `CLAUDE.md` and `MEMORY.md` on the path from the active project up to the knowledge base's root, plus any `Wiki/` folder along that path. If the session touched no project at all, scope is just the root and your auto-memory.
+
+2. **Sweeps the session for four things**, in order of how easy they are to miss:
+   - **Corrections** to something already written down — the highest-value catch, since in the moment it just felt like a conversation.
+   - **Durable product knowledge** — business rules, user flows, stakeholder positions, commercial context, research findings.
+   - **Project state that changed** — status, decisions, dates, deliverables.
+   - **Behaviour rules** — things you told it to always or never do, including implicit ones inferred from what you rejected and why.
+
+3. **Routes each finding** to one of seven destinations — a Wiki page, the Research Repository, a project's `MEMORY.md`, a `CLAUDE.md`, auto-memory, `About Me.md`, or `Design Principles.md` — based on what kind of thing it is, not where it's convenient to put it.
+
+4. **Shows you the exact text before writing anything.** A changed line is shown as a diff; a new page is shown in full. Nothing gets written on the assumption you'll approve it.
+
+5. **Applies only what you approve**, and does the housekeeping that comes with it — updating a wiki's `index.md` and `log.md`, fixing both halves of a correction if the same wrong fact appeared in more than one file.
+
+6. **Confirms what it wrote and where**, then checks one unrelated thing on the way out: whether anything in a shared folder you touched this session is sitting uncommitted, or whether the shared clone has fallen behind `main` — and offers `contribute-to-shared-knowledgebase` if there's something to submit.
+
+</Steps>
+
+## The line that matters most: Wiki vs MEMORY.md
+
+Ask whether the fact would still be true if the project were cancelled tomorrow. "The cap tiers by service count" is true regardless of this project's fate, so it's Wiki. "Step 6 done, step 7 next" is only true this week, so it's `MEMORY.md`.
+
+## Research gets special treatment
+
+A study records what people said on a given date, under the product version and conditions in place then — and that context can't be recovered later. So research findings never get quietly updated: if the session produced new evidence, this skill proposes a *new* study page, never an edit to an existing sealed one. If something this session disagrees with an existing finding, both get reported as accurate records of their own moment, and the disagreement is surfaced for you to judge, not resolved automatically.

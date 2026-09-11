@@ -1,0 +1,61 @@
+---
+title: UX AI Operating System
+description: Your UX knowledge base — what it is, and the path to go from zero to fully working with it.
+template: splash
+next:
+  label: Get started
+hero:
+  tagline: Your team's knowledge base and AI operating system for design and research — an extension of your own memory, that gets sharper every time you use it.
+  actions:
+    - text: Install the plugin
+      link: /uw-ux-claude-skills/install/
+      icon: right-arrow
+      variant: primary
+    - text: Browse the skills
+      link: /uw-ux-claude-skills/skills/
+      icon: right-arrow
+      variant: minimal
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+## A shared memory for your team
+
+You can't remember everything you've learned. Neither can your team: project decisions, research findings, design decisions and the reasoning behind them, where a Figma file lives, or why a design-system decision was made. It all ends up scattered across docs, Slack threads, email, and other people's heads, and finding them again costs more time than it should.
+
+You never have to forget any of that again, because Claude reads it directly from your knowledge base. Every conversation you have with it adds to what it knows about your projects and your research — kept as plain files on your own machine, which Claude can read directly instead of hunting across scattered sources. That also keeps it faster and cheaper to run. Product wikis, the research repository, and the design system are shared spaces inside it too, so what one designer teaches Claude about a project, a product, a study, or the brand and design system stays in sync and up to date for every other designer using it.
+
+Nothing here assumes you've coded before, or know what a terminal, git, or even a wiki is.
+
+## Getting started, step by step
+
+Follow these in order — they get you from nothing installed to your knowledge base up and running.
+
+<Steps>
+
+1. **Read the Concepts pages — or skip ahead if you're already comfortable.** Five short pages covering the vocabulary everything else assumes: [Claude Chat, Cowork, and Code](/concepts/claude-products/) (which product this all actually runs on), [Terminal basics](/concepts/terminal-basics/), [Git and GitHub](/concepts/git-and-github/), [What is a knowledge base?](/concepts/what-is-a-knowledge-base/), and [Plugins and Skills](/concepts/plugins-and-skills/). None of them assume you've read the others.
+
+2. **Install git, VS Code, and the Claude Code extension.** See [Before you start](/install/before-you-start/) for the full checklist, including GitHub access and Google Drive sync — Drive sync is required for everyone, not optional, since it's the only backup for your knowledge base if your Mac is lost, stolen, or dies.
+
+3. **Install the `ux` plugin.** Two terminal commands, covered on the [Install](/install/) page.
+
+4. **Run `/ux:setup-my-knowledge-base`.** Builds your personal knowledge base from nothing — folders, a starter `CLAUDE.md`, your own `About Me` note — and links you into the team's shared content. See the [full walkthrough](/skills/setup-my-knowledge-base/).
+
+5. **Understand your knowledge base's structure.** [Your knowledge base](/knowledge-base/) and its sub-pages cover the folder layout, how `CLAUDE.md` and `MEMORY.md` differ, and how the shared Research Repository works.
+
+</Steps>
+
+## Using it day to day
+
+Once you're set up, these are the skills you'll come back to again and again.
+
+- **Starting your next project.** Your first project already got set up for you automatically during the initial setup of the knowledge base. From now on, you don't need to run anything. Just tell Claude you're starting something new, and it sets up the right folders for you using `/ux:new-project-setup`. See the [full walkthrough](/skills/new-project-setup/).
+
+- **Sharing knowledge with the team.** Claude keeps watch over your whole knowledge base. If you edit or add to something already shared, it picks that up on its own, opens a pull request, and a knowledge base admin reviews it before it goes out to the team. If Claude spots something completely new that looks worth sharing, it gives you the option to turn it into shared knowledge and contribute it back. See the [full walkthrough](/skills/contribute-to-shared-knowledgebase/) for what that looks like.
+
+- **Keep your knowledge base healthy over time.** Run `/ux:knowledgebase-health-check` periodically. Good times to run it: after adding a lot of new content at once, or just when it's been a while. It catches broken links, contradictions in your knowledge, and stale rules. See the [full walkthrough](/skills/knowledgebase-health-check/) for details.
+
+- **End each working session with `/ux:end-session`.** A "session" is just one sitting of working with Claude Code — however long you're at it before you close the window or walk away. Ending a session properly, with this skill, captures durable knowledge, changed project facts, and new rules before any of it gets lost. See its [full page](/skills/end-session/).
+
+- **Explore the rest of the skills as you need them.** Every skill in the plugin gets a full walkthrough on [The skills](/skills/) page.
+
