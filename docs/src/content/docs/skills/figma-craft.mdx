@@ -1,0 +1,32 @@
+---
+title: figma-craft
+description: Execution-level craft for hands-on Figma work — the gotchas that don't throw an error but produce a subtly wrong screenshot.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Not a slash command you run on its own — this skill is a companion layer loaded alongside whichever tool is actually doing the Figma work (building instances, editing components, assembling a proposal), regardless of which underlying Figma tool is driving the calls. It holds properties of Figma and Hearth that are true in any file, not one specific file's own conventions — for those, see [figma-dev-handoff](/skills/figma-dev-handoff/).
+
+## The one idea behind every gotcha here
+
+Figma's Plugin API almost never errors on a wrong value. A default that's wrong, a property that's silently unwired, a fill left in place by accident — all of these run clean, and the only sign anything's off is a screenshot that looks subtly wrong. "It ran without error" is not confirmation of anything. Screenshot the result before calling a change done.
+
+## What it actually covers
+
+<Aside type="tip" title="Read this as a checklist, not a wall of trivia">
+  Each of these is a specific, previously-made mistake, written down so it isn't made twice.
+</Aside>
+
+- **Check effect styles, not just variants and text.** Shadows and blurs don't show up when inspecting a component's variant properties or its text — they need their own explicit check.
+- **Holding frames get no fill.** A frame that only exists to group content should have its fill cleared; auto-layout frames default to white, which is easy to leave in by accident.
+- **Hearth's "Icon Container" only wires one slot at small size.** At `Size=SM-32`, only the 20px icon slot is actually connected — setting the 24px slot silently does nothing.
+- **Set every component property explicitly.** Don't trust an unset property to default to something sensible — review the full set after any change, not just the one property you meant to touch.
+- **Pick tint shades for visible contrast, not the palest option that looks safe.** The bar is "can I tell this is green/red at a glance," not full accessibility contrast, but it is a real bar.
+- **Hearth's "Color Scheme" variant is product-tagged, not decorative.** Applying `Energy` or `Broadband` to unrelated content implies a product association that isn't real; default to `Pig` for generic content.
+- **Annotations belong to a node, not to a component.** Componentise a screen and place a fresh instance, and the annotation stays on the master — the instance comes back blank, with nothing flagging that this happened.
+- **Replacing a text node's full contents flattens its formatting** to whatever the first character was styled as. Change only the part that changed, or re-apply size/weight ranges afterwards.
+- **Figma escapes straight quotes in annotations** into `&quot;` — use typographic quotes (`" "`, `'`) instead, which store exactly as typed.
+- **Writing an annotation can invalidate node handles you collected earlier in the same pass** — capture anything you need to report before the write, then re-fetch.
+- **`combineAsVariants` doesn't lay anything out.** It groups components into a set and leaves each one wherever it happened to sit on the canvas — position and apply layout settings afterwards.
+- **An "unloaded font" error doesn't mean the font is broken** — it usually just needs loading in the current script before it can be written to.
+- **Read a node's position immediately before moving it, and check its siblings first.** Coordinates read earlier in a session are a guess, and a position computed relative to one neighbour doesn't confirm the target slot is actually empty.

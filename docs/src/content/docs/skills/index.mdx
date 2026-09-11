@@ -1,11 +1,11 @@
 ---
 title: The skills
-description: Every skill in the ux plugin, one paragraph each — with deep dives on the two you'll use most.
+description: Every skill in the ux plugin, one paragraph each, each linked to its own full page.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-The `ux` plugin currently ships eleven skills. Every command below runs under the `ux:` prefix — see [Install](/install/) if that's new to you. Two get a full deep-dive page because they're the ones almost everyone touches first: [setup-my-knowledge-base](/skills/setup-my-knowledge-base/) and [new-project-setup](/skills/new-project-setup/). Every other skill gets one paragraph here, pulled from its own description.
+The `ux` plugin currently ships eleven skills. Every command below runs under the `ux:` prefix — see [Plugins and Skills](/concepts/plugins-and-skills/) if that's new to you, or [Install](/install/) to get set up. All eleven get a full deep-dive page now — start with whichever paragraph matches what you're trying to do.
 
 ## setup-my-knowledge-base
 
@@ -17,39 +17,39 @@ Sets up a new project folder inside `1-Projects/`, branching on whether it's a b
 
 ## research-transcript-cleaner
 
-Cleans raw video transcripts from UX research sessions with participants — moderated interviews, usability tests, unmoderated recordings — into a coding-ready markdown file, using **intelligent verbatim**: hesitation and meaning are preserved, filler and inconsistency are removed, without rewriting what participants actually said. Triggers on a pasted or uploaded `.vtt`/`.srt`/`.txt`/`.docx` transcript, or a Dovetail/Userlytics/Meet/Zoom/Teams export. Not for internal meetings or standups — those have no research participant to code.
+Cleans raw video transcripts from UX research sessions with participants — moderated interviews, usability tests, unmoderated recordings — into a coding-ready markdown file, using **intelligent verbatim**: hesitation and meaning are preserved, filler and inconsistency are removed, without rewriting what participants actually said. Triggers on a pasted or uploaded `.vtt`/`.srt`/`.txt`/`.docx` transcript, or a Dovetail/Userlytics/Meet/Zoom/Teams export. Not for internal meetings or standups — those have no research participant to code. **[Full page →](/skills/research-transcript-cleaner/)**
 
 ## research-transcript-coder
 
-Takes a cleaned transcript and applies qualitative codes ready for thematic analysis, maintaining a shared codebook across every session in a study so cross-session synthesis stays consistent. Pairs naturally after `research-transcript-cleaner` finishes. Like the cleaner, it's for sessions with an actual research participant — not internal meetings.
+Takes a cleaned transcript and applies qualitative codes ready for thematic analysis, maintaining a shared codebook across every session in a study so cross-session synthesis stays consistent. Pairs naturally after `research-transcript-cleaner` finishes. Like the cleaner, it's for sessions with an actual research participant — not internal meetings. **[Full page →](/skills/research-transcript-coder/)**
 
 ## study-writeup
 
-Writes up a finished piece of research as a full report (may name participants, UW-internal, filed with the owning project and mirrored into the Research Repository) and a one-page study card (never names participants, shareable anywhere the knowledge base is shared). Detects what already exists — nothing, report-only, card-only, or both — and does only the work that state needs. Every figure is verified against a source before it's written, and when starting from raw or coded data the skill also does the thematic-clustering analysis itself.
+Writes up a finished piece of research as a full report (may name participants, UW-internal, filed with the owning project and mirrored into the Research Repository) and a one-page study card (never names participants, shareable anywhere the knowledge base is shared). Detects what already exists — nothing, report-only, card-only, or both — and does only the work that state needs. Every figure is verified against a source before it's written, and when starting from raw or coded data the skill also does the thematic-clustering analysis itself. **[Full page →](/skills/study-writeup/)**
 
 ## knowledgebase-health-check
 
-Audits the health of the whole knowledge base — not just one wiki — for orphaned notes, broken links, stale Routing Map rows, a root `CLAUDE.md` that's drifted from the shared starter template, missing symlinks into shared content, plain-filename citations that read as unconnected, stale pages, and page-format violations. Runs the mechanical link-check and the substantive content review together, rather than treating either as optional. Worth running after a bulk ingest, a folder reorganisation, or whenever graph view looks sparser than it should.
+Audits the health of the whole knowledge base — not just one wiki — for orphaned notes, broken links, stale Routing Map rows, a root `CLAUDE.md` that's drifted from the shared starter template, missing symlinks into shared content, plain-filename citations that read as unconnected, stale pages, and page-format violations. Runs the mechanical link-check and the substantive content review together, rather than treating either as optional. Worth running after a bulk ingest, a folder reorganisation, or whenever graph view looks sparser than it should. **[Full page →](/skills/knowledgebase-health-check/)**
 
 ## end-session
 
-An end-of-session capture pass that reviews what just happened for anything that should outlive the session, then routes each finding to the right home — durable product knowledge to the area Wiki, changed project facts to `MEMORY.md`, new behaviour rules to `CLAUDE.md`, cross-session facts to auto-memory, personal facts to `About Me.md`, standing design heuristics to `Design Principles.md` — proposing every change for approval before writing anything. Triggered by saying the session's wrapping up, or when something substantial landed mid-session and hasn't been written down yet.
+An end-of-session capture pass that reviews what just happened for anything that should outlive the session, then routes each finding to the right home — durable product knowledge to the area Wiki, changed project facts to `MEMORY.md`, new behaviour rules to `CLAUDE.md`, cross-session facts to auto-memory, personal facts to `About Me.md`, standing design heuristics to `Design Principles.md` — proposing every change for approval before writing anything. Triggered by saying the session's wrapping up, or when something substantial landed mid-session and hasn't been written down yet. **[Full page →](/skills/end-session/)**
 
 ## propose-skill
 
-Ships a finished skill change from this repo — a new skill, an edit to an existing one, or a retirement — into a pull request for repo admins to review and merge. Runs this repo's smoke test for the skill before every push. Never merges anything itself: `main` is protected, and only a repo admin approves the merge. This is literally how this documentation site's own source skills got written up — see [Contribute](/contribute/).
+Ships a finished skill change from this repo — a new skill, an edit to an existing one, or a retirement — into a pull request for repo admins to review and merge. Runs this repo's smoke test for the skill before every push. Never merges anything itself: `main` is protected, and only a repo admin approves the merge. This is literally how this documentation site's own source skills got written up — see [Contribute](/contribute/). **[Full page →](/skills/propose-skill/)**
 
 ## contribute-to-shared-knowledgebase
 
-Takes an edit already made inside a symlinked shared folder (the Research Repository, or a product wiki) and turns it into a pull request against `uw-knowledgebase-content` — handling the pull, branch, commit, push, and PR so the contributor never has to type a raw `git` command. Doesn't apply to edits inside your own private folders (`0-Inbox`, personal project work) — only shared content goes through a PR.
+Takes an edit already made inside a symlinked shared folder (the Research Repository, or a product wiki) and turns it into a pull request against `uw-knowledgebase-content` — handling the pull, branch, commit, push, and PR so the contributor never has to type a raw `git` command. Doesn't apply to edits inside your own private folders (`0-Inbox`, personal project work) — only shared content goes through a PR. **[Full page →](/skills/contribute-to-shared-knowledgebase/)**
 
 ## figma-craft
 
-Execution-level craft for hands-on Figma design work — a set of hard-won gotchas around effect styles, frame fills, Hearth component quirks, and semantic colour choices. A companion layer that sits underneath whichever Figma tool is actually driving the calls, holding the properties of Figma and Hearth that are true in any file, rather than one file's own local conventions.
+Execution-level craft for hands-on Figma design work — a set of hard-won gotchas around effect styles, frame fills, Hearth component quirks, and semantic colour choices. A companion layer that sits underneath whichever Figma tool is actually driving the calls, holding the properties of Figma and Hearth that are true in any file, rather than one file's own local conventions. **[Full page →](/skills/figma-craft/)**
 
 ## figma-dev-handoff
 
-Turns a working Figma journey page into a dev-ready one: converts loose screens into component sets, files them on the file's master-components page, places instances back on the journey page, and keeps every engineering annotation visible where developers actually read it. Deliberately not a manual process — the sequence has five silent failure modes that destroy annotations or ship mangled text to engineers if done by hand.
+Turns a working Figma journey page into a dev-ready one: converts loose screens into component sets, files them on the file's master-components page, places instances back on the journey page, and keeps every engineering annotation visible where developers actually read it. Deliberately not a manual process — the sequence has five silent failure modes that destroy annotations or ship mangled text to engineers if done by hand. **[Full page →](/skills/figma-dev-handoff/)**
 
 <Aside type="note">
   Confirmed against the actual `plugins/ux/skills/` folder in this repo at the time this page was written — eleven skills, matching the list above.

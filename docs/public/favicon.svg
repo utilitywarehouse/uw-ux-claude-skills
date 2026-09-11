@@ -1,0 +1,15 @@
+<!--
+  favicon.svg — derived, not a source file.
+  UW has no standalone monogram/mark distinct from the wordmark (confirmed against
+  01-Inputs/ and DESIGN.md — only four wordmark files exist). This favicon takes the
+  real Logo-Condensed geometry (69x32) unmodified — no new shapes added — and places
+  it on a purple rounded-square tile so it reads at 16-32px. If UW ships a real app-icon
+  monogram later, replace this file with it rather than iterating on this derivation.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Utility Warehouse favicon">
+  <title>Utility Warehouse</title>
+  <rect width="32" height="32" rx="6" fill="#7A42C8"/>
+  <g transform="translate(3.93, 10.4) scale(0.35)">
+    <path d="M27.8713 18.9797C27.8713 26.1352 33.9093 31.8509 40.9537 31.8509H55.9176C62.9619 31.8509 69 26.1352 69 18.9797V0H58.324V19.5469C58.324 21.2485 57.3614 22.1648 56.0488 22.1648C54.7362 22.1648 53.7736 21.2485 53.7736 19.5469V0H43.0976V19.5469C43.0976 21.2485 42.1351 22.1648 40.8224 22.1648C39.5098 22.1648 38.5472 21.2485 38.5472 19.5469V0H27.8713L27.8713 18.9797ZM12.9512 32.2C20.6081 32.2 25.9024 26.6588 25.9024 19.1542V0H15.2264V19.3724C15.2264 21.074 14.2638 21.9902 12.9512 21.9902C11.6386 21.9902 10.676 21.074 10.676 19.3724V0H0V19.1542C0 26.6588 5.29423 32.2 12.9512 32.2Z" fill="#FCFBF2"/>
+  </g>
+</svg>

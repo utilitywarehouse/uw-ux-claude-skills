@@ -1,0 +1,46 @@
+---
+title: knowledgebase-health-check
+description: Audit the whole knowledge base for broken links, orphaned notes, stale rules, and — for any project with a Wiki — its content health too.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:knowledgebase-health-check
+```
+
+Finds the notes that have fallen out of your knowledge base's link graph, and the reasons they fell out. A knowledge base can look healthy and be badly disconnected — one real example had 157 orphaned notes out of 260 while its wikis looked internally immaculate, because sources were being cited as plain filenames instead of real links, which a link-checking tool can't see as a connection at all.
+
+## Pick a mode first
+
+<Steps>
+
+1. **Full check** — link health across the whole knowledge base, plus a content reading pass for any project with a `Wiki/` folder. Slower, most thorough. Use this after a bulk ingest, a reorganisation, or when nothing's been checked in a while.
+
+2. **Quick check for new wikis** — just checks whether a shared wiki or the Research Repository has appeared in the team's shared clone without a symlink into your knowledge base yet. Seconds, not minutes. Use this when the only question is "did anyone add a new shared wiki since I last set up?"
+
+</Steps>
+
+## What the full check looks for
+
+- **Orphans** — notes with no links in or out. Not automatically a problem: daily notes and `CLAUDE.md`/`MEMORY.md` files are reasonable orphans. The judgement call is whether anything *should* point at the note.
+- **Broken links** — a link resolving to nothing. Worth fixing promptly: clicking an unresolved link in Obsidian actually creates an empty note, so broken links quietly manufacture junk.
+- **Stale Routing Map rows** — a row in the root `CLAUDE.md`'s routing table pointing at a folder that no longer exists, usually because a project was archived but its row was never removed.
+- **Citations written as plain text** — the highest-value finding in practice. A `**Sources**: filename.md` line asserts a relationship a reader can follow, but doesn't create a real link, so the source reads as an orphan even though the connection is stated right there in the prose.
+- **Frontmatter links resolving to nothing** — commonly an unconfigured web clipper wrapping every article author in a link to a note that will never exist.
+- **Filenames differing only by case** — two files that can collide on some operating systems, so a short link can silently resolve to the wrong one.
+- **Root CLAUDE.md drift** — your root `CLAUDE.md` compared against the shared starter template, section by section, to catch either side drifting out of step with the other.
+- **Shared folders with no symlink yet** — a wiki or the Research Repository exists in the team's shared clone but was created after your own setup ran, so it never got linked in.
+- **Orphaned shared folders** — a wiki still sits in the shared clone, but nothing in your knowledge base mentions it any more — a sign a local project (and its symlink) was deleted without cleaning up the shared copy.
+
+For a project with a `Wiki/` folder, the full check also reads the wiki's actual content — not just its links — for format violations, sources that were never turned into a page, stale content, missing cross-links, contradictions between pages, and missing stakeholder entries.
+
+<Aside type="caution" title="Sealed pages: flagged, never repaired">
+  Research findings are point-in-time and sealed once written. An old research page being "stale" is the finding, not a defect — this check reports it as context, never edits it to look current. If new data contradicts an old one, both get reported as accurate records of their own moment; the check never picks a winner.
+</Aside>
+
+## What it does with what it finds
+
+The report goes to `2-Areas/Knowledgebase Maintenance/`, leading with counts and then the findings that need a decision. Fixes are always proposed, never applied — deletions and renames in particular need your explicit approval. An earlier report covering the same scope gets moved (never deleted) into `4-Archives/Knowledgebase Maintenance/` once the new one supersedes it, unless something still links to it.
+
+If a defect shows up in many files at once, the report looks for what's generating it — often a template embedded in another skill — rather than treating each instance as a one-off to fix by hand.
