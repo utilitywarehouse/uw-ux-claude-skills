@@ -1,0 +1,44 @@
+---
+title: contribute-to-shared-knowledgebase
+description: Turn an edit already made inside a shared wiki or the Research Repository into a pull request, without ever typing a raw git command.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:contribute-to-shared-knowledgebase
+```
+
+Takes an edit you've already made inside a symlinked shared folder — the Research Repository, or a product wiki — and turns it into a pull request against `utilitywarehouse/uw-knowledgebase-content`. You never run a raw `git` command yourself; this skill does the pull, branch, commit, push, and PR. If the [git and GitHub vocabulary](/concepts/git-and-github/) here is new, that page defines every term used below.
+
+This only applies to shared content. Edits inside your own private folders — `0-Inbox`, personal project work — never go through a PR; you just save them like any normal file.
+
+## What it actually does
+
+<Steps>
+
+1. **Finds the real clone.** The shared folder you edited is a [symlink](/concepts/git-and-github/) — it resolves to a separate clone on disk, and everything from here runs inside that clone, not your knowledge base.
+
+2. **Confirms there's something to submit.** Checks the current branch and whether an earlier contribution from it already merged; if so, switches back to `main` and starts fresh rather than assuming it's mid-contribution. Then checks for actual uncommitted changes or unpushed commits — if there's nothing, it says so and stops.
+
+3. **Branches and commits your edit** before touching the remote at all — `contribute-<short-slug>-<date>` — using a one-line description of what changed, either obvious from the diff or asked for directly.
+
+4. **Pulls the latest `main` and merges it in.** Shared content has no locking system, so a real conflict here is expected occasionally, not a sign something's broken.
+
+5. **If it conflicts, it stops** rather than guessing which version is right — you (and possibly whoever else touched the same file) need to resolve it, and the branch is left exactly as-is so nothing is lost.
+
+6. **If it merges cleanly, it pushes and opens the PR** against `uw-knowledgebase-content`, with your one-line description as the title.
+
+7. **Hands you the PR URL**, and says plainly that it's waiting on review — nothing changes for the rest of the team until someone merges it.
+
+8. **Switches the clone back to `main`** and pulls fast-forward, so the clone doesn't sit on the contribution branch indefinitely. The pushed branch itself stays on the remote — that's what the PR points at.
+
+</Steps>
+
+## What a PR actually looks like here, concretely
+
+Say you fixed a typo on a Cashback Card wiki page. You tell Claude Code you want to submit it. It resolves your edit to the real clone, confirms the diff is just that typo, creates a branch like `contribute-cbc-wiki-typo-fix-2026-09-03`, commits it with your one-line description, pulls and merges the latest `main` (clean, in this case), pushes the branch, and opens a pull request on GitHub. You get a link. A repo admin reviews it — maybe today, maybe next week — and merges it. Only then does the fix exist for anyone else; your own copy already had it locally the whole time, since the symlink resolved to your clone immediately.
+
+<Aside type="caution" title="Never a direct push, never a self-merge">
+  `main` is a protected branch on GitHub — a direct push to it is rejected regardless. This skill never pushes to `main` and never merges the PR itself, even if asked. Only a repo admin can approve and merge a change to shared content.
+</Aside>

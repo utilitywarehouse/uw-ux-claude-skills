@@ -1,0 +1,56 @@
+---
+title: Folder structure
+description: PARA explained plainly, the routing-table concept, and shared vs personal folders.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page assumes you've read [Git and GitHub](/concepts/git-and-github/) — the clone/symlink vocabulary here builds directly on it rather than redefining it.
+
+## PARA, plainly
+
+Your knowledge base is organised by **PARA** — four top-level folders, sorted by how active something is, not by what topic it's about:
+
+- **`0-Inbox/`** — daily notes, created automatically as you work. Reference material for a specific day, not a task list.
+- **`1-Projects/`** — active work with an end point. Product areas (like a specific product your team owns) sit at the top level, with individual projects nested inside.
+- **`2-Areas/`** — ongoing responsibilities with no end date. A design system never "finishes" the way a project does, so it lives here instead of under Projects.
+- **`3-Resources/`** — reference material worth keeping, not tied to one active piece of work.
+- **`4-Archives/`** — work that's ended. When a project wraps up, it moves here — it doesn't stay in Projects, and it doesn't move sideways into Resources.
+
+The rule for filing something new: work down that list in order. Does this move forward an active project? If not, does it support an ongoing responsibility? If not, is it reference material worth keeping? Filing by *how actionable something is* beats filing by topic — a note filed under a subject heading is a note you won't see again when you actually need it.
+
+<Aside type="tip" title="An analogy">
+  Think of PARA less like a filing cabinet sorted by subject, and more like a Trello board sorted by status — what's live, what's a standing responsibility, what's reference, what's done. The question is always "what state is this in," not "what is this about."
+</Aside>
+
+## The routing table
+
+The root `CLAUDE.md` file at the top of your knowledge base holds a **routing map** — a table of folders and when to use each one. As new projects and areas get created, a row gets added automatically. As a project gets archived, its row is meant to go too, so the table stays an accurate map instead of only ever growing — a periodic health check catches any row still pointing at a folder that no longer exists.
+
+The point of the routing map is that Claude Code reads it before deciding where to look for something or where to file something new, so you don't have to remember your own folder structure by heart.
+
+Here's what that actually looks like for a handful of real prompts — step through them to see which folder each one lands in and why:
+
+<iframe
+  src="/uw-ux-claude-skills/routing-map.html"
+  title="The routing map — an interactive walkthrough of where different prompts land"
+  style="width: 100%; height: 900px; border: 1px solid var(--sl-color-gray-5); border-radius: 8px;"
+  loading="lazy"
+/>
+
+<Aside type="tip" title="Full-screen view">
+  If it looks cramped in the panel above, open it directly: [/routing-map.html](/uw-ux-claude-skills/routing-map.html).
+</Aside>
+
+## Shared vs personal folders
+
+Most of your knowledge base is a genuinely personal folder — files that live only on your machine. Two kinds of folder are different:
+
+- **`2-Areas/Research Repository`** — always linked in for everyone on the team.
+- **`1-Projects/[Product Area]/Wiki`** — linked in per product area, for any area whose Wiki was set up as shared (the default when a new top-level area is created).
+
+Both of these are [symlinks](/concepts/git-and-github/) — shortcuts that point at a separate clone of the team's shared content repo, sitting elsewhere on your computer. They look like ordinary folders inside your knowledge base, but editing a file inside one is really editing that shared clone, and a change there goes through the [pull-request loop](/skills/contribute-to-shared-knowledgebase/) before it reaches the rest of the team. Everything else in your knowledge base is a plain personal folder with none of that machinery.
+
+<Aside type="note" title="Where the routing map fits in">
+  The routing map isn't just for personal folders — it has rows for the shared Research Repository and every shared Wiki too, so "which folder do I need" and "is this folder shared or personal" get answered by the same table.
+</Aside>

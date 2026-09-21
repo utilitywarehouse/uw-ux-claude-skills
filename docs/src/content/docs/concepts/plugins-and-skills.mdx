@@ -1,0 +1,33 @@
+---
+title: Plugins and Skills
+description: What a plugin is, what a Skill is, and how the ux plugin and its Skills relate to everything else in these docs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Every `/ux:skill-name` command in these docs is one of two things this page explains: a plugin, or a Skill inside it.
+
+## Plugin: a bundle you install once
+
+A **plugin** is a bundle of capability you install once into Claude Code, after which it's available in every session. This whole repo — `uw-ux-claude-skills` — ships one plugin, called `ux`. Installing it is two terminal commands (covered on the [Install](/install/) page), and after that, everything inside it is just available — you don't re-install it per project or per session.
+
+## Skill: one packaged task inside a plugin
+
+A **Skill** is one specific, packaged piece of work inside a plugin — instructions that teach Claude Code how to carry out a task the way this team does it, rather than however it might improvise on its own. `setup-my-knowledge-base` is a Skill. So is `research-transcript-cleaner`. Each one exists because the task it covers has real rules worth getting right consistently — a transcript needs cleaning the same way every time, a new project needs the same folder structure every time — rather than being reinvented from scratch in every conversation.
+
+You invoke a Skill two ways:
+
+- **By name**, typed as a slash command: `/ux:setup-my-knowledge-base`.
+- **By describing what you want** in plain language: "help me set up my knowledge base" is usually enough for Claude Code to find and run the right Skill on its own.
+
+<Aside type="caution" title="The ux: prefix">
+  Skills are namespaced under the plugin they ship from, so the command is `/ux:setup-my-knowledge-base`, never `/setup-my-knowledge-base`. Typing the bare name without `ux:` won't find it. This mostly matters when you're being precise about which Skill to invoke, or reading these docs — describing what you want in plain language sidesteps the whole issue.
+</Aside>
+
+## How this maps onto the rest of the docs
+
+Every skill in the `ux` plugin gets covered on the [The skills](/skills/) page — a paragraph each, with a full deep-dive page for the ones worth walking through step by step. When later pages say "run `/ux:new-project-setup`" or "the `contribute-to-shared-knowledgebase` skill handles this", that's what they mean: one specific packaged task, inside the one plugin this whole system ships as.
+
+<Aside type="tip" title="An analogy">
+  A plugin is like installing a whole toolkit into Figma once — after that, every tool inside it just shows up in your toolbar. A Skill is one specific tool in that kit: not "Figma can do things," but "this exact tool does this exact job, the same way, every time you reach for it."
+</Aside>

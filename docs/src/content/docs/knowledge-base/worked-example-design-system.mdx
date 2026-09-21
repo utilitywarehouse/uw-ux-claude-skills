@@ -1,0 +1,30 @@
+---
+title: "Worked example: Brand and Design System"
+description: A case study of one area's own extension to the standard structure — not a template every area follows.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="One area's own extension, not a template">
+  Everything on this page describes how one specific area — Brand and Design System — chose to organise itself. It's worth reading to see what a mature area can grow into, but it is not the shape every area is expected to take. Most areas are a `CLAUDE.md` and a `Wiki/`, nothing more.
+</Aside>
+
+## Why this area is different
+
+Brand and Design System lives in `2-Areas/`, not `1-Projects/` — the one deliberate exception to the usual rule that product areas sit under Projects. A design system never really finishes the way a project does: the initial build project was completed and archived, but the area itself keeps going indefinitely, which is exactly what `2-Areas/` is for.
+
+The whole folder is shared with the team, the same way the Research Repository is — one copy, edited via pull request, never a personal local file.
+
+## The three-way split
+
+Where most areas hold just a `CLAUDE.md` and a `Wiki/`, this one also holds two more files, because three different things can each answer a UW-branding question and they aren't interchangeable:
+
+- **`DESIGN.md`** — a single-file, narrative reference for AI agents. The place to check for a quick single fact ("what's the primary purple?", "what's the CTA button radius?"). It's wired into the root routing table, so it's the default answer for a branding question.
+- **`design-system/`** — a fuller, multi-file repackaging of `DESIGN.md`, purpose-built for generating assets `DESIGN.md` doesn't cover — decks, social templates, ads, starter components — for use outside a real product codebase. It carries its own load order and its own `CLAUDE.md`, read first before using it.
+- **`Wiki/`** — the area's shared knowledge base in the ordinary sense: process notes, source captures, gotchas. Same shape as any other area's Wiki.
+
+A fourth source sits outside this area entirely but is part of the same routing decision: **`hearth-ai-toolkit`**'s skills, which pull live documentation straight from the real Hearth component library. For real code inside an actual product, or a final screen being handed to engineers, that live source wins over `design-system/`'s own copies, because `design-system/`'s tokens are a snapshot from a specific export date and can drift from the real, current library.
+
+## Why this matters as a worked example
+
+The lesson worth taking from this area isn't "add three files to every area." It's that **the standard shape (`CLAUDE.md` + `Wiki/`) can grow additional structure when an area's own needs genuinely call for it** — and when it does, the area's own `CLAUDE.md` is where that routing gets explained, so a reader (human or Claude) knows which source answers which kind of question rather than guessing. Most areas will never need this; this one did, because "what's on-brand" gets asked in enough different contexts (a quick fact, an asset build, real production code) that one file couldn't serve all three well.

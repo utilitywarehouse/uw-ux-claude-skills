@@ -1,0 +1,42 @@
+---
+title: study-writeup
+description: Write up a finished piece of research as a full report and a one-page study card, verifying every figure against a source before it's written.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:study-writeup
+```
+
+Produces the two outputs a finished study needs: a **full report** (may name participants, UW-internal only, filed with the owning project and mirrored into the [Research Repository](/knowledge-base/research-repository/)'s `Reports/`) and a **study card** (never names participants, shareable anywhere the knowledge base is shared, filed in `Studies/`). It also checks an existing report/card pair against each other and their source, if that's what's needed instead of writing from scratch.
+
+## It detects which state a study is in, and only does the work that state needs
+
+<Steps>
+
+1. **Nothing exists** — writes the report, then the card.
+2. **Report, no card** — writes the card from the report.
+3. **Card, no report** — writes the report from the source, then trims the card back to headlines.
+4. **Both exist and are already correct** — re-verifies, then says so and stops.
+
+</Steps>
+
+## What makes this more than formatting
+
+<Aside type="note" title="This is a decide-then-write skill">
+  Filling in headings without checking the content underneath solves nothing. The two real failure modes this guards against: nobody checked the written content against its source, and content ends up on the wrong page — a card carrying a cross-study comparison or a metric definition that belongs on a Topics page instead.
+</Aside>
+
+- **Every figure is verified, not assumed.** If raw data is held, every figure is recounted directly from it. If only the report exists, the card is transcribe-checked against it. If neither is held, that's stated plainly and every figure is marked as carried second-hand — this becomes a required field on the card.
+- **When starting from raw or coded data, it does the analysis itself** — clustering coded quotes into themes using standard thematic analysis (Braun & Clarke's six-phase method), not just formatting a set of findings someone already decided on.
+- **Participant names are scrubbed before the card is drafted**, never after — colleague attribution and source citations stay, since the no-names rule is about participants specifically.
+- **Every candidate line gets routed**, not assumed to belong on the card. Anything that actually belongs on a Topics page or a product Wiki is flagged to you with the proposed text — this skill never writes to either of those itself.
+
+## Sealing
+
+Reports and study cards are sealed the moment they're written — no edits, no additions, no tidying afterwards, with one narrow exception: a figure mistyped from its own cited source can be corrected, and the correction is recorded as such. New data is always a new record, never a change to an old one. Because sealing is permanent, the skill pauses for your explicit approval before treating a report as sealed — calling out by name any finding that's novel, contradicts other data, rests on a single source, or is especially stakeholder-facing.
+
+## Where the format itself lives
+
+The report and card structure are owned by this skill's own reference files, not by a knowledge base's local `Research Repository/CLAUDE.md` — deliberately, since the structure needs to be identical everywhere this skill runs. The one genuinely local thing is the tag taxonomy, which it reads from your own Research Repository's `CLAUDE.md`.

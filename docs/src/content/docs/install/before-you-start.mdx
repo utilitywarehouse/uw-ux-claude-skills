@@ -1,0 +1,32 @@
+---
+title: Before you start
+description: Installing git, VS Code and the Claude Code extension, GitHub access, and Google Drive sync — the setup that has to be in place before setup-my-knowledge-base can run.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+`setup-my-knowledge-base` checks for some of this itself and will stop and tell you what's missing rather than half-completing. This page walks through getting each piece in place ahead of time, so the first run goes straight through.
+
+## What you need before running the setup skill
+
+<Steps>
+
+1. **Git**, installed on your machine. This is what the whole shared-content system runs on underneath — see [Git and GitHub](/concepts/git-and-github/) if the vocabulary here is new.
+
+2. **VS Code, with the Claude Code extension.** This is the taught setup for this programme, not one option among several — `setup-my-knowledge-base`'s first step checks for VS Code specifically and stops if it isn't there, because the rest of setup (adding shared-repo clones to your workspace) assumes it.
+
+3. **Access to `utilitywarehouse/uw-knowledgebase-content`**, the private repo holding the team's shared Research Repository and product wikis. This is needed to link you into shared content during setup, not to install the plugin itself. If you don't have access yet, `setup-my-knowledge-base` still completes everything else and tells you plainly how to request it — it doesn't block on this.
+
+4. **Google Drive sync, set up on the folder your knowledge base will live in.** This is a required step, not optional — every designer's knowledge base needs to be backed up, since it's a folder of plain files on one machine with nothing else keeping a copy.
+
+</Steps>
+
+## The symlink error you'll see, and why it's expected
+
+Once your knowledge base is linked into shared content, two folders inside it — the Research Repository, and any shared product Wiki — are [symlinks](/concepts/git-and-github/) rather than ordinary folders: shortcuts pointing at a separate clone elsewhere on your computer. Google Drive can't sync a symlink, and it will throw an error on those specific folders when it tries.
+
+That error is safe to ignore. It means Drive is (correctly) not trying to sync a shortcut as if it were real file content — the actual shared content lives in its own clone, tracked by git and shared through pull requests instead, per [Git and GitHub](/concepts/git-and-github/). Drive sync is still doing its job on everything else in your knowledge base; it's just this specific pair of folders where the error is expected, not a sign something's broken.
+
+<Aside type="tip">
+  Once all of the above is in place, head to [Install the plugin](/install/) to add the `ux` plugin, then run `/ux:setup-my-knowledge-base`.
+</Aside>

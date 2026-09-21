@@ -1,0 +1,33 @@
+---
+title: FAQ
+description: Why this system exists instead of just using Slab with an AI connector.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+### Why not just use Slab + an MCP connector?
+
+It's a fair question — Slab is the team's existing wiki, and Claude could write into it directly via an MCP connector. That's a real capability, not one we're dismissing. But here's what this system has that a Slab-plus-connector setup doesn't, and what it would take to close the gap.
+
+**What we actually have:**
+
+- **Per-folder rule files.** Different rules apply in different folders — the Research Repository has its own workflow for adding new sources and its own citation rules, a product wiki has its own page format, a project folder has its own memory conventions. A generic wiki tool has no equivalent for this: it's one wiki, one set of rules for everything in it, if any rules exist at all.
+- **A pull-request review gate.** Every shared edit ships as a reviewed pull request against `uw-knowledgebase-content`, not something saved straight through. Someone looks at it before it lands for the whole team.
+- **A health-check skill.** `knowledgebase-health-check` scans the whole knowledge base for broken links, orphaned notes, and stale or drifted rule files — the kind of silent decay that builds up in any wiki and that nobody notices until graph view looks sparse or a link 404s.
+- **A family of skills a wiki has no concept of.** Transcript cleaning, transcript coding, study write-ups, starting a new project — these aren't wiki pages, they're workflows. A plain wiki, even one with an AI chat bolted on, doesn't model "clean this transcript" or "set up a new project" as first-class actions.
+
+**The "write and forget" problem.** A Slab page sits static until a human happens to remember to update it. This system doesn't wait to be noticed: `end-session` runs a capture pass at the end of every session looking for anything that should outlive it, and a session-start check actively flags stale or unshared content and prompts someone to deal with it — rather than it sitting there decaying until someone stumbles on it months later.
+
+**The counterpoint, taken seriously.** Yes, Claude could write into Slab through an MCP connector — that's real, and worth acknowledging rather than waving away. But three things would still be missing, and all three would need to be rebuilt outside Slab to match what this system already does:
+
+1. The per-folder rule files telling Claude what to do and when.
+2. The pull-request review gate before a shared edit lands.
+3. The health-check scan for broken links and drift.
+
+Rebuilding all three outside Slab is building this system again — just running on top of Slab instead of git.
+
+**Bottom line:** Slab plus an MCP connector gets you a chat interface bolted onto a static wiki. Closing the real gap means rebuilding what this system already has, for a worse result.
+
+<Aside type="tip" title="Getting set up or adding a project">
+  See [Install](/install/) for the two skills that build and grow this structure — `setup-my-knowledge-base` for the very first run, `new-project-setup` for every project after that.
+</Aside>

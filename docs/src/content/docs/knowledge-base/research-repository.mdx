@@ -1,0 +1,48 @@
+---
+title: Research Repository
+description: How the shared Research Repository is structured — studies, topics, and reports — and why it exists instead of just querying Dovetail.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Experimental, not a settled system">
+  This area is still being worked out in practice, not a proven, finished process. In particular, cross-project synthesis via Topic pages doesn't work well yet — don't oversell that part to yourself or a study's stakeholders.
+</Aside>
+
+## What it is
+
+The Research Repository is a shared store of UX research findings, readable by any project and contributed to by every project that runs a study. It isn't local to one person's knowledge base — it lives in the team's shared content repo and is linked into everyone's own knowledge base via a [symlink](/concepts/git-and-github/), at `2-Areas/Research Repository`.
+
+## The three kinds of document
+
+- **Studies** — one record card per study: what was asked, of whom, when, by whom, and what came back. Enough for someone to judge whether the study is worth opening, and no more. Figures live here, and nowhere else in the repository.
+- **Reports** — the full write-up of one study, by whoever ran it: reasoning, cohort splits, quotes, recommendations. A report stays with the project that produced it, and a second copy is mirrored into the Research Repository's `Reports/` folder so nothing is lost if the project is later archived.
+- **Topics** — cross-study synthesis. A question that more than one study speaks to, answered by drawing those studies together. A topic page restates no figures of its own — it points back at the study pages that support it.
+
+Studies and Topics are a ladder: a study says what one piece of research found, a topic says what several found together.
+
+## Study card vs report — who sees what
+
+This split exists because of who's allowed to see participant names:
+
+| Document | Shareable with | Names participants? |
+|---|---|---|
+| Study card (`Studies/`) | Anyone the knowledge base is shared with | Never |
+| Report (`Reports/`) | Inside UW only | Sometimes — reports may name participants |
+
+A study card is built to travel: no names, no account numbers, nothing identifying. A report stops at the UW boundary because it can legitimately need to name who said what.
+
+To produce either one, use the `study-writeup` skill — it owns the exact format for both, so every study lands in the same shape regardless of whose knowledge base wrote it up. See its [deep-dive page](/skills/study-writeup/).
+
+## Point-in-time: sealed once written
+
+A study is a snapshot — it records what people said on a given date, under the customer mix, the product version, and the marketing in place at that date. Those conditions are part of the finding and can't be recovered later, so a finding is never brought up to date. New data becomes a new record; it never edits an old one. Study pages and reports are sealed the moment they're written — no edits, no additions, no tidying after the fact. Topic pages are the exception, since they hold no figures of their own and can grow to reflect new studies.
+
+## Why this is built this way — the Dovetail comparison
+
+The team already has Dovetail for storing and querying research. This repository exists alongside it for a specific reason: it's built for **Claude to read and cite directly**, not primarily for humans to browse. Pulling from local markdown files that Claude can read straight off disk is faster than Claude querying an external tool's connector for relevant studies every time a research question comes up — the answer is already sitting in files it has direct access to, cross-linked to the product wikis that cite it.
+
+## Where it sits relative to everything else
+
+- **Evidence** (raw transcripts, source files) stays in each project's own inputs folder — it's linked to, never moved into the repository.
+- **Product Wikis** cite the Research Repository, not the other way round: a wiki page says what the team currently believes about a product, a study card says what one piece of research actually found.

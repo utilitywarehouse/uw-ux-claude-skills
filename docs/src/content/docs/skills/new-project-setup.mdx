@@ -1,0 +1,65 @@
+---
+title: new-project-setup
+description: Set up a new top-level product area or a sub-project, with the workspace ready immediately.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:new-project-setup
+```
+
+Sets up a new project folder inside `1-Projects/` and populates its core documents from your answers. It branches early on one question: is this a whole new product area, or a sub-project inside one that already exists?
+
+## Step 0 — confirm it's actually new
+
+If you explicitly asked for this ("new project", "start a project"), it skips straight to the question below. If it triggered because you mentioned starting something new in passing, it confirms first before creating anything.
+
+## Step 1 — top-level area, or sub-project?
+
+A neutral multiple-choice question, always asked the same way regardless of what already exists in your vault:
+
+- **Top-level product area** — a whole product you'll work on long-term (e.g. Insurance, Energy, Broadband).
+- **Sub-project** — a specific piece of work within an existing area (e.g. a research study, a feature redesign).
+
+## Branch A — top-level product area
+
+<Steps>
+
+1. **Asks a handful of questions**: product area name, design lead, PM, one-line description.
+
+2. **Checks for an existing or archived folder** with that name first. An exact match in `1-Projects/` stops the skill and points you at the existing folder. A close match in `4-Archives/` prompts a restart-vs-new question, and a restart moves the archived folder back rather than rebuilding from scratch.
+
+3. **Creates the folder structure** — and asks whether the new area's Wiki should be shared with the team. **Shared is the default** (this is decision #31 in the team's Build Plan — new wikis grow the shared repo automatically, without a deliberate decision every time). If shared: checks access, checks for a name clash with an existing wiki of the same name, creates the Wiki inside a clone of `uw-knowledgebase-content`, and symlinks it in. If local-only: creates a plain folder, nothing pushed anywhere.
+
+4. **Writes the area's `CLAUDE.md`** and **`Wiki/Area-Conventions.md`** — the latter carries that area's own ingest workflow, page format, and citation rules. If the wiki is shared, it also gets a note explaining that it's shared, shared content should be pulled before editing, and edits ship as a PR.
+
+5. **Writes `Wiki/index.md` and `Wiki/log.md`** — an empty index and a log recording the wiki's creation date.
+
+6. **Opens a pull request**, if the wiki is shared — branches off `main` in the shared repo clone, commits the new Wiki folder and its `CLAUDE.md`, pushes, and opens a PR against `uw-knowledgebase-content`. The Wiki works locally straight away (the symlink resolves immediately); the rest of the team sees it once that PR is reviewed and merged.
+
+7. **Updates the Routing Map** in your root `CLAUDE.md`, and confirms what was created, where, and whether the Wiki is shared or local.
+
+</Steps>
+
+## Branch B — sub-project
+
+<Steps>
+
+1. **Asks a handful of questions**: which product area it lives under, project name, PM, deadline, the problem (one or two sentences), the intended outcome, and a research method (Qualitative / Quantitative / Mixed / None yet). Nothing more than this upfront — the rest fills in as the project develops.
+
+2. **Checks for an existing or archived folder** the same way Branch A does, except an archived sub-project search is broader — it may not have lived under the same product area path it started in.
+
+3. **Creates the folder structure** — the base set (`01-Inputs/` through `06-Deliverables/`), plus method-specific subfolders (e.g. `03-Research/Transcripts/` and `03-Research/Discussion Guides/` for Qualitative or Mixed).
+
+4. **Writes `CLAUDE.md`** with the project's memory-system rules, and **`MEMORY.md`** populated from your answers — status, problem, outcome, stakeholders, and a log entry for today.
+
+5. **Updates the Routing Map**, then **links back to wherever the project actually came from** — a daily note, a task, a meeting transcript, a pasted Slack message — by adding a `Related:` line pointing at the new project's `MEMORY.md`, so that origin context stays reachable instead of going dead the moment the project folder exists.
+
+6. **Confirms** what was created, where, and what to do next (usually: add sources to `01-Inputs/`, or fill in scope and timeline).
+
+</Steps>
+
+<Aside type="tip">
+  Both branches update the same Routing Map in your root `CLAUDE.md` that `setup-my-knowledge-base` first wrote — this is how the knowledge base stays navigable as it grows, without hand-maintaining an index.
+</Aside>

@@ -1,0 +1,51 @@
+---
+title: Terminal basics
+description: What a terminal is, why these docs use one, and how to read a command like claude plugin install ux@uw-ux-claude-skills.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+If you've never opened a terminal before, this page is for you. It won't make you a programmer — it just gives you enough to follow every command in these docs without guessing.
+
+## What a terminal actually is
+
+A terminal is a window where you type instructions to your computer as text, instead of clicking. That's it. It's not specialist software — it's built into every Mac and Windows machine, the same way Finder or File Explorer is.
+
+Claude Code has its own desktop app with a chat window and a file view, so most of the time you won't be staring at a bare terminal at all — it's running quietly underneath, the same way an image editor runs its own processing under the hood without showing it to you. But some setup steps, and the plugin install itself, are typed directly as terminal commands, so it's worth knowing what you're looking at when one shows up.
+
+## Opening one
+
+- **Mac**: open Spotlight (Cmd + Space), type "Terminal", press Return.
+- **Windows**: open the Start menu, type "Terminal" (or "PowerShell"), press Enter.
+
+You'll get a mostly blank window with a blinking cursor, waiting for you to type something.
+
+## Reading a command
+
+Take this one, from the plugin install step:
+
+```
+claude plugin install ux@uw-ux-claude-skills
+```
+
+Every command like this breaks down into a few parts:
+
+- **`claude`** — the program being run. This tells the terminal which tool to hand the rest of the line to.
+- **`plugin install`** — the specific action within that tool. Most tools group related actions like this — `plugin install`, `plugin marketplace add`, and so on are all different things `claude` knows how to do.
+- **`ux@uw-ux-claude-skills`** — an **argument**: extra information the command needs to do its job. Here it's saying *which* plugin (`ux`) from *which* source (`uw-ux-claude-skills`).
+
+You type the whole line and press Enter. The terminal runs it and prints back whatever happened — success, an error, or something in between.
+
+<Aside type="tip" title="An analogy">
+  If a Figma component were a command, the component name would be the program, and its properties panel would be the arguments — same component, different behaviour depending on what you set. `claude plugin install` is the "component"; `ux@uw-ux-claude-skills` is the property telling it exactly what to install.
+</Aside>
+
+## What's a "session"?
+
+You'll see this word a lot in these docs. A session is just one sitting of working with Claude Code — from when you open it and start talking to it, to when you close the window or walk away. Nothing more technical than that. It's the same idea as one meeting, or one work block: it has a start, some amount of work happens, and it has an end.
+
+Why it matters: some skills specifically care about the end of a session — `end-session`, for instance, looks back over everything that happened and captures anything worth keeping before it's lost. So "end your session properly" just means "before you walk away, let the relevant skill do its wrap-up," not something you need a terminal command to trigger.
+
+## What you don't need to worry about
+
+You never need to memorise terminal commands for day-to-day work with this system. Once the plugin is installed, almost everything happens by describing what you want in plain English inside Claude Code — "help me set up my knowledge base" is usually enough for it to find and run the right skill on its own. The handful of commands in these docs (install steps, the `/ux:skill-name` invocations) are the exceptions, and each one is spelled out exactly where it's needed.

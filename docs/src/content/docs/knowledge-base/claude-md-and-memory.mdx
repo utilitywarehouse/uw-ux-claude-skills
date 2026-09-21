@@ -1,0 +1,39 @@
+---
+title: CLAUDE.md and memory
+description: What CLAUDE.md is, how it nests from root to area to project, how it differs from MEMORY.md, and what Area-Conventions.md covers.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## What CLAUDE.md is
+
+A **`CLAUDE.md`** file is a set of written instructions that Claude Code reads before doing anything inside the folder it sits in. It's not a memory of past conversations — it's a standing brief, checked fresh each time.
+
+<Aside type="tip" title="An analogy">
+  Think of CLAUDE.md as a brief or style guide the assistant reads before starting work — the same document a new team member would be handed on day one of a project, telling them the rules that apply here before they touch anything.
+</Aside>
+
+## Root, area, project — nested, not duplicated
+
+`CLAUDE.md` files exist at more than one level, and each level covers only what's specific to it:
+
+- **Root `CLAUDE.md`** — sits at the top of your whole knowledge base. Knowledge-base-wide conventions: the routing map, link-style rules, working preferences.
+- **Area `CLAUDE.md`** — one per product area under `1-Projects/` (or per ongoing area under `2-Areas/`). Covers that area's own folder structure and what makes it distinct — for example, Cashback Card's `CLAUDE.md` explains its project layout and where to find its Wiki conventions.
+- **Project `CLAUDE.md`** — one per individual project, for anything specific to that piece of work.
+
+A generic wiki tool has no equivalent for this layering — it's one wiki, one set of rules for everything in it, if it has rules at all. Here, the right rules apply automatically depending on which folder you're actually working in.
+
+## MEMORY.md vs CLAUDE.md — facts vs rules
+
+These two are easy to conflate because they sit right next to each other in a project folder, but they hold different kinds of thing:
+
+| File | Holds | Example |
+|---|---|---|
+| `CLAUDE.md` | Rules — how to behave in this folder | "Read Wiki/Area-Conventions.md before changing anything under Wiki/" |
+| `MEMORY.md` | Facts — what's currently true about this project | Status, current decisions, who's involved, what happened last session |
+
+A rule tells Claude Code *how* to act. A fact tells it *what's going on*. A project's `MEMORY.md` changes constantly as the work progresses; its `CLAUDE.md` changes rarely, only when the way of working itself needs to change.
+
+## Area-Conventions.md
+
+Where a shared area's Wiki exists, its own conventions — page format, citation rules, ingest workflow — live in a file called `Area-Conventions.md` inside the Wiki, rather than being folded into the area's `CLAUDE.md`. This is deliberate: the Wiki is shared and kept current by the whole team, so its own operating rules live alongside it rather than in a file only one person maintains. Read `Area-Conventions.md` before making any change under a shared `Wiki/` folder — it's the current source of truth for that area's own format, not this page.

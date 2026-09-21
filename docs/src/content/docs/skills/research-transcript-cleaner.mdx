@@ -1,0 +1,50 @@
+---
+title: research-transcript-cleaner
+description: Turn a raw research transcript into a coding-ready markdown file, using intelligent verbatim cleanup.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:research-transcript-cleaner
+```
+
+Cleans raw transcripts from UX research sessions with real participants — moderated interviews, usability tests, unmoderated recordings — into a coding-ready markdown file. It triggers on a pasted or uploaded `.vtt`/`.srt`/`.txt`/`.docx` transcript, or a Dovetail/Userlytics/Meet/Zoom/Teams export.
+
+<Aside type="caution" title="Not for internal meetings">
+  This is specifically for sessions with a research participant. Standups, planning calls, and internal meetings don't get coded for themes and don't fit this workflow — clean those by hand instead.
+</Aside>
+
+## What "clean" means here
+
+**Intelligent verbatim**: fillers, stutters, and inconsistent formatting get removed; hedges ("I think", "maybe"), self-corrections, negations, and emotional markers (`[laughs]`, `[long pause]`) are preserved exactly. The rule of thumb: if removing or changing something could affect *what* was said, *who* said it, or *how certain* they sounded, it's left alone. Cleaning is not rewriting.
+
+## What it does, step by step
+
+<Steps>
+
+1. **Locates the transcript** — from what you pasted or uploaded, or from the project's `01-Inputs/Interview transcripts/` folder if nothing was provided.
+
+2. **Confirms three things before touching anything**, always by asking directly rather than guessing from the file: the cohort (matching the exact spelling already used elsewhere in the study, so cohorts don't fragment into near-duplicate labels), the session date, and the source platform. None of these are reliably inferable from a plain transcript file.
+
+3. **Identifies session type** — moderated interview, moderated usability test (think-aloud), or unmoderated test — since this shapes what gets preserved (task boundaries, observed-action brackets, blockquoted prompts).
+
+4. **Checks the project's own Wiki or reference material** for terms, names, and internal jargon before flagging anything as unclear — a term documented elsewhere in the knowledge base shouldn't come out as `[unclear]`.
+
+5. **Applies or builds a glossary.** Asks whether this session is part of a multi-session study; if so, it loads (or creates) one shared glossary file for the whole study rather than one per transcript, and links it in the frontmatter rather than naming it as plain text — a plain-text reference would leave it orphaned from the graph.
+
+6. **Standardises speaker labels** (`MOD:`, `P1:`, `P2:`) in the transcript body, while expanding each label with the real name and context in the frontmatter — so the mapping is visible at a glance without opening the glossary.
+
+7. **Applies the intelligent-verbatim rules evenly to every speaker**, and the rules specific to the session type — preserving task headings and observed actions for a usability test, blockquoting prompts for an unmoderated one.
+
+8. **Runs a focused QA pass** on the things most likely to break analysis: dates, numbers and units, proper nouns, missing negations, and speaker attribution at turn boundaries.
+
+9. **Writes the cleaned markdown file** to the project's `03-Research/Transcripts/` folder, named `YYYY-MM-DD [Participant Name] — Cleaned Transcript.md`, with full frontmatter and a cleaning-notes section listing what was flagged.
+
+10. **Presents the file** and a short summary — what was cleaned, what's flagged as `[unclear]`, and anything worth reviewing before coding.
+
+</Steps>
+
+## What it deliberately won't do
+
+It won't replace a participant's actual words with "better" ones, smooth over a contradiction or self-correction, add a tone interpretation the source doesn't support, clean one speaker more thoroughly than another, or anonymise anyone unless asked. If a transcript is too garbled to clean confidently, it flags the passage as `[unclear]` rather than guessing.

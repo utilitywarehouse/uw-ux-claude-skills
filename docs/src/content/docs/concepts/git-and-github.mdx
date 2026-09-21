@@ -1,0 +1,46 @@
+---
+title: Git and GitHub
+description: Plain-English definitions of git, GitHub, repo, clone, symlink, commit, push, pull, branch, and pull request — the vocabulary the rest of these docs assume.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page defines every git and GitHub term these docs use, once, in plain English. Nothing after this page redefines them — if a later page mentions a "clone" or a "PR", this is where that word came from.
+
+<Aside type="tip" title="An analogy to hold onto">
+  Git and GitHub together work like Figma's version history plus a shared team library file — but for ordinary files and folders instead of a design canvas. Every save is recorded, you can always look back through what changed and when, and a shared copy that the whole team draws from lives in one place everyone can reach.
+</Aside>
+
+## The core vocabulary
+
+**Git** is the underlying system for tracking every change made to a set of files — what changed, when, and by whom — so nothing is ever really lost, and you can always look back through the history or undo a step.
+
+**GitHub** is a website that hosts shared copies of git-tracked file collections, so more than one person can work on the same set of files without emailing zip folders back and forth.
+
+**Repo** (short for repository) — one such tracked collection of files. This whole skills library is a repo (`uw-ux-claude-skills`); the team's shared Research Repository and product wikis live in a different repo (`uw-knowledgebase-content`).
+
+**Clone** — your own local copy of a repo, sitting on your computer's disk. Cloning downloads the whole thing so you can work on it directly.
+
+**Symlink** — a shortcut. Inside your personal knowledge base, a folder like `2-Areas/Research Repository` isn't really a folder full of files — it's a symlink pointing at the real thing, which is a clone sitting elsewhere on your computer (something like `~/Documents/Github/uw-knowledgebase-content/Research Repository`). Open it, edit a file in it, and you're actually editing that clone. This is why a shared Wiki folder behaves differently from an ordinary personal one: it looks and reads like a normal folder, but what you're touching is shared with the whole team.
+
+**Commit** — a saved snapshot of a change, with a short message describing what changed and why. Git is really just a long chain of commits.
+
+**Push** — sending your local commits up to GitHub, so they exist somewhere other than your own machine.
+
+**Pull** — the opposite: bringing down commits that exist on GitHub but not yet in your local clone. If a teammate changed a shared wiki page, `git pull` is what brings that change onto your computer.
+
+**Branch** — a parallel, isolated copy of a repo's history that you can experiment on without touching the main version. Nothing on a branch affects anyone else until it's deliberately brought back in.
+
+**Pull request** (**PR**) — a request to merge one branch's changes back into the main branch, with a review step in between. Opening a PR doesn't make a change live by itself — someone has to look at it and approve it first.
+
+## Why this matters here
+
+A shared Wiki folder or the Research Repository isn't something you (or Claude, on your behalf) edit and save directly the way you'd save a personal note. Every shared edit goes: make the change → commit it on its own branch → open a PR → someone reviews and merges it → everyone else picks it up next time they pull. That whole loop is what a Skill called `contribute-to-shared-knowledgebase` exists to run for you, so you never have to type a raw git command yourself — see its [deep-dive page](/skills/contribute-to-shared-knowledgebase/) for what that actually looks like in practice.
+
+<Aside type="tip" title="A branch as an analogy">
+  A branch is like duplicating a Figma page to try something out, safe from breaking the original — and a pull request is like sending that duplicate for review before it replaces the page everyone else sees. Nothing changes for anyone else until that review happens and the merge goes through.
+</Aside>
+
+## CLAUDE.md, briefly
+
+One more term worth having here because it comes up constantly in the rest of these docs: a **`CLAUDE.md`** file is a set of written instructions that Claude Code reads before doing anything in a given folder — like a brief or style guide it checks before starting work, rather than a rule it has memorised. The [knowledge base structure page](/knowledge-base/claude-md-and-memory/) covers this properly; this page is just flagging the term so it isn't a surprise later.

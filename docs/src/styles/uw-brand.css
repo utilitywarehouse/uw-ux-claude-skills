@@ -1,0 +1,310 @@
+/*
+ * UW brand theme for this Starlight site.
+ * Source: 2-Areas/Brand and Design System/design-system/ (tokens.css, foundations/color.md, applications/web.md).
+ *
+ * Comic Hams (headings) is self-hosted from design-system/fonts/Comic Hams/ —
+ * only SemiBold (600) and Bold (700) are confirmed real weights per DESIGN.md,
+ * so those are the only two loaded here.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+
+@font-face {
+  font-family: 'Comic Hams';
+  src: url('/uw-ux-claude-skills/fonts/ComicHams-SemiBoldFlare.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Comic Hams';
+  src: url('/uw-ux-claude-skills/fonts/ComicHams-BoldFlare.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --sl-font: 'DM Sans', var(--sl-font-system);
+  --sl-font-mono: 'DM Mono', var(--sl-font-system-mono);
+  --uw-font-heading: 'Comic Hams', 'DM Sans', var(--sl-font-system);
+
+  /* UW's own reading-width token — Starlight's 45rem default runs too wide for comfortable reading */
+  --sl-content-width: 680px;
+
+  /* UW Purple as Starlight's accent colour */
+  --sl-color-accent-low: #eeebf4;
+  --sl-color-accent: #7a42c8;
+  --sl-color-accent-high: #442484;
+  --sl-color-text-accent: #7a42c8;
+
+  /* Warm White canvas, never pure white as the default page background */
+  --sl-color-bg: #fcfbf2;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #fcfbf2;
+  --sl-color-bg-inline-code: #f1efe4;
+  --sl-color-bg-accent: #ffb921;
+
+  --sl-color-white: #101010;
+  --sl-color-black: #ffffff;
+  --sl-color-gray-1: #232323;
+  --sl-color-gray-2: #3f3f3f;
+  --sl-color-gray-3: #5b5b5b;
+  --sl-color-gray-4: #888888;
+  --sl-color-gray-5: #d3d3d3;
+  --sl-color-gray-6: #f1efe4;
+  --sl-color-gray-7: #fcfbf2;
+  --sl-color-text: #101010;
+  --sl-color-text-invert: #fcfbf2;
+
+  --sl-color-hairline-light: #d4d2c0;
+  --sl-color-hairline: #d4d2c0;
+  --sl-color-hairline-shade: #d4d2c0;
+
+  /* Outline button fill — DESIGN.md's light-mode Functional/subtle interactive state */
+  --uw-outline-btn-hover: #ebebeb;
+  --uw-outline-btn-active: #d3d3d3;
+
+  /* UW's hard offset shadows — no blur */
+  --uw-btn-shadow-color: #101010;
+  --sl-shadow-sm: 4px 4px 0 0 var(--uw-btn-shadow-color);
+  --sl-shadow-md: 6px 6px 0 0 var(--uw-btn-shadow-color);
+  --sl-shadow-lg: 6px 6px 0 0 var(--uw-btn-shadow-color);
+}
+
+/* Starlight widens content to 67.5rem on pages with no sidebar (e.g. this splash homepage)
+   via `html:not([data-has-sidebar])`, which is more specific than a plain :root rule and
+   wins regardless of load order. Match it here with a selector that reliably beats it. */
+:root:not([data-has-sidebar]) {
+  --sl-content-width: 680px;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #eeebf4;
+  --sl-color-accent: #7a42c8;
+  --sl-color-accent-high: #442484;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #fcfbf2;
+  --sl-color-hairline-light: #d4d2c0;
+  --sl-color-hairline-shade: #d4d2c0;
+}
+
+/* Dark mode — UW ships a full alternate theme, not a partial one */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --sl-color-accent-low: #442484;
+    --sl-color-accent: #af90de;
+    --sl-color-accent-high: #ddd5eb;
+    --sl-color-text-accent: #af90de;
+
+    --sl-color-bg: #191917;
+    --sl-color-bg-nav: #2f2d2d;
+    --sl-color-bg-sidebar: #191917;
+    --sl-color-bg-inline-code: #2f2d2d;
+
+    --sl-color-white: #ebebeb;
+    --sl-color-black: #191917;
+    --sl-color-gray-1: #ebebeb;
+    --sl-color-gray-2: #d3d3d3;
+    --sl-color-gray-3: #b2afae;
+    --sl-color-gray-4: #919191;
+    --sl-color-gray-5: #5b5b5b;
+    --sl-color-gray-6: #3f3f3f;
+    --sl-color-gray-7: #2f2d2d;
+    --sl-color-text: #ebebeb;
+    --sl-color-text-invert: #191917;
+
+    --sl-color-hairline-light: #5b5b5b;
+    --sl-color-hairline: #5b5b5b;
+    --sl-color-hairline-shade: #333;
+
+    /* Outline button fill, dark mode. Hover confirmed from the real Hearth Storybook token
+       (interactive/functional/surface/subtle/hover = #3a3837, UW grey-900). Active isn't
+       confirmed from any source — using grey-925 (#2f2d2d), one real step darker on UW's
+       own scale, so it's at least a genuine brand value, not an invented one. */
+    --uw-outline-btn-hover: #3a3837;
+    --uw-outline-btn-active: #2f2d2d;
+
+    --uw-btn-shadow-color: #3f3f3f;
+    --sl-shadow-sm: 4px 4px 0 0 var(--uw-btn-shadow-color);
+    --sl-shadow-md: 6px 6px 0 0 var(--uw-btn-shadow-color);
+    --sl-shadow-lg: 6px 6px 0 0 var(--uw-btn-shadow-color);
+  }
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #442484;
+  --sl-color-accent: #af90de;
+  --sl-color-accent-high: #ddd5eb;
+  --sl-color-text-accent: #af90de;
+
+  --sl-color-bg: #191917;
+  --sl-color-bg-nav: #2f2d2d;
+  --sl-color-bg-sidebar: #191917;
+  --sl-color-bg-inline-code: #2f2d2d;
+
+  --sl-color-white: #ebebeb;
+  --sl-color-black: #191917;
+  --sl-color-gray-1: #ebebeb;
+  --sl-color-gray-2: #d3d3d3;
+  --sl-color-gray-3: #b2afae;
+  --sl-color-gray-4: #919191;
+  --sl-color-gray-5: #5b5b5b;
+  --sl-color-gray-6: #3f3f3f;
+  --sl-color-gray-7: #2f2d2d;
+  --sl-color-text: #ebebeb;
+  --sl-color-text-invert: #191917;
+
+  --sl-color-hairline-light: #5b5b5b;
+  --sl-color-hairline: #5b5b5b;
+  --sl-color-hairline-shade: #333;
+
+  --uw-outline-btn-hover: #3a3837;
+  --uw-outline-btn-active: #2f2d2d;
+
+  --uw-btn-shadow-color: #3f3f3f;
+  --sl-shadow-sm: 4px 4px 0 0 var(--uw-btn-shadow-color);
+  --sl-shadow-md: 6px 6px 0 0 var(--uw-btn-shadow-color);
+  --sl-shadow-lg: 6px 6px 0 0 var(--uw-btn-shadow-color);
+}
+
+/* This site never sets a hero image, but Starlight's own .hero CSS always reserves a
+   4fr image column at >=50rem regardless, leaving an empty gap next to the text. Force
+   it back to one column at every width — this unlayered rule beats Starlight's @layer
+   one on cascade order alone, no extra specificity or media query needed. */
+.hero {
+  grid-template-columns: 100% !important;
+  /* At >=50rem, Starlight sets vertical padding via `padding-block`, a
+     shorthand that always makes top and bottom equal (up to 10rem, clamped
+     to viewport height) — far bigger than the 1rem mobile-only default this
+     file used to target. Overriding just the bottom half halves it while
+     leaving the top (breathing room below the nav) alone. */
+  padding-bottom: calc(clamp(2.5rem, calc(1rem + 10vmin), 10rem) / 2);
+}
+
+/* Gap between the hero and the body content below it. */
+.hero + .sl-markdown-content {
+  margin-top: 0.25rem;
+}
+
+/* Headings: Comic Hams, sentence case always — never all caps, per DESIGN.md */
+h1, h2, h3, h4, h5, h6,
+.hero h1 {
+  font-family: var(--uw-font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* UW never places brand purple as body text */
+.sl-markdown-content :is(p, li, td) {
+  color: var(--sl-color-text);
+}
+
+/* Buttons: 8px radius, hard offset shadow, no blur — UW's own button geometry.
+   Scoped as .hero .sl-link-button for specificity: Starlight's own default button
+   rules are equal-specificity and load after ours, so a bare .sl-link-button loses
+   the cascade (its 999rem pill radius and zeroed .minimal padding-inline win). */
+.hero .sl-link-button {
+  border-radius: 8px;
+  padding: 0.9375rem 1.25rem;
+  box-shadow: var(--sl-shadow-sm);
+  /* DESIGN.md: "Buttons: 8px radius, DM Sans SemiBold" — not just default weight. */
+  font-weight: 600;
+  transition: transform 0.13s var(--tf, ease-out), box-shadow 0.13s var(--tf, ease-out);
+}
+.hero .sl-link-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--uw-btn-shadow-color, #101010);
+}
+.hero .sl-link-button:active {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 0 var(--uw-btn-shadow-color, #101010);
+}
+.hero .sl-link-button.primary {
+  background: #ffb921;
+  color: #101010;
+  border: 2px solid #101010;
+}
+.hero .sl-link-button.primary:hover {
+  background: #eba400;
+}
+
+/* Secondary CTA: UW's outline button, not a filled one — no shadow, no lift */
+.hero .sl-link-button.minimal {
+  background: transparent;
+  color: var(--sl-color-text);
+  border: 2px solid var(--sl-color-text);
+  padding-inline: 1.25rem;
+  box-shadow: none;
+}
+.hero .sl-link-button.minimal:hover {
+  background: var(--uw-outline-btn-hover);
+  transform: none;
+  box-shadow: none;
+}
+.hero .sl-link-button.minimal:active {
+  background: var(--uw-outline-btn-active);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Steps: bigger purple dots with a connecting line, modelled on Hearth's own
+   Timeline component (progress variant) instead of Starlight's small grey
+   default. Confirmed against the real component's layers: a solid accent-
+   coloured circle, with a smaller circle inset 2px inside it that has its
+   own 2px page-background-coloured stroke — leaving a thin sliver of accent
+   colour visible outside that ring, like a target. Figma builds this as two
+   separate circles; here it's two stacked inset box-shadows on one element
+   instead (a real `border` can't leave that outer accent sliver, since a
+   border always sits flush at its own box's edge), layered so the ring sits
+   inset rather than right at the boundary. */
+.sl-steps {
+  --bullet-size: 2rem;
+  --bullet-margin: 0px;
+}
+.sl-steps > li::before {
+  background-color: var(--sl-color-accent);
+  box-shadow:
+    inset 0 0 0 2px var(--sl-color-accent),
+    inset 0 0 0 4px var(--sl-color-bg);
+  color: var(--sl-color-text-invert);
+  font-size: var(--sl-text-sm);
+  font-weight: 700;
+}
+/* Hearth's connecting line is a fixed purple that doesn't change with theme —
+   unlike the dot fill, which does. */
+.sl-steps > li::after {
+  background-color: #7a42c8;
+  --guide-width: 2px;
+}
+.sl-steps > li:last-child::after {
+  display: none;
+}
+
+/* Hearth's Timeline dims the helper text under each label to a secondary shade —
+   overrides the site-wide rule that flattens all list text to one colour.
+   Line-height also matches Hearth's "Body Text MD" (24px at this font-size),
+   tighter than Starlight's own default prose line-height (28px). */
+.sl-steps > li,
+.sl-steps > li p {
+  color: var(--sl-color-gray-3);
+  line-height: 24px;
+  letter-spacing: 0;
+}
+.sl-steps > li strong {
+  color: var(--sl-color-text);
+  /* Hearth's label uses Semibold (600), not the browser's default bold (700). */
+  font-weight: 600;
+  /* Figma stacks label and helper text as two separate lines, always — not
+     one sentence that only wraps when it runs out of room. */
+  display: block;
+}
+
+/* Asides (Tip/Note/Caution): 8px radius, no blurred shadow */
+starlight-aside,
+.starlight-aside {
+  border-radius: 8px;
+  box-shadow: none;
+}

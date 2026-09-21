@@ -1,0 +1,50 @@
+---
+title: setup-my-knowledge-base
+description: Build a brand-new personal knowledge base from scratch, linked into the team's shared content.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:setup-my-knowledge-base
+```
+
+Builds a new knowledge base from nothing: the core PARA folders, a starter `CLAUDE.md`, a personal `About Me.md`, and a `Start here.md`. Then hands off to [new-project-setup](/skills/new-project-setup/) so you leave with one real piece of work started, not an empty shell.
+
+<Aside type="caution">
+  This only runs once per knowledge base — it's the very first skill anyone touches. If a `CLAUDE.md` already exists at `~/Documents/Knowledge Base`, this isn't the right skill; use `new-project-setup` instead.
+</Aside>
+
+## What it does, step by step
+
+<Steps>
+
+1. **Checks for VS Code.** VS Code with the Claude Code extension is the taught setup for this programme, not one option among several — the rest of setup assumes it. If it's missing, the skill stops and asks you to install it before continuing.
+
+2. **Sets the knowledge base location.** Always `~/Documents/Knowledge Base` — no question asked about where notes should live.
+
+3. **Creates the core folder structure** — the PARA layout (`0-Inbox/`, `1-Projects/`, `2-Areas/`, `3-Resources/`, `4-Archives/`), plus a few starter resource files (a Design Principles template, a PARA guide, AI writing guidelines) copied in as-is.
+
+4. **Links you into the team's shared content.** This is the biggest step:
+   - Checks you have access to the private `utilitywarehouse/uw-knowledgebase-content` repo, and if not, tells you plainly how to request it — without blocking the rest of setup.
+   - Clones that repo to `~/Documents/Github/uw-knowledgebase-content` (outside the knowledge base — never git-nested inside it).
+   - Adds that clone to your VS Code workspace, so Claude Code can actually read and write inside it.
+   - Symlinks the Research Repository in at `2-Areas/Research Repository`, and symlinks every shared product wiki in at `1-Projects/[Product]/Wiki` — walking the clone's real top-level contents, so new shared wikis get picked up automatically as the team adds them.
+   - Clones `uw-ux-claude-skills` itself too, so you can later propose a skill change via `propose-skill` rather than only ever consuming skills read-only.
+   - Saves a VS Code workspace file (`Knowledge Base.code-workspace`) tying the knowledge base and both clones together, so reopening it later doesn't require re-adding folders by hand.
+   - Offers three optional plugin installs along the way — Figma, Hearth AI Toolkit, and `claude-md-management` — each a plain yes/no, none pushed on you.
+
+5. **Interviews you for `About Me`.** A conversational walkthrough of a fixed question set, written into `3-Resources/About Me/About Me.md`. For career history, you can paste in LinkedIn screenshots instead of typing it all out.
+
+6. **Writes the root `CLAUDE.md`**, including one Routing Map row per product wiki actually linked in step 4 — this is also the file `new-project-setup` adds a row to every time you start something new, so it stays accurate as your knowledge base grows.
+
+7. **Writes `Start here.md`** at the root, unchanged from the team template.
+
+8. **Hands off to `new-project-setup`**, so the session ends with one real project underway rather than a demo.
+
+</Steps>
+
+## What it deliberately doesn't do
+
+- **No update or sync path.** This is one-shot — it never re-runs against a knowledge base that already has a `CLAUDE.md`. The shared content linked in step 4 stays current on its own, through the normal `git pull` habit, since it's a live symlink rather than a copy.
+- **No local product-specific tag taxonomy.** You inherit whatever taxonomy the shared Research Repository already has.
