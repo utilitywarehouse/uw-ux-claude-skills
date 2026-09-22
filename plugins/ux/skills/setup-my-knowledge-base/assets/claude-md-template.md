@@ -61,6 +61,9 @@ When you're about to create a file for the first time in a session and there's n
 - Eval runs are throwaway. Keep them wherever the session can write, for as long as they're useful. They don't get committed and don't belong in this knowledge base.
 - After pushing a skill change, the local plugin cache needs a manual refresh — pushing to GitHub doesn't update what's installed. This always runs in a sandboxed session, so don't run the refresh commands yourself — they fail with an `EPERM`/permission error here. Instead, tell the vault owner to run these two in their own regular terminal: `claude plugin marketplace update <marketplace-name>` then `claude plugin update <plugin-name>@<marketplace-name>`, and check it worked with `claude plugin list`.
 - After a PR opened from a skills repo is confirmed merged, switch back to `main`, pull the latest changes, and delete the merged branch (locally, and remotely if GitHub hasn't already removed it) — do this automatically, without being asked.
+- Before running a skill's own live smoke test, ask first — skip it by default for a small, wording-only change (a rename, a path fix, a narrow logic generalisation) and rely on a diff review plus any existing automated test instead. Save the live run for a change broad enough to actually need one.
+- Skills in either shared repo must not name a specific real person — use role-based phrasing instead (`repo admins`, `the user`, `whoever owns this repo`). These get read, adapted, or installed by other people, and a skill that talks about one specific person by name reads as personal rather than shared.
+- Any machine-specific path written into a skill or a CLAUDE.md template should be marked `[replace on setup]`, so it's obviously wrong on someone else's machine and gets fixed rather than silently breaking.
 
 ## Personality and preferences
 
