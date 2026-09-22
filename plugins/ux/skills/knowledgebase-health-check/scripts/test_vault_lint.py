@@ -90,6 +90,14 @@ FILES = {
     # a note that links into a shared-repo folder mounted via symlink (the
     # setup every product Wiki/ and the Research Repository actually use)
     "notes/citer.md": "see [[shared-page]]\n",
+    # A markdown link whose target folder name contains literal parentheses,
+    # e.g. "Virtual Recurring Payments (VRP)/". A regex that captures a link
+    # target up to the first ")" truncates before the real closing paren,
+    # so this and a *different* broken link in another file (below) both
+    # collapse onto the same wrong, truncated key — and the report then
+    # blames whichever file sorts first for a link it doesn't even contain.
+    "notes/paren-link-a.md": "see [MEMORY](../Some%20Folder%20(ABC)/MEMORY.md)\n",
+    "notes/paren-link-b.md": "see [other.jpg](../Some%20Folder%20(ABC)/other.jpg)\n",
 }
 
 failures = []
@@ -199,6 +207,24 @@ with tempfile.TemporaryDirectory() as root:
     check("counts exactly the real edges, no over-counting",
           r["counts"]["edges"] == 3, f"got {r['counts']['edges']}")
     check("reports orphans", isinstance(r["orphans"], list) and len(r["orphans"]) > 0)
+
+    # Two links whose targets share a parenthesised folder segment but differ
+    # after it must resolve to two distinct broken-link keys, each correctly
+    # attributed to the file that actually contains it — not truncated at the
+    # first ")" into one shared key blamed on whichever file sorts first.
+    paren_a = os.path.join("notes", "paren-link-a.md")
+    paren_b = os.path.join("notes", "paren-link-b.md")
+    check("does not collapse two different paren-target links into one broken key",
+          not any(paren_a in where and paren_b in where for where in broken.values()),
+          f"got {broken}")
+    check("attributes the MEMORY.md paren-target broken link to the file that has it",
+          any(k.endswith("Some Folder (ABC)/MEMORY") and where == [paren_a]
+              for k, where in broken.items()),
+          f"got {broken}")
+    check("attributes the other.jpg paren-target broken link to the file that has it",
+          any(k.endswith("Some Folder (ABC)/other") and where == [paren_b]
+              for k, where in broken.items()),
+          f"got {broken}")
 
     stale = {row["row_path"]: row for row in r["stale_routing_map_rows"]}
     check("does not flag a Routing Map row whose folder still exists",
