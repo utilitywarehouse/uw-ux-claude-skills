@@ -1,6 +1,6 @@
 ---
 name: knowledgebase-health-check
-version: 16
+version: 17
 description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), the root CLAUDE.md drifting out of step with the shared starter template, shared wikis or the Research Repository missing their symlink into this knowledge base, shared folders orphaned in the team's clone after a project's local copy was deleted, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
@@ -22,6 +22,8 @@ The full audit reads every note and every wiki page, so it can take a while on a
 2. **Quick check for new wikis** — just `shared_content_sync.py`, to see if a shared wiki or the Research Repository has appeared in the team's shared clone without a symlink into this knowledge base yet. Seconds, not minutes. Use this when the only question is "did anyone add a new shared wiki since I last set up?"
 
 Everything from here on describes the full check. For the quick check, skip straight to "Shared folders with no symlink yet" below and run only that script.
+
+If "Full check" is picked, also ask which wikis to include in the content reading pass — multi-select, default to all of them if the question is skipped. This only scopes the judgement-based wiki content checks below; the mechanical link check (`vault_lint.py`) still covers the whole knowledge base regardless, since it's cheap and a broken link or orphan isn't confined to a wiki.
 
 ## Running it
 
@@ -86,7 +88,7 @@ Full check only — skip this whole section for the quick check. The checks abov
 
 This section replaces what used to live in a project's own `CLAUDE.md` under a `## Lint` heading — a checklist people used to trigger by saying "lint the wiki" before this skill existed. That heading is retired now; this skill is the one place both halves live. If you ever find a `## Lint` section in a project CLAUDE.md, it's a leftover — flag it to the user and offer to remove it.
 
-**Format violations** — every content page should have Summary, Sources, Last updated, and Related pages, per the page format template in the area's `CLAUDE.md` (or `Wiki/Area-Conventions.md`, for an area set up under the newer split layout). Flag pages missing any of the four. `index.md`, `log.md`, and `Area-Conventions.md` are housekeeping/convention files, not content pages, and are exempt from this check.
+**Format violations** — every content page should have Summary, Sources, Last updated, and Related pages, per the page format template in the area's `CLAUDE.md` (or `Wiki/Area-Conventions.md`, for an area set up under the newer split layout). Flag pages missing any of the four. `index.md`, `log.md`, `Area-Conventions.md`, and `health-check-decisions.md` are housekeeping/convention files, not content pages, and are exempt from this check.
 
 **Uningested sources** — cross-reference a project's `01-Inputs/`, `03-Research/`, and `05-Synthesis/` folders against `Wiki/index.md` and existing pages' Sources lines. A source that exists on disk but has no corresponding page and no citation anywhere hasn't been processed yet.
 
@@ -101,6 +103,24 @@ This section replaces what used to live in a project's own `CLAUDE.md` under a `
 **Concepts without a page** — an idea or entity that recurs across several pages in passing but has never been given its own page.
 
 Report these under their own headings in the same dated report as the mechanical findings — match the section structure shown in `references/example-report.md`.
+
+## Speeding up repeat runs: the decision log
+
+Each wiki keeps its own `Wiki/health-check-decisions.md` — a housekeeping file, same status as `log.md` and `index.md`, exempt from the format check above. It's shared content: edit and propose it the same way as any other change under `Wiki/`, per that wiki's own `Area-Conventions.md`.
+
+It records, per page: the date it was last checked, the verdict for that run's format-violations and stale-content checks, and any judgement-call decisions made about findings on that page (e.g. "this screenshot citation is a one-off, don't link it").
+
+**Reuse by file mtime, not git log.** A page's git history can lag behind an edit that hasn't been committed yet, but its mtime never does. Before fully re-reading a page:
+- If its mtime is older than its logged last-checked date, skip re-reading it for format-violations and stale-content, and carry forward its logged decisions as-is.
+- If its mtime is newer, or it has no entry yet, read it in full and write a fresh entry afterward.
+
+The one gap: a fresh `git pull` on a shared wiki resets every pulled file's mtime to the pull time, so the run right after a pull won't skip much. That corrects itself on the next run — a missed speed-up, not a wrong result.
+
+**Missing cross-links, contradictions, concepts-without-a-page, and missing stakeholder entries still need every page, every run** — even an unchanged page can gain a new inbound link or contradiction when a *different* page changes. Give these checks a lighter pass over unchanged pages (title, Related pages list, headings) rather than skipping them outright. Uningested sources stays a full pass too — it's a cheap filename diff, not a content read.
+
+**Answered vs. open decisions.** Before logging a judgement-call finding as decided, check whether you actually know this project well enough to call it — or ask the user running the check if they do.
+- **Answered** — logged with the reasoning, reused silently on future runs under the mtime rule above.
+- **Open** — logged as unresolved instead of guessed: the finding, the date flagged, and by whom. Name an owner if `stakeholders.md` or the project's own CLAUDE.md row has one (e.g. "Design lead: Richard"), so the report says who to actually ask. Never treated as settled — every run keeps surfacing it until someone with real context answers it, replacing the entry rather than appending to it.
 
 ## Sealed pages: flag, never repair
 
@@ -129,6 +149,7 @@ Two things to get right in the write-up:
 
 - **Give absolute numbers and say what instrument produced them.** If you quote an orphan count, be able to say whether fenced and backticked examples were counted. They shouldn't be, and a scanner that counts them can overstate connectivity enough to hide real orphans.
 - **Separate "needs fixing" from "fine as an orphan".** A raw count of orphans invites pointless work. What matters is notes that *should* be reachable and aren't.
+- **State which wikis were in scope and how many pages were read fresh vs. carried forward.** A cached run's numbers mean something different from a cold one — say "12 of 40 pages read fresh, 28 carried forward from `health-check-decisions.md`" rather than just a page count, and name which wikis were included if the run wasn't scoped to all of them.
 
 Propose fixes; don't apply them unasked. Deletions and renames in particular need the user's explicit approval, per the knowledge base's CLAUDE.md.
 
