@@ -1,6 +1,6 @@
 ---
 name: figma-craft
-version: 1
+version: 2
 description: >
   Execution-level craft for building and editing screens or components in Figma —
   a set of hard-won gotchas around effect styles, frame fills, Hearth component
@@ -233,3 +233,23 @@ auto-layout child means moving it through `insertChild`/`appendChild`, which in 
 requires every font in the moved subtree to be loadable first (see above) — a real
 dead end if one of those fonts can't load in the plugin environment, in which case
 the reorder has to happen by hand in the Figma app instead.
+
+## A frame's name and position aren't confirmation it's the right screen
+
+When identifying which frame in a large, multi-screen file corresponds to a named
+screen — "the quote summary page," "the success page" — a name or canvas position
+that looks plausible is not the same as a confirmed match. `get_metadata` returns
+whatever frame exists at that spot with that name; it doesn't check whether that
+frame is the current, production-relevant version of the screen. Files accumulate
+old variants, references, and abandoned drafts that share vague or similar names
+with the real thing.
+
+**Wrong:** inferring a node ID from frame names and x/y layout alone — picking a
+frame named "Summary page layout // Desktop" sitting near where the target screen
+ought to be, and recording that node ID as the confirmed screen. Nothing about the
+match errors or warns; it just looks right until someone checks.
+
+**Correct:** before recording a node ID as a specific named screen, get a screenshot
+of it and check the actual content matches — or ask the person for the frame
+directly. Treat any ID derived from name/position matching alone as a guess until a
+screenshot or the person confirms it.
