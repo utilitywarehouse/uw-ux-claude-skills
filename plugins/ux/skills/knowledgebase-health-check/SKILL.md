@@ -1,6 +1,6 @@
 ---
 name: knowledgebase-health-check
-version: 15
+version: 16
 description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), the root CLAUDE.md drifting out of step with the shared starter template, shared wikis or the Research Repository missing their symlink into this knowledge base, shared folders orphaned in the team's clone after a project's local copy was deleted, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
@@ -96,7 +96,7 @@ This section replaces what used to live in a project's own `CLAUDE.md` under a `
 
 **Contradictions** — two pages making incompatible claims about the same fact.
 
-**Missing stakeholder entries** — someone credited with a finding, decision, or quote in page content who isn't listed in `stakeholders.md`.
+**Missing stakeholder entries** — someone credited with a finding, decision, or quote in page content who isn't listed in the wiki's people-index file. Some wikis split people-tracking across more than one file — e.g. the Cashback Card wiki keeps `stakeholders.md` scoped to one project within it and tracks the cross-project people index in `Team.md` instead (see that wiki's own `log.md` for why). Before flagging a name as missing, check the wiki's `index.md` or `Area-Conventions.md` for which people-tracking file(s) it actually uses, and check all of them — don't assume `stakeholders.md` is the only or the right one, and don't assume every wiki has more than one.
 
 **Concepts without a page** — an idea or entity that recurs across several pages in passing but has never been given its own page.
 

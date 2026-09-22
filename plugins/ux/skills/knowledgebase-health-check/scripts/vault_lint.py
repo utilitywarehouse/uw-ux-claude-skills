@@ -24,12 +24,22 @@ GENERIC_STEMS = {'CLAUDE', 'MEMORY', 'index', 'README'}
 # Counting them inflates connectivity and hides real orphans.
 CODE_PATTERNS = [re.compile(r'^```.*?^```', re.S | re.M), re.compile(r'`[^`\n]*`')]
 WIKI = re.compile(r'\[\[([^\]|#]+)')
-MD_LINK = re.compile(r'\[[^\]]*\]\(([^)]+)\)')
-ANY_LINK = re.compile(r'\[\[[^\]|#]+|\[[^\]]*\]\([^)]+\)')
+# A markdown link target can legitimately contain literal parentheses, e.g. a
+# path through "Virtual Recurring Payments (VRP)/". A naive "up to the first
+# )" capture truncates at that inner paren, so two different links whose
+# targets diverge only after the parenthesised segment collapse onto the same
+# (wrong) truncated string — which then misattributes a broken-link finding
+# to whichever file sorts first, not the file that actually has the link.
+# This allows one level of nested parens in the target, matching real Markdown
+# rendering behaviour (CommonMark itself only balances one level unless the
+# URL is wrapped in angle brackets).
+LINK_URL = r'(?:[^()]|\([^()]*\))*'
+MD_LINK = re.compile(r'\[[^\]]*\]\((' + LINK_URL + r')\)')
+ANY_LINK = re.compile(r'\[\[[^\]|#]+|\[[^\]]*\]\(' + LINK_URL + r'\)')
 SOURCES_LINE = re.compile(r'^\*\*Sources?\*\*:(.*)$', re.M)
 INLINE_SOURCE = re.compile(r'\((?:source|Source)s?:\s*([^)]*)\)')
 FM_BLOCK = re.compile(r'^---\n(.*?)\n---', re.S)
-ALREADY_LINKED = re.compile(r'\[\[[^\]]*\]\]|\[[^\]]*\]\([^)]*\)')
+ALREADY_LINKED = re.compile(r'\[\[[^\]]*\]\]|\[[^\]]*\]\(' + LINK_URL + r'\)')
 
 # A routing-map row: a markdown table row whose first cell is a backtick-wrapped
 # path, e.g. "| `1-Projects/Cashback Card/` | ... |". Restricted to CLAUDE.md,
