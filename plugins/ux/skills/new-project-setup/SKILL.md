@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 10
+version: 11
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -22,7 +22,7 @@ This skill assumes the default knowledge base layout: `1-Projects/` for active w
 3. Creates the folder structure
 4. Writes the appropriate CLAUDE.md file(s)
 5. Writes a populated MEMORY.md (sub-projects only)
-6. Updates the Routing Map
+6. Updates the Vault Navigation table
 
 ---
 
@@ -269,9 +269,11 @@ Also copy `1-Projects/[Product Name]/CLAUDE.md` (written in A3) to `<clone>/[Pro
 
 Branch off `main` in the shared repo clone, commit the new `[Product Name]/Wiki/` folder and that `CLAUDE.md`, push, and open a pull request against `uw-knowledgebase-content` — same rule as everywhere else this repo is touched: never push to `main` directly, and never merge the PR. Tell the user the wiki works locally right away (the symlink resolves immediately), and that it's now up for review in the shared repo before the rest of the team can see it.
 
-### A6 — Update the Routing Map
+### A6 — Update the Vault Navigation table
 
-Add a new row to the Routing Map in the root `CLAUDE.md` so future sessions load it automatically.
+Add a new row to the "Vault Navigation" table in the root `CLAUDE.md` so future sessions load it automatically.
+
+Place it among the other product-area rows — the ones sitting directly under `1-Projects/` — in alphabetical order by folder name (e.g. "Insurance" goes before "Sign-up"). Leave every system/resource row above that block untouched.
 
 ### A7 — Confirm
 
@@ -428,9 +430,11 @@ TBD
 - [today's date]: Project created.
 ```
 
-### B5 — Update the Routing Map
+### B5 — Update the Vault Navigation table
 
-Add a new row to the Routing Map in the root `CLAUDE.md` so future sessions load it automatically.
+Add a new row to the "Vault Navigation" table in the root `CLAUDE.md` so future sessions load it automatically.
+
+Find the parent product-area row, then insert the new row directly under it, in alphabetical order relative to any existing sibling sub-project rows for that same area. If the parent has no sub-project rows yet, insert directly below the parent row.
 
 ### B5a — Link back from wherever the project came from
 
