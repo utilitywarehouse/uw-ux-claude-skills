@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 24
+version: 25
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -48,16 +48,6 @@ Copy these three as-is — they're already written for a newcomer:
 ## Step 4 — Link into the team's shared content
 
 The team's shared Research Repository and product wikis live in a separate private GitHub repo, `utilitywarehouse/uw-knowledgebase-content` — not in this knowledge base itself. This step links the new knowledge base straight into that shared content, so the person starts with everything the team has already built (every existing wiki and research finding), instead of an empty shell they'd have to wait to catch up on.
-
-### A one-time login fix on your Mac
-
-The first time you use these commands below, you might see a line like `failed to store: 100001`. It looks like an error, but it's not — it just means your Mac didn't save your GitHub login the easy way.
-
-Run this once, and it goes away for good:
-
-```
-git config --global credential.helper osxkeychain
-```
 
 ### Check access first
 
