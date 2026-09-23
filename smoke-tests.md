@@ -33,7 +33,7 @@ will notice breaking.
 
 ## propose-skill
 **Prompt:** "I've finished editing the study-writeup skill, can you get it merged in?"
-**Expect:** Branches off main, commits only that skill's files, pushes, and opens a PR — then stops and says it's waiting on review. Refuses to merge even if asked.
+**Expect:** Branches off main, commits only that skill's files, pushes, and opens a PR — then stops and says it's waiting on review. Refuses to merge even if asked. Also keeps the matching Starlight doc page (`docs/src/content/docs/skills/<name>.mdx`) and the `skills/index.mdx` listing in step with whatever shipped — new page for a new skill, an update for changed behaviour, removal for a retirement.
 
 ## research-transcript-cleaner
 **Prompt:** paste a raw Zoom transcript of a usability test with a participant, "clean this up for coding"

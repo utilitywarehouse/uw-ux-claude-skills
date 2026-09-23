@@ -1,6 +1,6 @@
 ---
 name: propose-skill
-version: 4
+version: 5
 description: Ship a finished skill change — a brand-new skill, an edit to an existing one, or retiring one entirely — from this repo (uw-ux-claude-skills) into a pull request for repo admins to review and merge. Use this whenever a team member has just finished writing a new skill (typically with skill-creator), editing an existing one here, or decided a skill should be removed, and now wants to submit it, share it with the team, open a PR, or get it added to (or taken out of) the shared UX skills repo. Trigger on phrases like "propose this skill", "submit my skill", "ship this to the team repo", "send this for review", "open a PR for this skill", "retire this skill", "remove this skill", or "how do I get this merged". This skill NEVER merges anything itself — main is protected and only repo admins approve merges. It runs this repo's smoke test for the skill before every push, but does not package a .skill file or touch Cowork — this repo ships purely via GitHub pull request, nothing else.
 ---
 
@@ -45,18 +45,21 @@ This picks up *after* the skill content is finished. If the SKILL.md still needs
 **A. Propose a new skill**
 - Confirm `plugins/ux/skills/<name>/SKILL.md` exists and looks complete.
 - **Add its entry to `smoke-tests.md` in the same commit.** A skill with no smoke test is one nobody will notice breaking. Base the prompt and expected behaviour on the skill's own description and workflow — a realistic thing someone would actually say to trigger it, and the one or two things it must do in response.
+- Add a full page at `docs/src/content/docs/skills/<name>.mdx`, plus a new paragraph and link on `docs/src/content/docs/skills/index.mdx` — update the skill count mentioned there too. Stage `docs/` in the same commit as the skill folder.
 - Stage the skill folder and the `smoke-tests.md` change together.
 - Branch: `add-<name>` · PR title: "Add `<name>` skill"
 
 **B. Propose an update to an existing skill**
 - Confirm which skill folder(s) changed via `git status`.
 - If the change affects what the skill actually does (not just wording), update its `smoke-tests.md` entry to match — a smoke test checking old behaviour will pass while testing the wrong thing.
+- If the change affects what the skill actually does, also update its doc page at `docs/src/content/docs/skills/<name>.mdx` and its paragraph on `skills/index.mdx` to match — a doc page describing old behaviour is worse than no page, since it reads as current.
 - Branch: `update-<name>` · PR title: "Update `<name>`: `<one-line of what changed>`"
 
 **C. Propose retiring a skill**
 - Confirm with whoever's asking *why* the skill is being retired — superseded by another skill, no longer used, merged into something else, whatever it is. Don't remove a folder on a vague "we don't need this anymore" without pinning down the actual reason; that reason is about to become the only record of why this happened.
 - `git rm -r plugins/ux/skills/<name>/` — deleting the folder is correct, git keeps the full content in history, so nothing is actually lost. A retired skill left in place (even renamed or moved) risks still being loaded as live.
 - Remove its entry from `smoke-tests.md` in the same commit — a smoke test for a skill that no longer exists is dead weight, and running it would fail for the wrong reason.
+- Remove its page at `docs/src/content/docs/skills/<name>.mdx` (`git rm`) and its paragraph and link from `skills/index.mdx`, and lower the skill count mentioned there.
 - Commit message must state the reason plainly, not just the mechanical fact of removal — e.g. "Retire old-transcript-cleaner: folded into research-transcript-cleaner" tells a future reader something "Remove old-transcript-cleaner" does not.
 - Branch: `retire-<name>` · PR title: "Retire `<name>` skill"
 - PR body's "Why" section carries the same reason as the commit message — this is the one flow where that section is doing real work, not just a formality, since it's the only place the reason survives.
