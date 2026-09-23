@@ -1,6 +1,6 @@
 ---
 name: end-session
-version: 8
+version: 9
 description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, cross-session facts to auto-memory, new personal facts to About Me.md, and new standing design/product heuristics to Design Principles.md. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
@@ -61,10 +61,13 @@ The implicit ones in D are where most of the value hides, because nothing in the
 - They deleted every em-dash from a draft push notification. The rule: no em-dashes in customer-facing copy, use a comma or full stop.
 - They said "check the T&Cs page first" after you asserted a cap figure from memory. The rule: verify product mechanics against the T&Cs wiki pages before stating them.
 - They cut your three recommended copy changes down to one line flagging the issue. The rule: flag UI problems in findings, recommend testing rather than prescribing the fix.
+- You skipped a check that was already written down somewhere (a style guide, a CLAUDE.md rule) and the user caught it. The rule isn't new content, it's "actually run this check, don't just know it exists," a distinct finding from the rule itself.
 
 Each of those started as a single edit and generalises into something that saves a round trip every future session. State the rule, not the incident.
 
 Then filter hard. Drop anything you already wrote to a file during the session, anything already in the files you read in Step 1, and anything that only mattered to this conversation. A session with nothing to capture is a normal outcome, and saying "clean session, nothing to add" is more useful than padding the list. Do not manufacture findings to look thorough.
+
+One exception to that filter: if a correction's surface content matches a rule already on disk, don't drop it on that basis alone. Check whether the finding is really "the rule was missing" (drop it, it's a duplicate) or "the rule existed and got skipped anyway" (keep it, that's a distinct, unrecorded fact about execution, not content, and belongs in auto-memory or a project MEMORY.md as its own finding).
 
 ## Step 3: Route each finding
 
