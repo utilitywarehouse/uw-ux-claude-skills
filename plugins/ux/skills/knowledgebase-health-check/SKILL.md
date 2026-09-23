@@ -1,6 +1,6 @@
 ---
 name: knowledgebase-health-check
-version: 17
+version: 18
 description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), the root CLAUDE.md drifting out of step with the shared starter template, shared wikis or the Research Repository missing their symlink into this knowledge base, shared folders orphaned in the team's clone after a project's local copy was deleted, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
@@ -23,7 +23,7 @@ The full audit reads every note and every wiki page, so it can take a while on a
 
 Everything from here on describes the full check. For the quick check, skip straight to "Shared folders with no symlink yet" below and run only that script.
 
-If "Full check" is picked, also ask which wikis to include in the content reading pass — multi-select, default to all of them if the question is skipped. This only scopes the judgement-based wiki content checks below; the mechanical link check (`vault_lint.py`) still covers the whole knowledge base regardless, since it's cheap and a broken link or orphan isn't confined to a wiki.
+If "Full check" is picked, also ask which wikis to include in the content reading pass. List every wiki and every project's `Wiki/` folder by its actual name as its own selectable option — not generic buckets like "all" or "some." Make the question multi-select, so more than one can be picked at once. Include one extra option to skip the question, labelled so it is unmistakable that skipping means "run on all wikis now," not "ask me again later." This only scopes the judgement-based wiki content checks below; the mechanical link check (`vault_lint.py`) still covers the whole knowledge base regardless, since it's cheap and a broken link or orphan isn't confined to a wiki.
 
 ## Running it
 
