@@ -165,6 +165,7 @@ class Vault:
         for p in self.md:
             self.by_stem[os.path.splitext(os.path.basename(p))[0]].append(p)
         self.attachments = {os.path.basename(p): p for p in self.other}
+        self.other_paths = set(self.other)
         self.by_path = {os.path.splitext(p)[0]: p for p in self.md}
         self.text = {}
         for p in self.md:
@@ -177,18 +178,40 @@ class Vault:
         t = target.strip().rstrip('\\').strip()
         if not t:
             return None
-        if t in self.by_stem:
-            return self.by_stem[t][0]
-        if t in self.attachments:
-            return self.attachments[t]
-        if t in self.by_path:
-            return self.by_path[t]
+        # A note (.md) is stored and looked up by its stem, so the extension is
+        # dropped below. Every other file — images, .html, .tsx, .css, .js, ... —
+        # is stored by its full filename *with* extension, so it must be matched
+        # with the extension kept. Stripping the extension off an attachment
+        # target (as this method used to, unconditionally) can never match, and
+        # reported every correct link to a non-.md file as broken.
+        if not t.endswith('.md'):
+            # bare filename, e.g. [button.tsx](button.tsx)
+            if t in self.attachments:
+                return self.attachments[t]
+            # a ./ or ../ path from the linking file
+            if t.startswith(('./', '../')):
+                rel = os.path.normpath(os.path.join(os.path.dirname(src), t))
+                if rel in self.other_paths:
+                    return rel
+            # a vault-root-relative path
+            if t in self.other_paths:
+                return t
+            # a path relative to the linking file with no ./ prefix, e.g.
+            # [01-Inputs/x.jpg](01-Inputs/x.jpg)
+            for p in self.other:
+                if p.endswith('/' + t):
+                    return p
+        stem = os.path.splitext(t)[0]
+        if stem in self.by_stem:
+            return self.by_stem[stem][0]
+        if stem in self.by_path:
+            return self.by_path[stem]
         if t.startswith(('./', '../')):
-            rel = os.path.normpath(os.path.join(os.path.dirname(src), t))
+            rel = os.path.normpath(os.path.join(os.path.dirname(src), stem))
             if rel in self.by_path:
                 return self.by_path[rel]
         for k, v in self.by_path.items():
-            if k.endswith('/' + t):
+            if k.endswith('/' + stem):
                 return v
         return None
 
@@ -200,7 +223,9 @@ class Vault:
             # produced a 600KB "broken link" report before it was filtered.
             if url.startswith(('http', 'mailto', '#', 'data:', 'obsidian:', 'tel:')):
                 continue
-            out.append(os.path.splitext(unquote(url))[0])
+            # Keep the extension: resolve() drops it only for .md targets, since
+            # attachments are looked up by their full filename.
+            out.append(unquote(url))
         return [t for t in out if len(t) <= 200 and '\n' not in t]
 
 

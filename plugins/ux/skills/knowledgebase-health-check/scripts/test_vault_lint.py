@@ -98,6 +98,21 @@ FILES = {
     # blames whichever file sorts first for a link it doesn't even contain.
     "notes/paren-link-a.md": "see [MEMORY](../Some%20Folder%20(ABC)/MEMORY.md)\n",
     "notes/paren-link-b.md": "see [other.jpg](../Some%20Folder%20(ABC)/other.jpg)\n",
+    # Links to non-.md files (attachments). An earlier version stripped the
+    # extension off *every* link target before looking it up, but attachments
+    # are stored by their full filename — so every correct link to a picture,
+    # .html, .tsx, .css, etc. was reported as broken. These cover the three
+    # real link shapes that were false-flagged, plus a genuinely missing one
+    # that must still be reported broken.
+    "notes/attach-links.md": (
+        "bare [button.tsx](button.tsx)\n"
+        "sub-folder [sub/pic.jpg](sub/pic.jpg)\n"
+        "parent [theme.css](../assets/theme.css)\n"
+        "missing [gone.png](gone.png)\n"
+    ),
+    "notes/button.tsx": "export const Button = () => null;\n",
+    "notes/sub/pic.jpg": "binary\n",
+    "assets/theme.css": ":root {}\n",
 }
 
 failures = []
@@ -180,7 +195,7 @@ with tempfile.TemporaryDirectory() as root:
           f"got {list(cites)}")
     check("flags a dead frontmatter link", "Some Author" in r["frontmatter_dead_links"])
     check("flags a dead frontmatter link (markdown-style)",
-          "Some Other Author" in r["frontmatter_dead_links"], f"got {list(r['frontmatter_dead_links'])}")
+          "Some Other Author.md" in r["frontmatter_dead_links"], f"got {list(r['frontmatter_dead_links'])}")
     check("flags backtick-only wikilinks",
           any(p.endswith("log.md") for p in r["backtick_only_references"]))
     check("flags backtick-only markdown links",
@@ -205,7 +220,19 @@ with tempfile.TemporaryDirectory() as root:
     # Update this number when the fixture gains a real link, never to make a
     # failure go away.
     check("counts exactly the real edges, no over-counting",
-          r["counts"]["edges"] == 3, f"got {r['counts']['edges']}")
+          r["counts"]["edges"] == 6, f"got {r['counts']['edges']}")
+
+    # Links to non-.md files must resolve, in every shape they are written:
+    # a bare filename, a sub-folder path, and a ../ path to a sibling folder.
+    # A genuinely missing attachment link must still be reported broken.
+    attach = os.path.join("notes", "attach-links.md")
+    for name in ("button.tsx", "sub/pic.jpg", "theme.css", "../assets/theme.css"):
+        check(f"does not report a correct attachment link as broken ({name})",
+              not any(attach in where for k, where in broken.items() if name in k),
+              f"got {broken}")
+    check("still reports a genuinely missing attachment link as broken",
+          "gone.png" in broken and broken["gone.png"] == [attach],
+          f"got {broken.get('gone.png')}")
     check("reports orphans", isinstance(r["orphans"], list) and len(r["orphans"]) > 0)
 
     # Two links whose targets share a parenthesised folder segment but differ
@@ -218,11 +245,11 @@ with tempfile.TemporaryDirectory() as root:
           not any(paren_a in where and paren_b in where for where in broken.values()),
           f"got {broken}")
     check("attributes the MEMORY.md paren-target broken link to the file that has it",
-          any(k.endswith("Some Folder (ABC)/MEMORY") and where == [paren_a]
+          any(k.endswith("Some Folder (ABC)/MEMORY.md") and where == [paren_a]
               for k, where in broken.items()),
           f"got {broken}")
     check("attributes the other.jpg paren-target broken link to the file that has it",
-          any(k.endswith("Some Folder (ABC)/other") and where == [paren_b]
+          any(k.endswith("Some Folder (ABC)/other.jpg") and where == [paren_b]
               for k, where in broken.items()),
           f"got {broken}")
 
