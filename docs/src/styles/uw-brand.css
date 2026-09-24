@@ -302,17 +302,6 @@ h1, h2, h3, h4, h5, h6,
   display: block;
 }
 
-/* Homepage hero: "Start here" sits below the toolkit name as a smaller,
-   lighter subheading — Starlight's hero has no subtitle field of its own,
-   so this rides in as HTML inside the title (which Starlight renders raw). */
-.hero-subtitle {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: var(--sl-text-xl);
-  font-weight: 600;
-  color: var(--sl-color-gray-3);
-}
-
 /* Asides (Tip/Note/Caution): 8px radius, no blurred shadow */
 starlight-aside,
 .starlight-aside {
