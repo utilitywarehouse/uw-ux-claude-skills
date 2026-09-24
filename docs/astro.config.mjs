@@ -1,12 +1,18 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { remarkBaseLinks } from './remark-base-links.mjs';
 
 // This site is published via GitHub Pages from the utilitywarehouse/uw-ux-claude-skills repo.
 // Pages serves project sites at https://<org>.github.io/<repo>/, so `base` must match the repo name.
+const base = '/uw-ux-claude-skills';
+
 export default defineConfig({
   site: 'https://utilitywarehouse.github.io',
-  base: '/uw-ux-claude-skills',
+  base,
+  markdown: {
+    remarkPlugins: [remarkBaseLinks(base)],
+  },
   integrations: [
     starlight({
       title: 'UW UX Claude Skills',
