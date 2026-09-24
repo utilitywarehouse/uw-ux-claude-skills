@@ -12,4 +12,4 @@ Owned by Richard Lang.
 
 ## Contributing
 
-This repo ships only through pull request. See the `propose-skill` skill (`plugins/ux/skills/propose-skill/SKILL.md`) for the full workflow — it opens the PR for you, it doesn't merge it.
+This repo ships only through pull request. See the `contribute-to-skills-repo` skill (`plugins/ux/skills/contribute-to-skills-repo/SKILL.md`) for the full workflow — it opens the PR for you, it doesn't merge it.

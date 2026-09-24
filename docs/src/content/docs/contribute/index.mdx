@@ -33,17 +33,17 @@ When you're ready to send that edit back to the team:
 
 ## Contributing a skill change
 
-This repo — `uw-ux-claude-skills` itself — ships purely through reviewed GitHub pull request, the same review-gated shape as above, but through a different skill: `propose-skill`.
+This repo — `uw-ux-claude-skills` itself — ships purely through reviewed GitHub pull request, the same review-gated shape as above, but through a different skill: `contribute-to-skills-repo`.
 
 <Steps>
 
 1. **Finish the skill first**, typically with `skill-creator` — writing or editing a new or existing `SKILL.md` under `plugins/ux/skills/`.
 
-2. **Say you want to ship it.** "Propose this skill", "submit my skill", "ship this to the team repo" all trigger `propose-skill`.
+2. **Say you want to ship it.** "Propose this skill", "submit my skill", "ship this to the team repo" all trigger `contribute-to-skills-repo`.
 
 3. **It checks scope, branches off `main`, runs this repo's smoke test for the skill, commits, and opens a PR** against `utilitywarehouse/uw-ux-claude-skills` for repo admins to review.
 
-4. **An admin reviews and merges.** Same as the wiki flow: `propose-skill` never merges anything itself, and `main` is protected.
+4. **An admin reviews and merges.** Same as the wiki flow: `contribute-to-skills-repo` never merges anything itself, and `main` is protected.
 
 5. **Everyone picks up the new or changed skill the way Claude Code plugins normally update** — it isn't instantly live in a session that's already running.
 

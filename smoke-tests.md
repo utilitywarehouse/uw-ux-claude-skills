@@ -1,6 +1,6 @@
 # Smoke Tests
 
-One prompt per skill, run before pushing any change (see `propose-skill`'s workflow). If the
+One prompt per skill, run before pushing any change (see `contribute-to-skills-repo`'s workflow). If the
 expected behaviour doesn't hold, stop and report what broke — don't open a PR for a skill that
 just regressed.
 
@@ -35,7 +35,7 @@ will notice breaking.
 **Prompt:** "let's continue working on the knowledge base documentation"
 **Expect:** Scans `1-Projects/` directly (not the CLAUDE.md routing table), shows a grouped numbered list of active projects sorted most-recent-first, and never shows the list at all if the opening message already names a project or says it's not project work. Flags — rather than silently drops — a project folder that has real content but no `CLAUDE.md`. Offers "not working in a project" and a "not listed — check Archives" fallback that reuses `new-project-setup`'s existing restore steps. Asks before handing off to `new-project-setup` if `1-Projects/` is empty, rather than jumping straight into setup.
 
-## propose-skill
+## contribute-to-skills-repo
 **Prompt:** "I've finished editing the study-writeup skill, can you get it merged in?"
 **Expect:** Branches off main, commits only that skill's files, pushes, and opens a PR — then stops and says it's waiting on review. Refuses to merge even if asked. Also keeps the matching Starlight doc page (`docs/src/content/docs/skills/<name>.mdx`) and the `skills/index.mdx` listing in step with whatever shipped — new page for a new skill, an update for changed behaviour, removal for a retirement.
 

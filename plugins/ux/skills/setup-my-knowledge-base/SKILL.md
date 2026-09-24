@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 27
+version: 28
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -98,7 +98,7 @@ Confirm the links resolved by listing one of them before moving on.
 
 ### Clone the shared skills repo too
 
-Everyone gets a local clone of `utilitywarehouse/uw-ux-claude-skills`, the repo these skills themselves ship from — not just the installed plugin. The clone is what lets someone propose a change to a skill later, via `propose-skill`, rather than only ever consuming skills read-only.
+Everyone gets a local clone of `utilitywarehouse/uw-ux-claude-skills`, the repo these skills themselves ship from — not just the installed plugin. The clone is what lets someone propose a change to a skill later, via `contribute-to-skills-repo`, rather than only ever consuming skills read-only.
 
 Check the default location first, `~/Documents/Github/uw-ux-claude-skills`, the same pattern as the knowledge-content clone above.
 
@@ -106,7 +106,7 @@ Check the default location first, `~/Documents/Github/uw-ux-claude-skills`, the 
 - If no clone exists there, default to creating it at that location, but give the user the option to choose a different location instead of asking open-endedly. Then `git clone https://github.com/utilitywarehouse/uw-ux-claude-skills.git` into the folder chosen.
 - If the clone fails on access, tell them plainly and skip this step without blocking the rest of setup — same handling as the knowledge-content access check above.
 
-Add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `propose-skill` will hit a sandbox permissions error the first time it tries to write there.
+Add this clone to the VS Code workspace too — **File → Add Folder to Workspace…**. Same reasoning as the knowledge-content clone: without it, `contribute-to-skills-repo` will hit a sandbox permissions error the first time it tries to write there.
 
 ### Save the workspace
 
