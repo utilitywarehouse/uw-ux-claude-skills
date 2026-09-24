@@ -39,7 +39,7 @@ export default defineConfig({
           label: 'Overview',
           items: [
             { label: 'Start here', link: '/' },
-            { label: 'Getting started, step by step', link: '/getting-started/' },
+            { label: 'Getting started', link: '/getting-started/' },
           ],
         },
         {
@@ -55,12 +55,13 @@ export default defineConfig({
         {
           label: 'Install',
           items: [
+            { label: 'Install required tools', link: '/install/before-you-start/' },
             { label: 'Install the plugin', link: '/install/' },
-            { label: 'Before you start', link: '/install/before-you-start/' },
+            { label: 'Set up your knowledge base', link: '/install/what-to-run-first/' },
           ],
         },
         {
-          label: 'Your knowledge base',
+          label: 'Understanding your knowledge base',
           items: [
             { label: 'Your knowledge base', link: '/knowledge-base/' },
             { label: 'Folder structure', link: '/knowledge-base/folder-structure/' },

@@ -188,6 +188,13 @@
   margin-top: 0.25rem;
 }
 
+/* Starlight only auto-centers the content column at >=72rem, so on any
+   narrower browser window a page's text sits flush against the sidebar
+   instead of centred in the space left for it. Centre it at every width. */
+.sl-container {
+  margin-inline: auto;
+}
+
 /* Headings: Comic Hams, sentence case always — never all caps, per DESIGN.md */
 h1, h2, h3, h4, h5, h6,
 .hero h1 {
@@ -263,6 +270,7 @@ h1, h2, h3, h4, h5, h6,
 .sl-steps {
   --bullet-size: 2rem;
   --bullet-margin: 0px;
+  margin-top: 3rem;
 }
 .sl-steps > li::before {
   background-color: var(--sl-color-accent);
