@@ -14,3 +14,4 @@ Follow these rules for any writing in the `docs/` Starlight site:
 - **User-centricity**: prioritize the user's goal — every page must help a specific reader do a specific task.
 - **Consistency**: keep tone, terminology, and style consistent across all pages.
 - **Terminology**: the Glossary (`docs/knowledge-base/glossary`) is the source of truth for naming recurring concepts (Routing Map, Wiki, symlink, etc.). Check it before introducing a new name for something that already has one, and add an entry when a skill introduces a new concept worth naming consistently.
+- **Audience for step-by-step sections**: describe what the reader experiences, and in what order — not why the skill was built that way internally. Cut implementation reasoning and internal tool/hook/API names from reader-facing text (e.g. "fancier pickers cap out at a handful of options" instead of naming `AskUserQuestion`).
