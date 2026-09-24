@@ -36,8 +36,8 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: 'UX AI Operating System',
-          items: [{ label: 'UX AI Operating System', link: '/' }],
+          label: 'UX AI Toolkit',
+          items: [{ label: 'UX AI Toolkit', link: '/' }],
         },
         {
           label: 'Concepts',
