@@ -13,3 +13,4 @@ Follow these rules for any writing in the `docs/` Starlight site:
 - **Accuracy**: all information, especially code snippets and technical details, must be correct and up to date.
 - **User-centricity**: prioritize the user's goal — every page must help a specific reader do a specific task.
 - **Consistency**: keep tone, terminology, and style consistent across all pages.
+- **Terminology**: the Glossary (`docs/knowledge-base/glossary`) is the source of truth for naming recurring concepts (Routing Map, Wiki, symlink, etc.). Check it before introducing a new name for something that already has one, and add an entry when a skill introduces a new concept worth naming consistently.

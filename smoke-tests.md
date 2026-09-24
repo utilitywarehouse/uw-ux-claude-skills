@@ -33,7 +33,7 @@ will notice breaking.
 
 ## new-session
 **Prompt:** "let's continue working on the knowledge base documentation"
-**Expect:** Scans `1-Projects/` directly (not the CLAUDE.md routing table), shows a grouped numbered list of active projects sorted most-recent-first, and never shows the list at all if the opening message already names a project or says it's not project work. Flags — rather than silently drops — a project folder that has real content but no `CLAUDE.md`. Offers "not working in a project" and a "not listed — check Archives" fallback that reuses `new-project-setup`'s existing restore steps. Asks before handing off to `new-project-setup` if `1-Projects/` is empty, rather than jumping straight into setup.
+**Expect:** Scans `1-Projects/` directly (not the CLAUDE.md Routing Map), shows a grouped numbered list of active projects sorted most-recent-first, and never shows the list at all if the opening message already names a project or says it's not project work. Flags — rather than silently drops — a project folder that has real content but no `CLAUDE.md`. Offers "not working in a project" and a "not listed — check Archives" fallback that reuses `new-project-setup`'s existing restore steps. Asks before handing off to `new-project-setup` if `1-Projects/` is empty, rather than jumping straight into setup.
 
 ## contribute-to-skills-repo
 **Prompt:** "I've finished editing the study-writeup skill, can you get it merged in?"

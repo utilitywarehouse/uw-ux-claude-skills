@@ -1,0 +1,50 @@
+---
+title: Glossary
+description: Short definitions of the recurring terms these docs and skills use, so one page settles naming instead of each one coining its own.
+---
+
+Quick lookups for terms used repeatedly across these docs. Where a page already covers a term in depth, the entry here is short and links out to it — this page is for naming consistency and a fast reminder, not for re-teaching.
+
+## Routing Map
+
+The folder-guide table that sits at the top of the root `CLAUDE.md`, telling Claude which folder to use for what. A row gets added automatically whenever a new project or area is created, and a stale row (pointing at a folder that's since moved to `4-Archives/`) gets flagged by a periodic health check. See [Folder structure](/knowledge-base/folder-structure/#the-routing-map) for the full explanation.
+
+## CLAUDE.md
+
+A set of written instructions Claude Code reads before doing anything inside the folder it sits in — a standing brief, not a memory of past conversations. Exists at more than one level (root, product area, project), each covering only what's specific to it. See [CLAUDE.md and memory](/knowledge-base/claude-md-and-memory/) for the full picture.
+
+## MEMORY.md
+
+A per-project file of facts learned about that specific piece of work — decisions made, context gathered — as opposed to `CLAUDE.md`'s standing rules. See [MEMORY.md vs CLAUDE.md](/knowledge-base/claude-md-and-memory/#memorymd-vs-claudemd--facts-vs-rules).
+
+## Wiki
+
+The shared knowledge folder for one product area (e.g. `1-Projects/Cashback Card/Wiki/`). When shared with the team, it's a [symlink](#symlink) into the team's shared content repo rather than a plain personal folder — see [Shared vs personal folders](/knowledge-base/folder-structure/#shared-vs-personal-folders).
+
+## Symlink
+
+A shortcut folder that points at a separate clone of a shared repo sitting elsewhere on your computer. Editing a file inside one is really editing that shared clone. See [Git and GitHub](/concepts/git-and-github/#the-core-vocabulary) for the full definition alongside the rest of the git vocabulary these docs use.
+
+## Shared clone
+
+The actual on-disk checkout of the team's shared content repo (`utilitywarehouse/uw-knowledgebase-content`) that a symlink resolves to. It's a real git repository in its own right — you can run `git status`, `git pull`, and so on inside it — whereas the symlink itself is just the shortcut that makes it appear inside your personal knowledge base.
+
+## PARA
+
+The four top-level folders every knowledge base is organised into, sorted by how active something is rather than what topic it's about: `1-Projects/` (active work with an end), `2-Areas/` (ongoing responsibilities with no end date), `3-Resources/` (reference material), `4-Archives/` (work that's ended). See [PARA, plainly](/knowledge-base/folder-structure/#para-plainly).
+
+## Knowledge base
+
+A folder of plain files on your own computer, organised by a consistent structure, read and written directly by Claude Code. Not an app you log into. See [What is a knowledge base?](/concepts/what-is-a-knowledge-base/).
+
+## Product area, project, sub-project
+
+The nesting inside `1-Projects/`: a **product area** (e.g. `Cashback Card/`) sits at the top level and can have its own `Wiki/` and area-wide `CLAUDE.md`. A **project** (sometimes called a **sub-project** when it sits inside a product area) is one piece of active work with an end point, nested inside its area, with its own `CLAUDE.md` and `MEMORY.md`.
+
+## Skill
+
+One packaged task inside a plugin, invoked as a `/prefix:skill-name` slash command. See [Plugins and Skills](/concepts/plugins-and-skills/#skill-one-packaged-task-inside-a-plugin).
+
+## Plugin
+
+A bundle of skills installed once into Claude Code, after which every skill inside it is available in any session. See [Plugins and Skills](/concepts/plugins-and-skills/#plugin-a-bundle-you-install-once).

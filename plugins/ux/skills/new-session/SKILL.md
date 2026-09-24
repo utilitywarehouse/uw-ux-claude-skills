@@ -1,7 +1,7 @@
 ---
 name: new-session
-version: 1
-description: "Work out which project in the knowledge base a session is about, right at the start, instead of leaving Claude blind to it until the user opens the exact folder or spells out a path. Use this skill whenever a new Claude Code session begins in this Obsidian-vault knowledge base and it isn't yet obvious which project (or product area) is meant — for example 'let's continue working on the knowledge base documentation', 'let's pick up where we left off', 'continue working on Sign-up', or any first message that doesn't already name a project. Also trigger on explicit invocations: 'new session', '/new-session', 'which project am I in', 'let's start', 'what are we working on'. Scans the real 1-Projects/ folder structure directly — never a CLAUDE.md routing table, which can drift stale — lists active projects grouped by product area, offers a 'not working in a project' option for vault-wide work, and falls back to checking 4-Archives/ for something that should be reactivated. If the vault has no projects at all yet, hands off to new-project-setup instead of showing an empty list."
+version: 2
+description: "Work out which project in the knowledge base a session is about, right at the start, instead of leaving Claude blind to it until the user opens the exact folder or spells out a path. Use this skill whenever a new Claude Code session begins in this Obsidian-vault knowledge base and it isn't yet obvious which project (or product area) is meant — for example 'let's continue working on the knowledge base documentation', 'let's pick up where we left off', 'continue working on Sign-up', or any first message that doesn't already name a project. Also trigger on explicit invocations: 'new session', '/new-session', 'which project am I in', 'let's start', 'what are we working on'. Scans the real 1-Projects/ folder structure directly — never a CLAUDE.md Routing Map, which can drift stale — lists active projects grouped by product area, offers a 'not working in a project' option for vault-wide work, and falls back to checking 4-Archives/ for something that should be reactivated. If the vault has no projects at all yet, hands off to new-project-setup instead of showing an empty list."
 ---
 
 # New Session
@@ -14,7 +14,7 @@ This skill assumes the default knowledge base layout: `1-Projects/` for active w
 
 ## What this skill does
 
-0. Scans `1-Projects/` directly to build the list — not the Vault Navigation table, which can point at folders that moved or were archived
+0. Scans `1-Projects/` directly to build the list — not the Routing Map, which can point at folders that moved or were archived
 1. If there are no projects yet at all, asks before handing off to `new-project-setup`
 2. Skips the list entirely if the opening message already names a project or says it's not project work
 3. Otherwise shows the list as plain numbered text, grouped by product area, most recently active first
@@ -25,7 +25,7 @@ This skill assumes the default knowledge base layout: `1-Projects/` for active w
 
 ## Step 0 — Scan the active projects
 
-Look inside `1-Projects/` and build the list from the folders that are actually there, not from anything written in the root `CLAUDE.md`'s Vault Navigation table — that table is a curated summary and can lag behind the real folder structure.
+Look inside `1-Projects/` and build the list from the folders that are actually there, not from anything written in the root `CLAUDE.md`'s Routing Map — that table is a curated summary and can lag behind the real folder structure.
 
 - List each top-level product-area folder (e.g. `Cashback Card`, `Insurance`).
 - A folder only counts as a pickable entry — area or sub-project — if it has its own `CLAUDE.md` directly inside it. That's what separates a real project/area from a resource folder like `Wiki/`, which is a symlink into the shared content repo, not a project, and should never appear in the list.
