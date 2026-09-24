@@ -7,6 +7,20 @@ import { Aside } from '@astrojs/starlight/components';
 
 The `ux` plugin currently ships twelve skills. Every command below runs under the `ux:` prefix — see [Plugins and Skills](/concepts/plugins-and-skills/) if that's new to you, or [Install](/install/) to get set up. All twelve get a full deep-dive page now — start with whichever paragraph matches what you're trying to do. Unfamiliar term in one of the descriptions below? Check the [Glossary](/knowledge-base/glossary/).
 
+## Using it day to day
+
+Once you're set up, these are the skills you'll come back to again and again.
+
+- **Starting a new session.** At the start of a session, tell Claude what you're working on, or ask it to run `/ux:new-session`. It lists your active projects and loads the right one, so you don't have to spell out a folder path. See the [full walkthrough](/skills/new-session/).
+
+- **Starting your next project.** Your first project already got set up for you automatically during the initial setup of the knowledge base. From now on, you don't need to run anything. Just tell Claude you're starting something new, and it sets up the right folders for you using `/ux:new-project-setup`. See the [full walkthrough](/skills/new-project-setup/).
+
+- **Sharing knowledge with the team.** Claude keeps watch over your whole knowledge base. If you edit or add to something already shared, it picks that up on its own, opens a pull request, and a knowledge base admin reviews it before it goes out to the team. If Claude spots something completely new that looks worth sharing, it gives you the option to turn it into shared knowledge and contribute it back. See the [full walkthrough](/skills/contribute-to-shared-knowledgebase/) for what that looks like.
+
+- **Keep your knowledge base healthy over time.** Run `/ux:knowledgebase-health-check` periodically. Good times to run it: after adding a lot of new content at once, or just when it's been a while. It catches broken links, contradictions in your knowledge, and stale rules. See the [full walkthrough](/skills/knowledgebase-health-check/) for details.
+
+- **End each working session with `/ux:end-session`.** A "session" is just one sitting of working with Claude Code — however long you're at it before you close the window or walk away. Ending a session properly, with this skill, captures durable knowledge, changed project facts, and new rules before any of it gets lost. See its [full page](/skills/end-session/).
+
 ## setup-my-knowledge-base
 
 Sets up a brand-new personal knowledge base from scratch: the core PARA folders, a starter `CLAUDE.md`, an interview-driven `About Me` note, a `Start here` note, and links into all of the team's shared content (the Research Repository and every shared product wiki) — then hands off to `new-project-setup` so you leave with one real project, not a demo. Only ever runs once per knowledge base. **[Full page →](/skills/setup-my-knowledge-base/)**
