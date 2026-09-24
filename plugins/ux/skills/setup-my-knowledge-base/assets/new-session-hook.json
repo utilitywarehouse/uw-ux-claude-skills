@@ -1,0 +1,9 @@
+{
+  "hooks": [
+    {
+      "type": "command",
+      "command": "MSG=\"If it is not already obvious from the user's first message which knowledge-base project (or 'not working in a project') is meant, offer to run the new-session skill before doing any project-specific work. Don't force this if the first message already makes it clear, just offer it when genuinely ambiguous.\"; jq -n --arg msg \"$MSG\" '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":$msg}}'",
+      "timeout": 15
+    }
+  ]
+}

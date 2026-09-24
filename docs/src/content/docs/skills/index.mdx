@@ -5,7 +5,7 @@ description: Every skill in the ux plugin, one paragraph each, each linked to it
 
 import { Aside } from '@astrojs/starlight/components';
 
-The `ux` plugin currently ships eleven skills. Every command below runs under the `ux:` prefix — see [Plugins and Skills](/concepts/plugins-and-skills/) if that's new to you, or [Install](/install/) to get set up. All eleven get a full deep-dive page now — start with whichever paragraph matches what you're trying to do.
+The `ux` plugin currently ships twelve skills. Every command below runs under the `ux:` prefix — see [Plugins and Skills](/concepts/plugins-and-skills/) if that's new to you, or [Install](/install/) to get set up. All twelve get a full deep-dive page now — start with whichever paragraph matches what you're trying to do.
 
 ## setup-my-knowledge-base
 
@@ -14,6 +14,10 @@ Sets up a brand-new personal knowledge base from scratch: the core PARA folders,
 ## new-project-setup
 
 Sets up a new project folder inside `1-Projects/`, branching on whether it's a brand-new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area. Confirms the project is actually new, asks a handful of focused questions, and leaves the workspace ready to go immediately. **[Full page →](/skills/new-project-setup/)**
+
+## new-session
+
+Works out which knowledge-base project a session is about, right at the start, by scanning `1-Projects/` directly and offering back a short grouped list — instead of leaving Claude blind to it until you open the exact folder or spell out a path. Skips the list if your opening message already answers the question, flags projects missing a `CLAUDE.md` instead of silently dropping them, and falls back to `4-Archives/` or `new-project-setup` when nothing active matches. A `SessionStart` hook nudges Claude to offer it automatically. **[Full page →](/skills/new-session/)**
 
 ## research-transcript-cleaner
 
@@ -52,5 +56,5 @@ Execution-level craft for hands-on Figma design work — a set of hard-won gotch
 Turns a working Figma journey page into a dev-ready one: converts loose screens into component sets, files them on the file's master-components page, places instances back on the journey page, and keeps every engineering annotation visible where developers actually read it. Deliberately not a manual process — the sequence has five silent failure modes that destroy annotations or ship mangled text to engineers if done by hand. **[Full page →](/skills/figma-dev-handoff/)**
 
 <Aside type="note">
-  Confirmed against the actual `plugins/ux/skills/` folder in this repo at the time this page was written — eleven skills, matching the list above.
+  Confirmed against the actual `plugins/ux/skills/` folder in this repo at the time this page was written — twelve skills, matching the list above.
 </Aside>

@@ -25,6 +25,8 @@ Builds a new knowledge base from nothing: the core PARA folders, a starter `CLAU
 
 3. **Creates the core folder structure** — the PARA layout (`0-Inbox/`, `1-Projects/`, `2-Areas/`, `3-Resources/`, `4-Archives/`), plus a few starter resource files (a Design Principles template, a PARA guide, AI writing guidelines) copied in as-is.
 
+   Also adds a `SessionStart` hook to `.claude/settings.json` so [new-session](/skills/new-session/) gets offered automatically whenever a session's opening message doesn't already make the active project clear.
+
 4. **Links you into the team's shared content.** This is the biggest step:
    - Checks you have access to the private `utilitywarehouse/uw-knowledgebase-content` repo, and if not, tells you plainly how to request it — without blocking the rest of setup.
    - Clones that repo to `~/Documents/Github/uw-knowledgebase-content` (outside the knowledge base — never git-nested inside it).

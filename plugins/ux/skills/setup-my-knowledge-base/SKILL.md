@@ -1,6 +1,6 @@
 ---
 name: setup-my-knowledge-base
-version: 25
+version: 26
 description: "Set up a brand-new personal knowledge base from scratch, driven by Claude Code. Use this skill when no knowledge base exists yet and someone says things like \"set up my knowledge base\", \"get me started\", \"I'm new, help me set this up\", or is working through session one of the UX team's onboarding. Creates the core folder structure, links the person into all of the team's shared content (the Research Repository and every shared product wiki), interviews the person for their own About Me note, writes a starter CLAUDE.md and Start here note, then hands off to `new-project-setup` so they leave with one real project, not a demo. Do not use this on a knowledge base that already exists — that's `new-project-setup`'s job instead."
 ---
 
@@ -38,6 +38,12 @@ Create the `Knowledge Base` folder first if it doesn't already exist, then creat
 ```
 
 The Research Repository doesn't get created here — Step 4 links it in from the team's shared repo instead of writing a blank local copy.
+
+## Step 3a — Add the new-session hook
+
+Everyone gets the same nudge you'd get if `new-session` (from this same `ux` plugin) had always been part of their setup: a `SessionStart` hook that offers to run it whenever the opening message doesn't already make the project clear. Without this step, a new teammate only discovers `new-session` if they happen to type it.
+
+Create `.claude/settings.json` at the knowledge base root if it doesn't exist yet. Merge the contents of `assets/new-session-hook.json` in as the (or an additional) entry in `hooks.SessionStart` — don't overwrite an existing `SessionStart` array if one somehow already exists, add alongside it.
 
 Copy these three as-is — they're already written for a newcomer:
 
