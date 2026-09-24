@@ -19,20 +19,26 @@ You can either type `/ux:new-session` at the start of every new chat, or Claude 
 
 <Steps>
 
-1. **Scans `1-Projects/` directly.** It skips the CLAUDE.md Routing Map, since that can drift out of date. The real folder structure is always accurate. A folder only counts if it has its own `CLAUDE.md`. That's what separates a real project from a resource folder like `Wiki/`. A folder with real content but no `CLAUDE.md` gets flagged as "not set up yet," not silently dropped.
+1. **You start a new chat.** Either type `/ux:new-session`, or just begin typing your prompt.
 
-2. **Checks your opening message first.** If you already named a project, or already said you're not working on one, the skill skips straight to that outcome. You won't be asked to pick from a list you've already answered.
+2. **Claude checks your message.** If you've already made it clear which project you're referring to, Claude just gets on with it — the skill isn't needed.
 
-3. **Handles an empty vault carefully.** If there are no projects at all yet, it doesn't show an empty list or assume you want to set one up. It asks first, and only hands off to `new-project-setup` if you say yes.
+3. **Otherwise, Claude offers to run this skill for you.** This is where it kicks in.
 
-4. **Shows a plain numbered list.** Projects are grouped by product area and sorted most-recently-active first. Two extra options are always included: "Not working in a project" and "Not listed — check Archives".
+4. **It checks your `1-Projects/` folder to see what's active.**
 
-5. **Loads whatever you pick.** For a project, that means its `CLAUDE.md` and `MEMORY.md`. For "check Archives," it reuses `new-project-setup`'s existing restore steps if a match turns up there.
+5. **No projects yet? Claude asks if you want to set one up.** Only if you say yes does it hand off to the `new-project-setup` skill to build one.
 
-6. **Works mid-session too.** You can run it again any time to switch projects. It's just a slash command.
+6. **Otherwise, you get a short list of your active projects to pick from.** So you can tell Claude which project to work in. Projects are grouped by area, most recently worked-on first. Two extra options are always there too: "Not working in a project" and "Check Archives".
+
+7. **Once you pick, Claude loads that project's rules and history** (its `CLAUDE.md` and `MEMORY.md` — see [CLAUDE.md and memory](/knowledge-base/claude-md-and-memory/)). It's instantly up to speed.
 
 </Steps>
 
 <Aside type="tip">
   This list stays a plain numbered list on purpose. Fancier pickers cap out at a handful of options — a plain list keeps working no matter how many areas and sub-projects your vault grows to.
+</Aside>
+
+<Aside type="tip">
+  Naming the project in your first message (e.g. "let's work on Sign-up") means this skill isn't needed — Claude loads that project's rules and history straight away.
 </Aside>
