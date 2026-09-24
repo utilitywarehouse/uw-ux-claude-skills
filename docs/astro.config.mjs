@@ -15,7 +15,7 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: 'UW UX Claude Skills',
+      title: 'UX AI Toolkit',
       description: "The UW UX team's knowledge base and the Claude Code Skills that run it.",
       logo: {
         light: './src/assets/wordmark-purple.svg',
