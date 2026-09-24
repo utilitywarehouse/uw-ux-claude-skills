@@ -75,7 +75,7 @@ export default defineConfig({
             { label: 'study-writeup', link: '/skills/study-writeup/' },
             { label: 'knowledgebase-health-check', link: '/skills/knowledgebase-health-check/' },
             { label: 'end-session', link: '/skills/end-session/' },
-            { label: 'propose-skill', link: '/skills/propose-skill/' },
+            { label: 'contribute-to-skills-repo', link: '/skills/contribute-to-skills-repo/' },
             {
               label: 'contribute-to-shared-knowledgebase',
               link: '/skills/contribute-to-shared-knowledgebase/',
