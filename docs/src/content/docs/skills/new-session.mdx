@@ -1,0 +1,36 @@
+---
+title: new-session
+description: Work out which knowledge-base project a session is about, right at the start.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+```
+/ux:new-session
+```
+
+At the start of a session, Claude only knows the folder it was opened in. If that's the whole vault rather than one project's folder, there's nothing to tell it which of many active projects you mean — and a wrong guess wastes a round trip. This skill closes that gap: it looks at what's actually in `1-Projects/` right now, offers it back as a short list, and loads whichever one you pick.
+
+A `SessionStart` hook (added by [setup-my-knowledge-base](/skills/setup-my-knowledge-base/)) nudges Claude to offer this skill whenever your opening message doesn't already make the project clear — you don't have to remember to type it yourself.
+
+## What it does, step by step
+
+<Steps>
+
+1. **Scans `1-Projects/` directly.** Not the CLAUDE.md routing table, which can drift out of date — the real folder structure is always accurate. A folder only counts if it has its own `CLAUDE.md`, which is what separates a real project from a resource folder like `Wiki/`. A folder with real content but no `CLAUDE.md` gets flagged as "not set up yet," not silently dropped.
+
+2. **Checks whether your opening message already answers this.** If you already named a project, or already said you're not working on one, the skill skips straight to that outcome instead of making you read a list you've already answered.
+
+3. **If there are no projects at all yet**, it doesn't show an empty list or assume you want to set one up — it asks first, and only hands off to `new-project-setup` on a yes.
+
+4. **Otherwise, shows a plain numbered list**, grouped by product area and sorted most-recently-active first, plus "Not working in a project" and "Not listed — check Archives" options.
+
+5. **Loads whatever you pick** — that project's `CLAUDE.md` and `MEMORY.md` — or, for "check Archives," reuses `new-project-setup`'s existing restore steps if a match turns up there.
+
+6. **Can be run again mid-session** to switch projects — it's just a slash command.
+
+</Steps>
+
+<Aside type="tip">
+  Don't use `AskUserQuestion` here — it caps out at a handful of options, and this list is designed to keep working as the vault grows to many areas and sub-projects.
+</Aside>
