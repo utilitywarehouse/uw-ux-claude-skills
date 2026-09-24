@@ -9,28 +9,30 @@ import { Steps, Aside } from '@astrojs/starlight/components';
 /ux:new-session
 ```
 
-At the start of a session, Claude only knows the folder it was opened in. If that's the whole vault rather than one project's folder, there's nothing to tell it which of many active projects you mean — and a wrong guess wastes a round trip. This skill closes that gap: it looks at what's actually in `1-Projects/` right now, offers it back as a short list, and loads whichever one you pick.
+Imagine this scenario. You start a new chat (session), but you have more than one active project in your knowledge base, and your message doesn't specify the project you're referring to. Claude has no way to guess it right, and a wrong guess just wastes a round trip fixing it.
 
-A `SessionStart` hook (added by [setup-my-knowledge-base](/skills/setup-my-knowledge-base/)) nudges Claude to offer this skill whenever your opening message doesn't already make the project clear — you don't have to remember to type it yourself.
+This skill stops that problem. It looks at what is actually inside `1-Projects/` right now. It shows you a short list. You pick one. Claude loads that project.
+
+You can either type `/ux:new-session` at the start of every new chat, or Claude will offer to run it automatically, if your first message doesn't already make the project clear.
 
 ## What it does, step by step
 
 <Steps>
 
-1. **Scans `1-Projects/` directly.** Not the CLAUDE.md routing table, which can drift out of date — the real folder structure is always accurate. A folder only counts if it has its own `CLAUDE.md`, which is what separates a real project from a resource folder like `Wiki/`. A folder with real content but no `CLAUDE.md` gets flagged as "not set up yet," not silently dropped.
+1. **Scans `1-Projects/` directly.** It skips the CLAUDE.md Routing Map, since that can drift out of date. The real folder structure is always accurate. A folder only counts if it has its own `CLAUDE.md`. That's what separates a real project from a resource folder like `Wiki/`. A folder with real content but no `CLAUDE.md` gets flagged as "not set up yet," not silently dropped.
 
-2. **Checks whether your opening message already answers this.** If you already named a project, or already said you're not working on one, the skill skips straight to that outcome instead of making you read a list you've already answered.
+2. **Checks your opening message first.** If you already named a project, or already said you're not working on one, the skill skips straight to that outcome. You won't be asked to pick from a list you've already answered.
 
-3. **If there are no projects at all yet**, it doesn't show an empty list or assume you want to set one up — it asks first, and only hands off to `new-project-setup` on a yes.
+3. **Handles an empty vault carefully.** If there are no projects at all yet, it doesn't show an empty list or assume you want to set one up. It asks first, and only hands off to `new-project-setup` if you say yes.
 
-4. **Otherwise, shows a plain numbered list**, grouped by product area and sorted most-recently-active first, plus "Not working in a project" and "Not listed — check Archives" options.
+4. **Shows a plain numbered list.** Projects are grouped by product area and sorted most-recently-active first. Two extra options are always included: "Not working in a project" and "Not listed — check Archives".
 
-5. **Loads whatever you pick** — that project's `CLAUDE.md` and `MEMORY.md` — or, for "check Archives," reuses `new-project-setup`'s existing restore steps if a match turns up there.
+5. **Loads whatever you pick.** For a project, that means its `CLAUDE.md` and `MEMORY.md`. For "check Archives," it reuses `new-project-setup`'s existing restore steps if a match turns up there.
 
-6. **Can be run again mid-session** to switch projects — it's just a slash command.
+6. **Works mid-session too.** You can run it again any time to switch projects. It's just a slash command.
 
 </Steps>
 
 <Aside type="tip">
-  Don't use `AskUserQuestion` here — it caps out at a handful of options, and this list is designed to keep working as the vault grows to many areas and sub-projects.
+  This list stays a plain numbered list on purpose. Fancier pickers cap out at a handful of options — a plain list keeps working no matter how many areas and sub-projects your vault grows to.
 </Aside>

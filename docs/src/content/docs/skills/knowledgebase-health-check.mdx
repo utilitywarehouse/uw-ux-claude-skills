@@ -25,7 +25,7 @@ Finds the notes that have fallen out of your knowledge base's link graph, and th
 
 - **Orphans** — notes with no links in or out. Not automatically a problem: daily notes and `CLAUDE.md`/`MEMORY.md` files are reasonable orphans. The judgement call is whether anything *should* point at the note.
 - **Broken links** — a link resolving to nothing. Worth fixing promptly: clicking an unresolved link in Obsidian actually creates an empty note, so broken links quietly manufacture junk.
-- **Stale Routing Map rows** — a row in the root `CLAUDE.md`'s routing table pointing at a folder that no longer exists, usually because a project was archived but its row was never removed.
+- **Stale Routing Map rows** — a row in the root `CLAUDE.md`'s Routing Map pointing at a folder that no longer exists, usually because a project was archived but its row was never removed.
 - **Citations written as plain text** — the highest-value finding in practice. A `**Sources**: filename.md` line asserts a relationship a reader can follow, but doesn't create a real link, so the source reads as an orphan even though the connection is stated right there in the prose.
 - **Frontmatter links resolving to nothing** — commonly an unconfigured web clipper wrapping every article author in a link to a note that will never exist.
 - **Filenames differing only by case** — two files that can collide on some operating systems, so a short link can silently resolve to the wrong one.

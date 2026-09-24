@@ -65,6 +65,7 @@ When you're about to create a file for the first time in a session and there's n
 - Before running a skill's own live smoke test, ask first — skip it by default for a small, wording-only change (a rename, a path fix, a narrow logic generalisation) and rely on a diff review plus any existing automated test instead. Save the live run for a change broad enough to actually need one.
 - Skills in either shared repo must not name a specific real person — use role-based phrasing instead (`repo admins`, `the user`, `whoever owns this repo`). These get read, adapted, or installed by other people, and a skill that talks about one specific person by name reads as personal rather than shared. Exception: a skill that's explicitly personal-voice by design (e.g. a writing-style coach modelled on one person's voice).
 - Any machine-specific path written into a skill or a CLAUDE.md template should be marked `[replace on setup]`, so it's obviously wrong on someone else's machine and gets fixed rather than silently breaking.
+- Before naming a new concept in a skill or its docs, check the shared docs site's Glossary (`docs/knowledge-base/glossary`) — it's the source of truth for what recurring things are called. Reuse an existing name if one fits, and add an entry there when a skill introduces a genuinely new concept worth naming consistently.
 
 ## Personality and preferences
 

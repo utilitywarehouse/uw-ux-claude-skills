@@ -62,6 +62,7 @@ export default defineConfig({
             },
             { label: 'Research Repository', link: '/knowledge-base/research-repository/' },
             { label: 'FAQ', link: '/knowledge-base/faq/' },
+            { label: 'Glossary', link: '/knowledge-base/glossary/' },
           ],
         },
         {

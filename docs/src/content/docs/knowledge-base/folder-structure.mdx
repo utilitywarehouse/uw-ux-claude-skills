@@ -1,6 +1,6 @@
 ---
 title: Folder structure
-description: PARA explained plainly, the routing-table concept, and shared vs personal folders.
+description: PARA explained plainly, the Routing Map concept, and shared vs personal folders.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -23,17 +23,17 @@ The rule for filing something new: work down that list in order. Does this move 
   Think of PARA less like a filing cabinet sorted by subject, and more like a Trello board sorted by status — what's live, what's a standing responsibility, what's reference, what's done. The question is always "what state is this in," not "what is this about."
 </Aside>
 
-## The routing table
+## The Routing Map
 
-The root `CLAUDE.md` file at the top of your knowledge base holds a **routing map** — a table of folders and when to use each one. As new projects and areas get created, a row gets added automatically. As a project gets archived, its row is meant to go too, so the table stays an accurate map instead of only ever growing — a periodic health check catches any row still pointing at a folder that no longer exists.
+The root `CLAUDE.md` file at the top of your knowledge base holds a **Routing Map** — a table of folders and when to use each one. (See the [Glossary](/knowledge-base/glossary/) for other recurring terms like this.) As new projects and areas get created, a row gets added automatically. As a project gets archived, its row is meant to go too, so the table stays an accurate map instead of only ever growing — a periodic health check catches any row still pointing at a folder that no longer exists.
 
-The point of the routing map is that Claude Code reads it before deciding where to look for something or where to file something new, so you don't have to remember your own folder structure by heart.
+The point of the Routing Map is that Claude Code reads it before deciding where to look for something or where to file something new, so you don't have to remember your own folder structure by heart.
 
 Here's what that actually looks like for a handful of real prompts — step through them to see which folder each one lands in and why:
 
 <iframe
   src="/uw-ux-claude-skills/routing-map.html"
-  title="The routing map — an interactive walkthrough of where different prompts land"
+  title="The Routing Map — an interactive walkthrough of where different prompts land"
   style="width: 100%; height: 900px; border: 1px solid var(--sl-color-gray-5); border-radius: 8px;"
   loading="lazy"
 />
@@ -51,6 +51,6 @@ Most of your knowledge base is a genuinely personal folder — files that live o
 
 Both of these are [symlinks](/concepts/git-and-github/) — shortcuts that point at a separate clone of the team's shared content repo, sitting elsewhere on your computer. They look like ordinary folders inside your knowledge base, but editing a file inside one is really editing that shared clone, and a change there goes through the [pull-request loop](/skills/contribute-to-shared-knowledgebase/) before it reaches the rest of the team. Everything else in your knowledge base is a plain personal folder with none of that machinery.
 
-<Aside type="note" title="Where the routing map fits in">
-  The routing map isn't just for personal folders — it has rows for the shared Research Repository and every shared Wiki too, so "which folder do I need" and "is this folder shared or personal" get answered by the same table.
+<Aside type="note" title="Where the Routing Map fits in">
+  The Routing Map isn't just for personal folders — it has rows for the shared Research Repository and every shared Wiki too, so "which folder do I need" and "is this folder shared or personal" get answered by the same table.
 </Aside>
