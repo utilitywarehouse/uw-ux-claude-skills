@@ -36,8 +36,8 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: 'UX AI Toolkit',
-          items: [{ label: 'UX AI Toolkit', link: '/' }],
+          label: 'Overview',
+          items: [{ label: 'Start here', link: '/' }],
         },
         {
           label: 'Concepts',
