@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 12
+version: 13
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -97,9 +97,7 @@ Either way, also create:
 
 This step writes two files, not one: the product-area half goes to `1-Projects/[Product Name]/CLAUDE.md`, and the Wiki half goes to `Wiki/Area-Conventions.md` (inside the Wiki folder set up in A2 — already the shared clone if the Wiki is shared, so this file is part of the same commit/PR as the rest of the new Wiki).
 
-**Fence the `## Page format` block in the Area-Conventions.md file you write.** It contains placeholder links (`[wiki-links](wiki-links.md)`, `[related-concept-1](related-concept-1.md)`, `[page-name](page-name.md)`) that are illustrations, not real targets. Left unfenced they become live broken links once opened in a linked-notes tool, and clicking one can create an empty note. Wrap that block in a ```` ```markdown ```` fence in the generated file, the same way it's fenced here.
-
-**If the Wiki is shared** (per A2), insert this section into the Area-Conventions.md template below, directly after `## Purpose`:
+**If the Wiki is shared** (per A2), insert this section directly after `## Purpose` in the file you write:
 
 ```markdown
 ## This content is shared
@@ -149,84 +147,7 @@ This is the shared workspace for all [Product Name] projects.
 This area's Wiki has its own shared conventions — purpose, ingest workflow, page format, citation rules — kept in [Wiki/Area-Conventions.md](Wiki/Area-Conventions.md). Read it before making any change under `Wiki/`; it's shared and kept current by the team, not by this file.
 ```
 
-Write this to `Wiki/Area-Conventions.md`:
-
-```markdown
-# Wiki
-
-A shared knowledge base maintained across all [Product Name] projects.
-
-## Purpose
-
-The wiki is the canonical store for [Product Name] product knowledge — concepts, hypotheses, entities, research findings, and competitive intelligence. It compounds over time. Project-specific status, decisions, and actions belong in project MEMORY.md files, not here.
-
-## Default behaviour
-
-- Before answering any question about [Product Name], read `Wiki/index.md` and any relevant pages. If the answer is there, use it. If it's not, say so clearly.
-- When searching for context or background, treat the wiki as the first port of call — before project folders or memory.
-- When the user shares new information about the product, a stakeholder, or a concept — even in passing — offer to add it to the wiki.
-- When a question generates a valuable answer not already in the wiki, offer to save it as a new page.
-
-## Ingest workflow
-
-When the user adds a new source to a project's `01-Inputs/` and asks you to ingest it:
-
-1. Read the full source document
-2. Discuss key takeaways with the user before writing anything
-3. Create a summary page in `Wiki/` named after the source
-4. Create or update concept pages for each major idea or entity
-5. Add markdown links (`[Page Title](page-name.md)`) to connect related pages
-6. Update `Wiki/index.md` with new pages and one-line descriptions
-7. Append an entry to `Wiki/log.md` with the date, source name, and what changed
-
-A single source may touch 10–15 wiki pages. That is normal.
-
-## Question answering
-
-1. Read `Wiki/index.md` to find relevant pages
-2. Read those pages and synthesise an answer
-3. Cite specific wiki pages in your response
-4. If the answer is not in the wiki, say so clearly
-5. If the answer is valuable, offer to save it as a new wiki page
-
-## Page format
-
-# Page Title
-
-**Summary**: One to two sentences describing this page.
-
-**Sources**: List of raw source files this page draws from, each as a markdown link.
-
-**Last updated**: Date of most recent update.
-
----
-
-Main content goes here. Use clear headings and short paragraphs.
-
-Link to related concepts using markdown links throughout the text, e.g. `[Related Concept](related-concept.md)`.
-
-## Related pages
-
-- [Related Concept 1](related-concept-1.md)
-- [Related Concept 2](related-concept-2.md)
-
-## Citation rules
-
-- Every factual claim should reference its source file
-- Use the format `(source: [Source Name](Source%20Name.md))` after the claim, linking the source file rather than naming it as plain text. A plain-text filename doesn't create a link, so the source it points at reads as unconnected even though something cites it
-- Always keep the file extension in the link target (`.md`, `.pdf`, whatever the file actually is) — a markdown link points at a real file path, not a page-name lookup
-- If `CLAUDE.md`, `MEMORY.md` or `index.md` exists in more than one place in the knowledge base, path-qualify the link so it resolves to the right one, and leave filenames used as ordinary nouns as plain text
-- If two sources disagree, note the contradiction explicitly
-- If a claim has no source, mark it as needing verification
-
-## Rules
-
-- Never modify anything in a project's `01-Inputs/` folder
-- Always update `Wiki/index.md` and `Wiki/log.md` after changes
-- Keep page names lowercase with hyphens (e.g. `machine-learning.md`)
-- Write in clear, plain language
-- When uncertain about how to categorise something, ask the user
-```
+Read `assets/area-conventions-template.md` now and write its content verbatim to `Wiki/Area-Conventions.md`, substituting `[Product Name]` throughout. If the Wiki is shared, also insert the "This content is shared" section above directly after `## Purpose`. The `## Page format` block is already fenced in the template — copy it exactly as written.
 
 ### A4 — Write Wiki/index.md
 
