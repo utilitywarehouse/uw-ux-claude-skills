@@ -1,7 +1,7 @@
 ---
 name: knowledgebase-health-check
-version: 19
-description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), the root CLAUDE.md drifting out of step with the shared starter template, shared wikis or the Research Repository missing their symlink into this knowledge base, shared folders orphaned in the team's clone after a project's local copy was deleted, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
+version: 20
+description: Audit the health of the whole knowledgebase — link health across every note in the knowledge base, and, for any project with a Wiki/ folder, its content health too. Covers orphaned notes, broken links, wikilinks used where this vault's convention is markdown links only, area CLAUDE.md or Area-Conventions.md files whose stated link-style rule contradicts that convention, stale Routing Map rows in CLAUDE.md (folders that got archived but never had their table row removed), the root CLAUDE.md drifting out of step with the shared starter template, shared wikis or the Research Repository missing their symlink into this knowledge base, shared folders orphaned in the team's clone after a project's local copy was deleted, plain-filename citations, stale pages, unprocessed sources, missing cross-links, contradictions, missing stakeholder entries, and page-format violations. Use this skill whenever someone asks about orphans, disconnected notes, graph view looking sparse, broken links, or wants the knowledge base or a wiki checked, audited or linted. Trigger on phrasings like "knowledgebase health check", "health check the vault", "run the health check", "check the health of my notes", "lint the vault", "lint the wiki", "audit the wiki", "why are there so many orphans", "check my links", "are there notes nothing links to", or "run the link check" — all of these should get the full pass, not just the mechanical half. Also use it after a bulk ingest, a folder reorganisation, or any session that created or moved a lot of notes, since those are exactly when link rot appears. Prefer this over a hand-rolled grep: the script already handles the false positives that make naive link-counting untrustworthy.
 ---
 
 # Knowledgebase Health Check
@@ -46,13 +46,14 @@ Both scripts are read-only against the knowledge base — `shared_content_sync.p
 
 `vault_lint.py` finds the shared starter template for the root CLAUDE.md drift check on its own — it's a sibling skill's asset (`setup-my-knowledge-base/assets/claude-md-template.md`), resolved relative to `vault_lint.py`'s own location, not the vault path. Pass `--template=/path/to/claude-md-template.md` to point it at a different copy; if no template can be found at all, that section of the report is skipped rather than reported as an error.
 
-To verify the script itself still behaves after any edit:
+To verify the scripts themselves still behave after any edit:
 
 ```bash
 python scripts/test_vault_lint.py
+python scripts/test_wikilink_to_markdown.py
 ```
 
-That builds a synthetic knowledge base covering every check plus the known false positives, and asserts each result. If you change detection logic, add a case there first — every check in it exists because an earlier version got that case wrong.
+Each builds a synthetic knowledge base covering every check plus the known false positives, and asserts each result. If you change detection logic, add a case there first — every check in it exists because an earlier version got that case wrong.
 
 ## What it checks, and how to read each result
 
@@ -71,6 +72,10 @@ The judgement call that remains is whether the source is worth a graph edge at a
 **Frontmatter links resolving to nothing** — usually an unconfigured Obsidian Web Clipper. Its default `author` property is `{{author|split:", "|wikilink|join}}`, and the `wikilink` filter wraps every article author in `[[ ]]`. Article authors never have notes, so every clipping arrives with a permanent dead link. Fix the template, not just the files — and since this knowledge base uses markdown links, point the fix at a markdown-link filter instead of a wikilink one.
 
 **Notes whose only links are inside backticks** — connected when you read them, orphaned to the graph. Changelogs and lint reports show up here legitimately, since they *name* pages rather than navigate to them. A wiki changelog with 33 backticked references and zero real links is honest, not broken; flag it, don't force it.
+
+**Wikilinks used in page bodies** — real `[[wikilink]]` syntax, wherever it turns up. This vault's convention is markdown links only (`[Page Title](page.md)`), so a wikilink is a rule violation even though it counts exactly the same as a markdown link for the orphan/broken-link graph above — that half is correct and does not change. Propose the fix, don't apply it: run `python scripts/wikilink_to_markdown.py "/path/to/vault"` to see every conversion it would make (dry run by default; it only converts targets that resolve unambiguously and leaves anything else — a genuine collision, a vault-only target — untouched), then `--write` once the person approves.
+
+**Convention files whose stated link rule contradicts the vault-wide rule** — a project/area `CLAUDE.md` (never the vault root, which the drift check above already covers), or a `Wiki/Area-Conventions.md` under the newer split layout, whose own text endorses wikilinks instead of ruling them out. This is a different failure from the one above: no wikilink needs to actually appear anywhere for the *rule itself* to be wrong, and a wrong rule keeps producing new violations for as long as it stands uncorrected. This surfaced twice for real: an area `CLAUDE.md` that flatly said "use wikilinks", and a `Area-Conventions.md` flipped the same way by a misleadingly-named PR that had already merged. Report the offending file and line; never edit it yourself, same as every other finding here — the fix is a sentence-level correction the person needs to sign off on, not a mechanical rewrite.
 
 **Filenames differing only by case** — `About me.md` and `About Me.md` collide on macOS, so a short link can silently resolve to the wrong one. Use a path-qualified link (`[About Me](3-Resources/About%20Me/About%20Me.md)`) or rename one.
 

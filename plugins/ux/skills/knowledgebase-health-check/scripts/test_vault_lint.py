@@ -113,6 +113,17 @@ FILES = {
     "notes/button.tsx": "export const Button = () => null;\n",
     "notes/sub/pic.jpg": "binary\n",
     "assets/theme.css": ":root {}\n",
+    # an area CLAUDE.md whose stated rule contradicts the vault-wide one --
+    # the exact shape of a real drift this check exists to catch
+    "1-Projects/Some Area/CLAUDE.md": "## Conventions\n\nUse wikilinks for internal links in this area.\n",
+    # a Wiki/Area-Conventions.md flipped the same way, under the newer split layout
+    "1-Projects/Other Area/Wiki/Area-Conventions.md": "Link pages with wikilinks, e.g. [[Some Page]].\n",
+    # an area CLAUDE.md that states the rule correctly -- must not be flagged,
+    # however often it says the word "wikilink"
+    "1-Projects/Correct Area/CLAUDE.md": "## Conventions\n\nThis area never uses wikilinks -- markdown links only, not [[Some Page]].\n",
+    # the word "wikilink" inside a code fence (an illustrative example) must
+    # not trip the contradiction check either
+    "1-Projects/Fenced Area/CLAUDE.md": "## Conventions\n\n```\nUse wikilinks like this.\n```\n",
 }
 
 failures = []
@@ -269,6 +280,30 @@ with tempfile.TemporaryDirectory() as root:
 
     check("root CLAUDE.md drift check is skipped when no template is given",
           r["root_claude_md_drift"] is None)
+
+    wiki_usage = r["wikilink_usage"]
+    check("flags real wikilink usage in a page body",
+          os.path.join("notes", "good.md") in wiki_usage, f"got {list(wiki_usage)}")
+    check("flags real wikilink usage through a symlinked folder's citer",
+          os.path.join("notes", "citer.md") in wiki_usage, f"got {list(wiki_usage)}")
+    check("does not flag a wikilink written inside a code fence as usage",
+          os.path.join("notes", "spec.md") not in wiki_usage, f"got {list(wiki_usage)}")
+
+    contradictions = r["wikilink_rule_contradictions"]
+    claude_md_hit = os.path.join("1-Projects", "Some Area", "CLAUDE.md")
+    conventions_hit = os.path.join("1-Projects", "Other Area", "Wiki", "Area-Conventions.md")
+    correct_area = os.path.join("1-Projects", "Correct Area", "CLAUDE.md")
+    fenced_area = os.path.join("1-Projects", "Fenced Area", "CLAUDE.md")
+    check("flags an area CLAUDE.md that tells people to use wikilinks",
+          claude_md_hit in contradictions, f"got {list(contradictions)}")
+    check("flags a Wiki/Area-Conventions.md flipped to endorse wikilinks",
+          conventions_hit in contradictions, f"got {list(contradictions)}")
+    check("does not flag an area CLAUDE.md that correctly rules wikilinks out",
+          correct_area not in contradictions, f"got {list(contradictions)}")
+    check("does not flag the word wikilink when it only appears in a code fence",
+          fenced_area not in contradictions, f"got {list(contradictions)}")
+    check("never treats the vault root CLAUDE.md as an area convention file",
+          "CLAUDE.md" not in contradictions, f"got {list(contradictions)}")
 
     section_diffs = {d["section"]: d for d in r_drift["section_diffs"]}
     routing_diffs = {d["path"]: d for d in r_drift["routing_map_diffs"]}
