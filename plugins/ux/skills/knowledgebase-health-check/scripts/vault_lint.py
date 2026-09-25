@@ -67,6 +67,19 @@ ROUTING_ROW_FULL = re.compile(r'^(\|\s*`([^`]+)`\s*\|.*)$', re.M)
 # Sections that are expected to be personal, not shared — never flagged.
 DRIFT_SKIP_SECTIONS = {'Preferences', 'Vibe', 'Personality and preferences', 'Routing Map'}
 
+# --- Wikilink rule contradictions in convention files ----------------------
+# A project/area CLAUDE.md, or Wiki/Area-Conventions.md under the newer split
+# layout, can state a link-style rule that disagrees with the vault-wide one
+# (markdown links only, never wikilinks) without any wikilink ever appearing
+# on the page itself -- the drift is in the sentence, not the syntax. Two real
+# examples surfaced this: an area CLAUDE.md that flatly said "use wikilinks",
+# and an Area-Conventions.md flipped the same way by a misleadingly-named PR.
+# A line mentioning "wikilink" that carries no negation marker ("never",
+# "not", "instead of", ...) reads as endorsing the banned syntax.
+WIKILINK_MENTION = re.compile(r'^.*\bwikilinks?\b.*$', re.I | re.M)
+NEGATION_MARKERS = re.compile(
+    r"\b(never|not|instead of|don't|do not|doesn't|no longer|isn't|aren't|turn(?:ed)? off)\b", re.I)
+
 
 def h2_sections(text):
     """Split text into an ordered {heading: body} map of its H2 sections."""
@@ -271,6 +284,25 @@ def stale_routing_rows(root, claude_md_text):
     return stale
 
 
+def wikilink_rule_contradictions(vault):
+    """{convention_file_path: [offending line, ...]} for every project/area
+    CLAUDE.md (never the vault root -- that one is covered by the drift check
+    against the shared template) and every Wiki/Area-Conventions.md whose text
+    endorses wikilinks rather than ruling them out."""
+    hits = {}
+    for p in vault.md:
+        base = os.path.basename(p)
+        is_area_claude_md = base == 'CLAUDE.md' and p != 'CLAUDE.md'
+        is_area_conventions = base == 'Area-Conventions.md'
+        if not (is_area_claude_md or is_area_conventions):
+            continue
+        body = strip_code(vault.text[p])
+        for line in body.splitlines():
+            if WIKILINK_MENTION.match(line) and not NEGATION_MARKERS.search(line):
+                hits.setdefault(p, []).append(line.strip())
+    return hits
+
+
 def lint(vault, claude_md_template_path=None):
     out_links = collections.defaultdict(set)
     in_links = collections.defaultdict(set)
@@ -278,6 +310,7 @@ def lint(vault, claude_md_template_path=None):
     backtick_only = []
     plain_citations = collections.defaultdict(list)
     fm_dead = collections.defaultdict(list)
+    wikilink_usage = collections.defaultdict(list)
 
     for p in vault.md:
         raw = vault.text[p]
@@ -291,6 +324,13 @@ def lint(vault, claude_md_template_path=None):
                 in_links[r].add(p)
             elif not r:
                 broken[t.strip().rstrip('\\')].append(p)
+
+        # Real wikilinks are a rule violation in this vault (markdown links
+        # only), even though they count the same as a markdown link for the
+        # connectivity graph above -- that part is correct and stays as-is.
+        wiki_hits = [m.group(1).strip() for m in WIKI.finditer(body)]
+        if wiki_hits:
+            wikilink_usage[p] = wiki_hits
 
         # A file whose only links (wiki- or markdown-style) sit inside backticks
         # looks connected when you read it but is an orphan to the graph. The
@@ -356,6 +396,7 @@ def lint(vault, claude_md_template_path=None):
     claude_md_text = vault.text.get('CLAUDE.md', '')
     stale_routing = stale_routing_rows(vault.root, claude_md_text) if claude_md_text else []
     root_drift = root_claude_md_drift(vault.root, claude_md_template_path)
+    rule_contradictions = wikilink_rule_contradictions(vault)
 
     return {
         'counts': {
@@ -374,6 +415,8 @@ def lint(vault, claude_md_template_path=None):
         'vault_root_files': sorted(root_files),
         'stale_routing_map_rows': stale_routing,
         'root_claude_md_drift': root_drift,
+        'wikilink_usage': {k: v for k, v in sorted(wikilink_usage.items(), key=lambda x: -len(x[1]))},
+        'wikilink_rule_contradictions': rule_contradictions,
     }
 
 
@@ -419,6 +462,19 @@ def report(r, quiet=False):
                 lines.append(f"  `{row['row_path']}` — not found; likely archived to {row['archived_at']}")
             else:
                 lines.append(f"  `{row['row_path']}` — not found anywhere in the vault")
+        lines.append("")
+    if r['wikilink_usage']:
+        total = sum(len(v) for v in r['wikilink_usage'].values())
+        lines.append(f"## Wikilinks used in page bodies ({total} instance(s), {len(r['wikilink_usage'])} file(s)) — rule violation, not just a connectivity gap")
+        for p, targets in r['wikilink_usage'].items():
+            lines.append(f"  {p} — {len(targets)}x, e.g. [[{targets[0]}]]")
+        lines.append("")
+    if r['wikilink_rule_contradictions']:
+        lines.append(f"## Convention files whose stated link rule may contradict the vault-wide rule ({len(r['wikilink_rule_contradictions'])})")
+        for p, offending_lines in r['wikilink_rule_contradictions'].items():
+            lines.append(f"  {p}")
+            for ln in offending_lines:
+                lines.append(f"    {ln}")
         lines.append("")
     drift = r.get('root_claude_md_drift')
     if drift and (drift['section_diffs'] or drift['routing_map_diffs']):
