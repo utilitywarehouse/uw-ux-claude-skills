@@ -1,6 +1,6 @@
 ---
 name: new-project-setup
-version: 13
+version: 14
 description: "Set up a new project from scratch. Use this skill when someone says \"new project\", \"start a project\", \"set up a project\", or mentions starting something new. The skill confirms it's actually new (checking for an existing or archived folder first), asks a few focused questions, then either sets up a new top-level product area (with a Wiki shared with the team by default) or a sub-project within an existing area — so the workspace is ready to go immediately."
 ---
 
@@ -111,74 +111,17 @@ After editing, the change goes up as a pull request from that clone — never a 
 
 Skip this section entirely if the Wiki ended up local-only.
 
-Write this to `1-Projects/[Product Name]/CLAUDE.md`:
-
-```markdown
-# [Product Name]
-
-This is the shared workspace for all [Product Name] projects.
-
-## Folder structure
-
-[Product Name]/
-  CLAUDE.md               ← this file (points to Wiki/Area-Conventions.md for wiki rules)
-  Wiki/
-    Area-Conventions.md   ← shared wiki conventions
-    index.md
-    log.md
-  [Project Name]/         ← one folder per project
-    CLAUDE.md
-    MEMORY.md
-    01-Inputs/    ← source documents for that project (immutable — never modify)
-    02-Planning/
-    03-Research/
-    04-Competitive/
-    05-Synthesis/
-    06-Deliverables/
-
-## Starting a session
-
-1. Check memory and context to determine which project is active. If it's clear, state it and proceed. If it's ambiguous or memory is absent, ask the user to confirm before continuing.
-2. Navigate to that project folder and read its CLAUDE.md.
-3. You're ready to respond to the initial question or task.
-
-## Wiki conventions
-
-This area's Wiki has its own shared conventions — purpose, ingest workflow, page format, citation rules — kept in [Wiki/Area-Conventions.md](Wiki/Area-Conventions.md). Read it before making any change under `Wiki/`; it's shared and kept current by the team, not by this file.
-```
+Read `assets/product-area-claude-md-template.md` and write its content verbatim to `1-Projects/[Product Name]/CLAUDE.md`, substituting `[Product Name]` throughout.
 
 Read `assets/area-conventions-template.md` now and write its content verbatim to `Wiki/Area-Conventions.md`, substituting `[Product Name]` throughout. If the Wiki is shared, also insert the "This content is shared" section above directly after `## Purpose`. The `## Page format` block is already fenced in the template — copy it exactly as written.
 
 ### A4 — Write Wiki/index.md
 
-```markdown
-# [Product Name] Wiki
-
-A shared knowledge base across all [Product Name] projects.
-
-## Pages
-
-_No pages yet. Add pages here as the wiki grows._
-
-## How to use
-
-- Each page covers one concept, entity, or source
-- Link between pages using markdown links (`[Page Title](page-title.md)`)
-- Update this index whenever a page is added or significantly changed
-- `Area-Conventions.md` is a housekeeping file, not a content page — it won't appear in this list
-```
+Read `assets/wiki-index-template.md` and write its content verbatim to `Wiki/index.md`, substituting `[Product Name]` throughout.
 
 ### A5 — Write Wiki/log.md
 
-```markdown
-# Wiki Log
-
-A record of all changes to the [Product Name] wiki.
-
----
-
-- [today's date]: Wiki created.
-```
+Read `assets/wiki-log-template.md` and write its content verbatim to `Wiki/log.md`, substituting `[Product Name]` throughout and today's date for `[today's date]`.
 
 A4 and A5 write through the `1-Projects/[Product Name]/Wiki/` path either way — if A2 set that up as a symlink into the shared clone, the files land there automatically, no special handling needed.
 
@@ -280,76 +223,11 @@ Then create subfolders based on the research method:
 
 ### B3 — Write CLAUDE.md
 
-Write a lean `CLAUDE.md` into the project folder:
-
-```markdown
-## Memory System
-
-At the start of every session, read `MEMORY.md` before responding. Read this to pick up where we left off. Don't announce what you found, just be informed by it. If auto-memory contains relevant project context, reconcile it against the knowledge base's `MEMORY.md` — that file is the source of truth.
-
-When I say "remember this," write the information to `MEMORY.md` in the knowledge base immediately. Confirm you've done it.
-
-**Update it at the end of every session** by appending new entries or updating existing ones. This is how you remember what we've been working on.
-
-**Where things go:** Apply two tests when deciding where to save something. Test 1: Does it prescribe behavior? Look for words like "always," "never," "before doing X, do Y." If yes, add it to this file (CLAUDE.md) under the appropriate section. Test 2: Does it describe a fact about the project that could change? Contact details, project status, decisions, things I've told you to remember. If yes, add it to MEMORY.md. When unsure, suggest which file you think it belongs in and ask me to confirm.
-
-## Transcripts
-
-Raw transcripts (unedited exports from Meet, Zoom, Teams, etc.) live in `01-Inputs/`.
-
-Cleaned transcripts are saved as follows:
-- **Meeting transcripts** (internal calls, team meetings): clean in place → `01-Inputs/Meeting transcripts/`
-- **Research interview transcripts** (participant sessions): save cleaned version → `03-Research/Transcripts/`
-
-If asked to clean or summarise a transcript, check `01-Inputs/` first for the raw source file.
-```
+Read `assets/sub-project-claude-md-template.md` and write its content verbatim to the project folder as `CLAUDE.md`.
 
 ### B4 — Write MEMORY.md
 
-Populate it from the user's answers. Use this structure:
-
-```markdown
-# [Project Name]
-
-**Status:** Discovery
-**Start:** [today's date YYYY-MM-DD]
-**Deadline:** [deadline]
-**Design lead:** [designer's name]
-**PM:** [PM name]
-
-## The problem
-
-[user's answer]
-
-## The outcome
-
-[user's answer]
-
-## Scope
-
-TBD — to be defined in Week 1.
-
-## Deliverables
-
-TBD
-
-## Timeline
-
-TBD
-
-## Stakeholders
-
-- **PM:** [PM name]
-- **Design:** [designer's name]
-
-## Open questions
-
-- TBD
-
-## Log
-
-- [today's date]: Project created.
-```
+Read `assets/sub-project-memory-template.md` and write its content verbatim to the project folder as `MEMORY.md`, substituting the user's answers and today's date throughout.
 
 ### B5 — Update the Routing Map
 

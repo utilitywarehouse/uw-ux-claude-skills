@@ -1,6 +1,6 @@
 ---
 name: end-session
-version: 9
+version: 10
 description: "End-of-session capture pass over a Claude-Code-driven knowledge base. Reviews the session you have just had for anything that should outlive it, then routes each finding to the right home: durable product knowledge to the area Wiki, changed project facts to MEMORY.md, new behaviour rules to CLAUDE.md, cross-session facts to auto-memory, new personal facts to About Me.md, and new standing design/product heuristics to Design Principles.md. Proposes every change for approval before writing anything. Use this skill whenever the user signals the session is wrapping up: 'end session', 'end of session', 'we're done', 'wrap up', 'that's it for today', 'let's close out', 'anything worth capturing?', 'update the wiki before we finish', or when they ask what should be saved from the work you just did together. Also use it when a substantial piece of work lands mid-session (a deliverable shipped, a source ingested, a research question answered, a product rule corrected) and none of it has been written down yet."
 ---
 
@@ -64,6 +64,8 @@ The implicit ones in D are where most of the value hides, because nothing in the
 - You skipped a check that was already written down somewhere (a style guide, a CLAUDE.md rule) and the user caught it. The rule isn't new content, it's "actually run this check, don't just know it exists," a distinct finding from the rule itself.
 
 Each of those started as a single edit and generalises into something that saves a round trip every future session. State the rule, not the incident.
+
+**E. Corrections that trace to a generator.** If the correction is to a file that `new-project-setup` created (a project's `CLAUDE.md`, `MEMORY.md`, or a `Wiki/index.md` or `Wiki/log.md`), check whether the same problem exists in the matching asset template in the skills repo (`new-project-setup/assets/`). Flag it in Step 3 as a separate finding routed to the skills repo rather than to the knowledge base file — fixing the file without fixing the template means every new project starts with the same defect. The asset template path to name is the one that produced the file (see `new-project-setup/SKILL.md` for which step writes which file).
 
 Then filter hard. Drop anything you already wrote to a file during the session, anything already in the files you read in Step 1, and anything that only mattered to this conversation. A session with nothing to capture is a normal outcome, and saying "clean session, nothing to add" is more useful than padding the list. Do not manufacture findings to look thorough.
 

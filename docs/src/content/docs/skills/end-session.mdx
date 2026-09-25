@@ -21,11 +21,12 @@ A knowledge base only remembers what gets written down. During a session you cor
 
 1. **Works out what's in scope.** Reads every `CLAUDE.md` and `MEMORY.md` on the path from the active project up to the knowledge base's root, plus any `Wiki/` folder along that path. If the session touched no project at all, scope is just the root and your auto-memory.
 
-2. **Sweeps the session for four things**, in order of how easy they are to miss:
+2. **Sweeps the session for five things**, in order of how easy they are to miss:
    - **Corrections** to something already written down — the highest-value catch, since in the moment it just felt like a conversation.
    - **Durable product knowledge** — business rules, user flows, stakeholder positions, commercial context, research findings.
    - **Project state that changed** — status, decisions, dates, deliverables.
    - **Behaviour rules** — things you told it to always or never do, including implicit ones inferred from what you rejected and why.
+   - **Corrections that trace to a generator** — if a correction is to a file `new-project-setup` created (a project `CLAUDE.md`, `MEMORY.md`, `Wiki/index.md`, or `Wiki/log.md`), it also checks whether the matching asset template needs the same fix, so every future project doesn't start with the same defect.
 
 3. **Routes each finding** to one of seven destinations — a Wiki page, the Research Repository, a project's `MEMORY.md`, a `CLAUDE.md`, auto-memory, `About Me.md`, or `Design Principles.md` — based on what kind of thing it is, not where it's convenient to put it.
 
