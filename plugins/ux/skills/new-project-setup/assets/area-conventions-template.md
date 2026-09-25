@@ -66,7 +66,7 @@ Link to related concepts using [markdown links](path/to/note.md) throughout the 
 - If `CLAUDE.md`, `MEMORY.md` or `index.md` exists in more than one place in the knowledge base, path-qualify the link so it resolves to the right one, and leave filenames used as ordinary nouns as plain text
 - If two sources disagree, note the contradiction explicitly
 - If a claim has no source, mark it as needing verification
-- If the source is a file that lives only in a private project folder, not shared with the team, cite it as plain text — just the file name, no link of any kind
+- If a source lives only in the private vault — not in this shared repo, and not something the team can open through it — cite it as plain text: just the file name, extension included (e.g. `Workshop summary.md`), no link of any kind. If it was previously an aliased wikilink, use the real file name, not the alias text.
 
 ## Rules
 
